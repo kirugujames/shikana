@@ -2,19 +2,26 @@
 
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import GradientText from './GradientText'
+import { Herotext } from "./hero-text"
+
 
 export function HeroSection() {
   return (
-    <section className="relative w-full h-screen bg-primary overflow-hidden flex items-center justify-center">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 opacity-95" />
+    <section className="relative w-full h-screen overflow:hidden flex items-center justify-center">
+      <div className="absolute inset-0">
+        <img
+          src="/deer.gif"
+          alt="Background animation"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-      {/* Content */}
+      <div className="absolute inset-0 bg-primary/80" />
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight text-balance">
-          Together We Rise for a United Tomorrow
-        </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
+       <Herotext  title="Together We Rise for a United Tomorrow"/>
+
+        <p className="text-xl md:text-2xl mt-2 text-white/90 mb-8 max-w-2xl mx-auto text-balance">
           Join the Shikana Frontliners for Unity Party in building a stronger, more prosperous nation through unity and
           progress.
         </p>

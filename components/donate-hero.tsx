@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Heart, TrendingUp } from "lucide-react"
+import { Herotext } from "./hero-text"
 
 export function DonateHero() {
   return (
@@ -11,10 +12,8 @@ export function DonateHero() {
         <div className="flex justify-center mb-6">
           <Heart size={48} className="text-secondary" />
         </div>
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight text-balance">
-          Support Our Movement
-        </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
+       <Herotext title="Support Our Movement" />
+        <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
           Your contribution helps us build a united, prosperous nation. Every donation makes a difference.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

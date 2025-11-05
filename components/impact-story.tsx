@@ -1,8 +1,15 @@
 "use client"
 
 import { TrendingUp, Users, MapPin, Zap } from "lucide-react"
-
+import { useEffect, useState } from "react";
+import { AnimatedNumber } from '@/components/motion-primitives/animated-number';
 export function ImpactStory() {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    setValue(2082);
+  }, []);
+
   const impacts = [
     {
       icon: Users,
@@ -48,7 +55,14 @@ export function ImpactStory() {
                 <div className="bg-background p-4 rounded-lg mb-4 w-fit mx-auto border border-border">
                   <Icon className="text-secondary" size={32} />
                 </div>
-                <p className="text-4xl font-bold text-foreground mb-2">{impact.stat}</p>
+                <AnimatedNumber
+                  className='inline-flex items-center text-4xl font-bold text-foreground mb-2'
+                  springOptions={{
+                    bounce: 0,
+                    duration: 2000,
+                  }}
+                  value={value}
+                />
                 <p className="text-lg font-bold text-secondary mb-2">{impact.label}</p>
                 <p className="text-foreground/70 text-sm">{impact.description}</p>
               </div>

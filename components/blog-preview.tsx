@@ -37,7 +37,7 @@ export function BlogPreview() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {blogs.map((blog) => (
-            <article key={blog.id} className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+            <article key={blog.id} className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
               <img src={blog.image || "/placeholder.svg"} alt={blog.title} className="w-full h-48 object-cover" />
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">

@@ -61,7 +61,7 @@ export function RegisterForm() {
           </div>
 
           {/* Right Column - Form */}
-          <div className="bg-card border border-border rounded-lg p-8 md:w-2/3">
+          <div className="bg-muted border border-border rounded-lg p-8 md:w-2/3">
             <h3 className="text-2xl font-bold text-foreground mb-6">Registration Form</h3>
 
             {submitted && (

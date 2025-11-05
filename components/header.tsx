@@ -3,7 +3,9 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, Facebook, Twitter, Instagram, Youtube } from "lucide-react"
+import { Menu, X, Facebook, Twitter, Instagram, Youtube, Icon ,Phone,Mail} from "lucide-react"
+import { Button } from "./ui/button"
+import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -17,7 +19,8 @@ export function Header() {
     { label: "Contact Us", href: "/contact" },
     { label: "Careers", href: "/careers" },
     { label: "Donate", href: "/donate" },
-    { label: "Register", href: "/register" },
+    { label: "Join Us", href: "/register" },
+    { label: "Login", href: "/login" },
   ]
 
   const socialLinks = [
@@ -32,25 +35,42 @@ export function Header() {
   return (
     <header className="w-full">
       {/* Top Navbar */}
-      <div className="bg-primary text-primary-foreground py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <p className="text-sm font-medium">Shikana Frontliners for Unity Party</p>
-          <div className="flex gap-4">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="hover:opacity-80 transition-opacity"
-              >
-                <Icon size={18} />
-              </a>
-            ))}
-          </div>
+      <div className="bg-secondary  text-primary-foreground py-2 overflow-hidden">
+        {/* Remove max-w-7xl and make it full width */}
+        <div className="w-full overflow-hidden flex items-center">
+          <InfiniteSlider
+            gap={100}
+            className="w-full whitespace-nowrap"
+            reverse
+          >
+            <p className="text-sm font-medium">
+              Shikana Frontliners for Unity Party
+            </p>
+            <p className="text-sm font-medium flex">
+              < Phone className="me-2"  size={18}/>+254700000000
+            </p>
+            <p className="text-sm font-medium flex">
+              <Mail className="me-2" size={18} /> sfuparty@net.com
+            </p>
+            <div className="flex gap-4">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="hover:opacity-80 transition-opacity"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          </InfiniteSlider>
         </div>
       </div>
+
+
 
       {/* Main Navbar */}
       <nav className="bg-white border-b border-border sticky top-0 z-50">
@@ -67,18 +87,17 @@ export function Header() {
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex gap-6">
+            <div className="hidden md:flex md:items-center gap-6">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`font-medium text-sm transition-colors ${
-                    isActive(item.href)
+                  className={`font-medium text-sm transition-colors ${isActive(item.href)
                       ? "text-secondary border-b-2 border-secondary"
                       : "text-foreground hover:text-secondary"
-                  }`}
+                    }`}
                 >
-                  {item.label}
+                  {item.label == "Login" ? <Button variant="outline" className="bg-secondary hover:bg-secondary/90 text-white">Login</Button> : item.label}
                 </Link>
               ))}
             </div>
@@ -100,9 +119,8 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block py-2 font-medium transition-colors ${
-                    isActive(item.href) ? "text-secondary" : "text-foreground hover:text-secondary"
-                  }`}
+                  className={`block py-2 font-medium transition-colors ${isActive(item.href) ? "text-secondary" : "text-foreground hover:text-secondary"
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}

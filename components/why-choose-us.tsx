@@ -36,7 +36,7 @@ export function WhyChooseUs() {
             return (
               <div
                 key={index}
-                className="text-center p-6 hover:shadow-lg transition-shadow rounded-lg border border-border"
+                className="text-center bg-muted p-6 hover:shadow-lg transition-shadow rounded-lg border border-border"
               >
                 <div className="inline-block p-4 bg-secondary/10 rounded-full mb-4">
                   <Icon size={32} className="text-secondary" />
