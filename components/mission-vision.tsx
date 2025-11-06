@@ -17,7 +17,7 @@ export function MissionVision() {
             </div>
             <p className="text-lg text-foreground/80 leading-relaxed">
               To unite citizens across all demographics and regions, fostering genuine dialogue and collaborative
-              solutions that prioritize the wellbeing of every Tanzanian. We are committed to transparent, accountable
+              solutions that prioritize the wellbeing of every Kenyan. We are committed to transparent, accountable
               governance that serves the people.
             </p>
             <ul className="space-y-3 mt-6">
@@ -46,7 +46,7 @@ export function MissionVision() {
             </div>
             <p className="text-lg text-foreground/80 leading-relaxed">
               A prosperous, unified nation where every citizen has equal opportunities, healthcare, education, and
-              economic advancement regardless of background. A Tanzania that leads the region in innovation, stability,
+              economic advancement regardless of background. A Kenya that leads the region in innovation, stability,
               and democratic excellence.
             </p>
             <ul className="space-y-3 mt-6">

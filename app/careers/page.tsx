@@ -12,7 +12,6 @@ export default function CareersPage() {
       <CareersHero />
       <CultureSection />
       <JobListings />
-      <ApplicationForm />
       <Footer />
     </main>
   )

@@ -4,11 +4,24 @@ import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "luci
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
+  // Define the social links data for cleaner rendering
+  const socialLinks = [
+    { name: "Facebook", icon: Facebook, href: "https://facebook.com/sfup" },
+    { name: "Twitter", icon: Twitter, href: "https://twitter.com/sfup" },
+    { name: "Instagram", icon: Instagram, href: "https://instagram.com/sfup" },
+    { name: "YouTube", icon: Youtube, href: "https://youtube.com/sfup" },
+  ]
+
   return (
     <footer className="bg-primary text-white">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* About */}
+        {/*
+          Main Grid: Set to 5 columns on medium screens (md:grid-cols-5).
+          On mobile (grid-cols-1), content will stack vertically.
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
+          
+          {/* 1. About Us (1/5 column width) */}
           <div>
             <h3 className="text-xl font-bold mb-4">About Us</h3>
             <p className="text-white/80 text-sm leading-relaxed">
@@ -17,34 +30,24 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* 2. Downloads (1/5 column width) */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+            <h3 className="text-xl font-bold mb-4">Downloads</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="text-white/80 hover:text-white transition-colors">
-                  About Us
+                <Link href="/constitution" className="text-white/80 hover:text-white transition-colors">
+                  Party Constitution
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="text-white/80 hover:text-white transition-colors">
-                  Events
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-white/80 hover:text-white transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-white/80 hover:text-white transition-colors">
-                  Contact
+                <Link href="/manifesto" className="text-white/80 hover:text-white transition-colors">
+                  Party Manifesto
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support */}
+          {/* 3. Get Involved (1/5 column width) */}
           <div>
             <h3 className="text-xl font-bold mb-4">Get Involved</h3>
             <ul className="space-y-2 text-sm">
@@ -59,11 +62,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-white/80 hover:text-white transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
                 <Link href="/volunteer" className="text-white/80 hover:text-white transition-colors">
                   Volunteer
                 </Link>
@@ -71,7 +69,28 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* 4. Socials (1/5 column width) - Now a list with icons and names */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Follow Us</h3>
+            <ul className="space-y-2 text-sm">
+              {socialLinks.map((social) => (
+                <li key={social.name}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+                    aria-label={`Follow us on ${social.name}`}
+                  >
+                    <social.icon size={16} className="flex-shrink-0" />
+                    <span>{social.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 5. Contact Info (1/5 column width) - Back in the main row */}
           <div>
             <h3 className="text-xl font-bold mb-4">Contact Info</h3>
             <ul className="space-y-3 text-sm">
@@ -92,49 +111,6 @@ export function Footer() {
                 <span className="text-white/80">National Headquarters</span>
               </li>
             </ul>
-          </div>
-        </div>
-
-        {/* Social Links */}
-        <div className="border-t border-white/20 pt-8 mb-8">
-          <p className="text-sm text-white/80 mb-4">Follow Us</p>
-          <div className="flex gap-6">
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="Facebook"
-            >
-              <Facebook size={24} />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter size={24} />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram size={24} />
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label="YouTube"
-            >
-              <Youtube size={24} />
-            </a>
           </div>
         </div>
 

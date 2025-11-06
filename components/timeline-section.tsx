@@ -3,25 +3,17 @@
 export function TimelineSection() {
   const milestones = [
     {
-      year: "2020",
-      title: "Party Formation",
-      description: "Shikana Frontliners for Unity Party was officially founded with a vision for national unity.",
-    },
-    {
-      year: "2021",
-      title: "Regional Expansion",
-      description: "Expanded our presence across all regions with grassroots organizing and community engagement.",
-    },
-    {
-      year: "2022",
-      title: "Policy Development",
-      description: "Developed comprehensive policy framework addressing education, healthcare, and economic growth.",
-    },
-    {
       year: "2024",
-      title: "2024 Campaign",
-      description: "Launched national campaign focusing on unity, transparency, and inclusive governance.",
+      title: "Coming Together of Like-Minded Citizens",
+      description: "Shikana Frontliners for Unity Party started as a dream by like minded Kenyan driven by change and system the deliver for citizens.",
     },
+    
+    {
+      year: "2025",
+      title: "Party Registration",
+      description: "Registration of SFU party and Launched national campaign focusing on unity, transparency, and inclusive governance.",
+    },
+    
   ]
 
   return (

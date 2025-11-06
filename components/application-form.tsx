@@ -5,8 +5,13 @@ import type React from "react"
 import { useState } from "react"
 import { Send } from "lucide-react"
 
-export function ApplicationForm() {
+interface propsData{
+  id:any;
+}
+export function ApplicationForm({id}: propsData) {
   const [submitted, setSubmitted] = useState(false)
+  const [fullName, setFullName] = useState("")
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,6 +43,8 @@ export function ApplicationForm() {
               <input
                 type="text"
                 required
+                value={id}
+                onChange={(e)=>setFullName(e.target.value)}
                 className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Your full name"
               />
@@ -66,6 +73,7 @@ export function ApplicationForm() {
             </div>
 
             {/* Areas of Interest */}
+            { id=="volunteer" ?
             <div>
               <label className="block text-sm font-medium text-foreground mb-3">Areas of Interest</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -86,7 +94,9 @@ export function ApplicationForm() {
                 ))}
               </div>
             </div>
-
+            :
+            null
+            }
             {/* CV Upload */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Upload CV/Resume *</label>
