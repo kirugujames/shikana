@@ -18,25 +18,16 @@ export function NewsletterSection() {
   }
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 bg-gray-50">
-      <div
-        className="hidden md:block relative w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/stay.gif')" }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 text-white text-center pt-40">
-          <h1 className="text-4xl font-bold">Welcome</h1>
-        </div>
-      </div>
-
-      <div className="text-center py-16 px-4 md:me-10 md:py-24 ">
-        <div className="inline-block p-4 bg-secondary/10 rounded-full mb-10">
+    <section className="py-16 md:py-24 px-4 bg-gray-50">
+      <div className="max-w-2xl mx-auto text-center">
+        <div className="inline-block p-4 bg-secondary/10 rounded-full mb-6">
           <Mail className="text-secondary" size={32} />
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold text-primary"></h2>
-        <TextShimmer  className='text-4xl md:text-5xl font-bold mb-4' duration={1}>
+        <h2 className=""></h2>
+
+        <TextShimmer className='text-4xl md:text-5xl font-bold mb-4' duration={1}>
           Stay Connected
-        </TextShimmer >
+        </TextShimmer>
         <p className="text-lg text-muted-foreground mb-8">
           Subscribe to our newsletter for updates, announcements, and exclusive content from the Shikana Frontliners.
         </p>
