@@ -11,15 +11,16 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import EventsForm from "./components/form"
 import { useEffect, useState } from "react"
 import api from "@/lib/axios"
+import EventsForm from "./components/form"
+import EventsCategoryForm from "./components/add-event-category"
 export default function Page() {
   const [fetchAllEvents, setFetchAllEvents] = useState<boolean>(false);
   const columns = [
     { key: "id", label: "ID" },
     { key: "event_type", label: "Event Type" },
-    { key: "title", label: "Vouchers Issued" },
+    { key: "title", label: "Event Name" },
     { key: "event_date", label: "Event Date" },
     { key: "location", label: "Loaction" },
   ]
@@ -34,7 +35,7 @@ export default function Page() {
   }, [fetchAllEvents])
   const handleView = (row: any) => alert(`Viewing ${row.id}`)
   const onRefreshMyPage = (data: boolean) => setFetchAllEvents(data)
-  const handleEdit = (row: any) => {alert(row.id) }
+  const handleEdit = (row: any) => { alert(row.id) }
   const handleDelete = (row: any) => alert(`Deleting ${row.id}`)
   const sectionCardData = [
     {
@@ -84,7 +85,7 @@ export default function Page() {
                       <TabsList>
                         <TabsTrigger value="allEvents">All Events</TabsTrigger>
                         <TabsTrigger value="newEvent">New Event</TabsTrigger>
-                        <TabsTrigger value="bookedEvents">Booked Events</TabsTrigger>
+                        {/* <TabsTrigger value="bookedEvents">Events Category</TabsTrigger> */}
                       </TabsList>
                       <TabsContent value="allEvents" className="w-full">
                         <DataTable
@@ -97,17 +98,11 @@ export default function Page() {
                         />
                       </TabsContent>
                       <TabsContent value="bookedEvents">
-                        <DataTable
-                          title="Users"
-                          columns={columns}
-                          data={data}
-                          onView={handleView}
-                          onEdit={handleEdit}
-                          onDelete={handleDelete}
-                        />
+                        <EventsCategoryForm />
+
                       </TabsContent>
                       <TabsContent value="newEvent">
-                        <EventsForm onRefreshMyPage={onRefreshMyPage} />
+                        <EventsForm />
                       </TabsContent>
                     </Tabs>
                   </div>

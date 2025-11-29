@@ -8,11 +8,11 @@ import { toast } from "sonner";
 import { Toaster } from "react-hot-toast";
 
 export function FeaturedArticle() {
-  const [mainActiveBlogs,setMainActiveBlogs] = useState<any[]>([]);
-  useEffect(()=>{
+  const [mainActiveBlogs, setMainActiveBlogs] = useState<any[]>([]);
+  useEffect(() => {
     async function getActiveBlogs() {
       try {
-        const response  =  await api.get("/blog/getMainBlog?isMain=Y");
+        const response = await api.get("/api/blog/getMainBlog?isMain=Y");
         setMainActiveBlogs(response.data.data ?? []);
       } catch (error) {
         setMainActiveBlogs([]);
@@ -20,7 +20,7 @@ export function FeaturedArticle() {
       }
     }
     getActiveBlogs();
-  },[])
+  }, [])
   const [expanded, setExpanded] = useState(false)
 
   const words = mainActiveBlogs[0]?.content.trim().split(/\s+/)
@@ -29,15 +29,15 @@ export function FeaturedArticle() {
 
   return (
     <section className="w-full py-16 md:py-24 bg-muted">
-      <Toaster  position="top-center"/>
-      <div className="max-w-6xl mx-auto px-4">
+      <Toaster position="top-center" />
+      {mainActiveBlogs.length == 0 ? <p className="max-w-6xl mx-auto px-4 text-center">No main article available</p> : <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-foreground mb-8">Featured Article</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-card border border-border rounded-lg overflow-hidden">
 
           <div>
             <img
-              src={mainActiveBlogs[0]?.image || "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"}
+              src={mainActiveBlogs[0]?.image}
               alt="The Path to National Unity"
               className="w-full h-96 object-cover"
             />
@@ -95,7 +95,7 @@ export function FeaturedArticle() {
             </Link>
           </div>
         </div>
-      </div>
+      </div>}
     </section>
   )
 }

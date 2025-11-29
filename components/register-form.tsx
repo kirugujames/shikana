@@ -43,7 +43,7 @@ const resetForm = () => {
     e.preventDefault()
     try {
       setSubmitted(false);
-      const response = await api.post("api/members/register/member", {
+      const response = await api.post("/api/members/register/member", {
         first_name, last_name, email, dob, gender, phone, idNo, doc_type, Constituency, ward, county, area_of_interest, role_id, username
       })
       if (response.data?.statusCode == 201) {
