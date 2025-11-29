@@ -1,61 +1,146 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { Bell, Calendar, AlertCircle } from "lucide-react"
+import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { ChevronRight, Send } from 'lucide-react'
 
-export function EventsRegistration() {
+const AVAILABLE_EVENTS = [
+  {
+    id: 1,
+    name: 'Community Cleanup Drive',
+    date: 'Dec 15, 2025',
+    location: 'Central Park',
+    description: 'Help us keep our city clean',
+  },
+  {
+    id: 2,
+    name: 'Food Bank Distribution',
+    date: 'Dec 20, 2025',
+    location: 'Downtown Center',
+    description: 'Package and distribute food to families in need',
+  },
+  {
+    id: 3,
+    name: 'Youth Mentorship Program',
+    date: 'Jan 10, 2026',
+    location: 'Community School',
+    description: 'Guide and inspire the next generation',
+  },
+  {
+    id: 4,
+    name: 'Environmental Restoration',
+    date: 'Jan 25, 2026',
+    location: 'Nature Reserve',
+    description: 'Plant trees and restore natural habitats',
+  },
+]
+
+export default function EventsRegistration() {
+
+  const formData = {
+    fullName: '',
+    email: '',
+    phone: '',
+    consent: '',
+  }
+
+  const [consent, setConsent] = useState(false)
+
+  // const formData = {
+  //     fullName,
+  //     email,
+  //     consent,
+  //   }
+
+
+
+
+
+
   return (
-    <section className="w-full py-16 md:py-24 bg-muted">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Register */}
-          <div className="text-center">
-            <div className="bg-black/10 p-4 rounded-lg mb-4 w-fit mx-auto">
-              <Calendar size={32} className="text-black" />
-            </div>
-            <h3 className="text-2xl font-bold text-black mb-2">Register for Events</h3>
-            <p className="text-black/80 mb-6">Sign up for any of our upcoming events and be part of the movement.</p>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 bg-secondary text-white px-6 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
-            >
-              Register Now
-            </Link>
-          </div>
-
-          {/* Notifications */}
-          <div className="text-center">
-            <div className="bg-black/10 p-4 rounded-lg mb-4 w-fit mx-auto">
-              <Bell size={32} className="text-black" />
-            </div>
-            <h3 className="text-2xl font-bold text-black mb-2">Get Notifications</h3>
-            <p className="text-black/80 mb-6">
-              Subscribe to our newsletter to receive updates about new events and activities.
-            </p>
-            <Link
-              href="/#newsletter"
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-black/90 transition-colors"
-            >
-              Subscribe
-            </Link>
-          </div>
-
-          {/* Volunteer */}
-          <div className="text-center">
-            <div className="bg-black/10 p-4 rounded-lg mb-4 w-fit mx-auto">
-              <AlertCircle size={32} className="text-black" />
-            </div>
-            <h3 className="text-2xl font-bold text-black mb-2">Volunteer</h3>
-            <p className="text-black/80 mb-6">Help organize events and engage with the community as a volunteer.</p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-secondary text-white px-6 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
-            >
-              Get Involved
-            </Link>
-          </div>
+    <main className="px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-foreground mb-3">Register for an Event</h1>
+          <p className="text-muted-foreground text-lg">Join us and make a difference in your community</p>
         </div>
       </div>
-    </section>
+      <Card className="border-2 border-border p-8">
+        <h3 className="text-xl font-bold text-foreground mb-6">Your Information</h3>
+        <form className="space-y-6">
+          
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Full Name *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.fullName}
+              className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+              placeholder="Your full name"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Email *
+            </label>
+            <input
+              type="email"
+              required
+              value={formData.email}
+              className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+              placeholder="Your email"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Phone Number*
+            </label>
+            <input
+              type="tel"
+              required
+              value={formData.phone}
+              className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+              placeholder="Your Phone Number"
+            />
+          </div>
+
+          <div>
+            <h1>Select event through lookup</h1>
+          </div>
+
+         
+
+          {/* Consent */}
+          <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+            <input
+              type="checkbox"
+              id="consent"
+              required
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="w-4 h-4 rounded mt-1"
+            />
+            <label htmlFor="consent" className="text-sm text-foreground cursor-pointer">
+              I consent to having my registration information stored and used for event registration
+               purposes, and I agree to the privacy policy.
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-secondary text-white py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2">
+            <Send size={20} />
+            Submit Application
+          </button>
+        </form>
+      </Card>
+    </main>
   )
+
+
 }

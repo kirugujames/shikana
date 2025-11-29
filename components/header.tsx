@@ -3,19 +3,27 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, X, Facebook, Twitter, Instagram, Youtube, Icon ,Phone,Mail} from "lucide-react"
+import { Menu, X, Facebook, Twitter, Instagram, Youtube, Icon, Phone, Mail } from "lucide-react"
 import { Button } from "./ui/button"
 import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const router =  useRouter()
+  const router = useRouter()
 
   const navItems = [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/shared-ui/about" },
-    { label: "Events", href: "/shared-ui/events" },
+    // { label: "Events", href: "/shared-ui/events" },
+    {
+      label: "Events",
+      children: [
+        { label: "All Events", href: "/shared-ui/events" },
+        { label: "Volunteers", href: "/shared-ui/volunteer" },
+        { label: "Register Event", href: "/shared-ui/register-event" },
+      ],
+    },
     { label: "Blogs", href: "/shared-ui/blog" },
     { label: "Contact Us", href: "/shared-ui/contact" },
     { label: "Careers", href: "/shared-ui/careers" },
@@ -32,15 +40,13 @@ export function Header() {
   ]
 
   const isActive = (href: string) => pathname === href
-  const navigateLogin = (e:any) => {
+  const navigateLogin = (e: any) => {
     e.preventDefault();
     router.push('/login');
   }
   return (
     <header className="w-full">
-      {/* Top Navbar */}
       <div className="bg-secondary  text-primary-foreground py-2 overflow-hidden">
-        {/* Remove max-w-7xl and make it full width */}
         <div className="w-full overflow-hidden flex items-center">
           <InfiniteSlider
             gap={100}
@@ -51,7 +57,7 @@ export function Header() {
               Shikana Frontliners for Unity Party
             </p>
             <p className="text-sm font-medium flex">
-              < Phone className="me-2"  size={18}/>+254700000000
+              < Phone className="me-2" size={18} />+254700000000
             </p>
             <p className="text-sm font-medium flex">
               <Mail className="me-2" size={18} /> sfuparty@net.com
@@ -91,20 +97,55 @@ export function Header() {
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex md:items-center gap-6">
+            <div className="hidden md:flex items-center gap-6">
               {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`font-medium text-sm transition-colors ${isActive(item.href)
-                      ? "text-secondary border-b-2 border-secondary"
-                      : "text-foreground hover:text-secondary"
-                    }`}
-                >
-                  {item.label == "Login" ? <Button variant="outline" className="bg-secondary hover:bg-secondary/90 text-white" onClick={navigateLogin}>Login</Button> : item.label}
-                </Link>
+                <div key={item.label} className="relative group">
+                  {!item.children ? (
+
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`font-medium text-sm transition-colors ${isActive(item.href)
+                        ? "text-secondary border-b-2 border-secondary"
+                        : "text-foreground hover:text-secondary"
+                        }`}
+                    >
+                      {item.label == "Login" ? <Button variant="outline" className="bg-secondary hover:bg-secondary/90 text-white" onClick={navigateLogin}>Login</Button> : item.label}
+                    </Link>
+                  ) : (
+                    <>
+
+                      <span className="font-medium text-sm text-foreground hover:text-secondary cursor-pointer">
+                        {item.label}
+                      </span>
+
+
+                      <div
+                        className="
+                          absolute left-0 
+                          invisible opacity-0 translate-y-2 
+                          group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 
+                          transition-all duration-200
+                          bg-white border border-border rounded-md shadow-lg w-48 z-50
+                          "
+                      >
+                        {item.children.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
               ))}
             </div>
+
+
 
             {/* Mobile Menu Button */}
             <button
@@ -115,23 +156,47 @@ export function Header() {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t border-border pt-4">
+            <div className="md:hidden mt-4 pb-4 border-t border-border pt-4 space-y-2">
               {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block py-2 font-medium transition-colors ${isActive(item.href) ? "text-secondary" : "text-foreground hover:text-secondary"
-                    }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
+                <div key={item.label}>
+                  {!item.children ? (
+                    <Link
+                      href={item.href!}
+                      className={`block py-2 font-medium ${isActive(item.href!) ? "text-secondary" : "text-foreground hover:text-secondary"
+                        }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <>
+                      {/* Parent Label */}
+                      <span className="block py-2 font-medium text-foreground">
+                        {item.label}
+                      </span>
+
+                      {/* Sub-items */}
+                      <div className="pl-4 space-y-2">
+                        {item.children.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            className="block py-1 text-sm text-foreground/80 hover:text-secondary"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
               ))}
             </div>
           )}
+
         </div>
       </nav>
     </header>

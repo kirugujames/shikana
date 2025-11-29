@@ -140,7 +140,7 @@ export function EventsGrid() {
                 </div>
 
                 <Link
-                  href={`/events/${event.id}`}
+                  href={`shared-ui/events/${event.id}`}
                   className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
                 >
                   Learn More <ArrowRight size={16} />

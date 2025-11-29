@@ -49,7 +49,7 @@ export function DonationOptions() {
 
           {/* Amount Selection */}
           <div className="mb-8">
-            <label className="block text-sm font-medium text-foreground mb-4">Select Amount (TZS)</label>
+            <label className="block text-sm font-medium text-foreground mb-4">Select Amount (KES)</label>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
               {presetAmounts.map((amount) => (
                 <button
@@ -66,7 +66,7 @@ export function DonationOptions() {
               ))}
             </div>
             <div>
-              <label className="block text-sm text-foreground mb-2">Custom Amount (TZS)</label>
+              <label className="block text-sm text-foreground mb-2">Custom Amount (KES)</label>
               <input
                 type="number"
                 value={selectedAmount}
@@ -107,7 +107,7 @@ export function DonationOptions() {
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-3">
               <span className="text-foreground font-medium">Donation Amount:</span>
-              <span className="text-2xl font-bold text-secondary">TZS {selectedAmount.toLocaleString()}</span>
+              <span className="text-2xl font-bold text-secondary">KES {selectedAmount.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-foreground font-medium">Type:</span>

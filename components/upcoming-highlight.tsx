@@ -4,6 +4,16 @@ import Link from "next/link"
 import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react"
 
 export function UpcomingHighlight() {
+
+  const fullText = `
+    The biggest gathering of SFUP supporters and sympathizers for a day of inspiration, unity, and
+    collective action. Join thousands of citizens in celebrating unity and progress. Featuring
+    inspiring speeches from party leadership, live cultural performances, food stalls, and networking
+    opportunities. Free admission for all supporters.
+  `
+
+  const preview = fullText.trim().split(/\s+/).slice(0, 20).join(" ")
+
   return (
     <section className="w-full py-16 md:py-24 bg-muted">
       <div className="max-w-6xl mx-auto px-4">
@@ -22,10 +32,6 @@ export function UpcomingHighlight() {
                 MAIN EVENT
               </span>
               <h3 className="text-4xl font-bold text-foreground mb-2">Unity Rally 2025</h3>
-              <p className="text-lg text-foreground/70">
-                The biggest gathering of SFUP supporters and sympathizers for a day of inspiration, unity, and
-                collective action.
-              </p>
             </div>
 
             <div className="space-y-3">
@@ -44,9 +50,7 @@ export function UpcomingHighlight() {
             </div>
 
             <p className="text-foreground/80 leading-relaxed">
-              Join thousands of citizens in celebrating unity and progress. Featuring inspiring speeches from party
-              leadership, live cultural performances, food stalls, and networking opportunities. Free admission for all
-              supporters.
+              {preview}...
             </p>
 
             <div className="flex gap-4 pt-4">
@@ -58,7 +62,7 @@ export function UpcomingHighlight() {
                 <ArrowRight size={18} />
               </Link>
               <Link
-                href="/events/1"
+                href="/shared-ui/events/1"
                 className="inline-flex items-center gap-2 border-2 border-secondary text-secondary px-6 py-3 rounded-lg font-bold hover:bg-secondary/10 transition-colors"
               >
                 View Details
