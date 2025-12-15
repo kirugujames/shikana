@@ -30,7 +30,7 @@ export function EventsPreview() {
   ]
 
   return (
-    <section className="py-16 md:py-24 px-4 bg-gray-50">
+    <section className="py-8 md:py-12 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Upcoming Events</h2>
         <p className="text-lg text-muted-foreground mb-16">Be part of our journey and connect with the community</p>

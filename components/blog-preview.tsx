@@ -30,7 +30,7 @@ export function BlogPreview() {
   ]
 
   return (
-    <section className="py-16 md:py-24 px-4 bg-white">
+    <section className="py-8 md:py-12 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Latest News & Insights</h2>
         <p className="text-lg text-muted-foreground mb-16">Stay updated with our latest articles and announcements</p>

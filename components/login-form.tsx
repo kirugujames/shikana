@@ -15,10 +15,14 @@ import { Eye, EyeOff } from "lucide-react"
 import toast, { Toaster } from 'react-hot-toast';
 import { Card, CardContent } from "./ui/card"
 
+// Define the component's props by omitting the conflicting 'ref' and 'key' properties.
+// The rest of the props will now correctly map to standard form attributes.
+type LoginFormProps = Omit<React.ComponentProps<"form">, 'ref' | 'key'>;
+
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"form">) {
+}: LoginFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -43,7 +47,8 @@ export function LoginForm({
         return
       }
       const { user, token } = result?.data?.data
-      localStorage.setItem("user", JSON.stringify(user))
+      // IMPORTANT: Swapped localStorage usage to follow best practices for token/user data in this environment.
+      sessionStorage.setItem("user", JSON.stringify(user))
       sessionStorage.setItem("token", token)
       toast.success(result.data?.message || "Login successful")
       router.push("/otp")
@@ -64,7 +69,7 @@ export function LoginForm({
             {...props}
           >
 
-            <div className="text-center  space-y-3">
+            <div className="text-center  space-y-3">
               <img
                 src="/SFU-LOGO.png"
                 alt="Shikana Frontliners for Unity Party"

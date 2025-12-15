@@ -29,7 +29,7 @@ export function TestimonialsSection() {
   ]
 
   return (
-    <section className="py-16 md:py-24 px-4 bg-primary">
+    <section className="py-8 md:py-12 px-4 bg-primary">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">What Our Community Says</h2>
         <p className="text-lg text-white/80 text-center mb-16">Hear from members and supporters across the nation</p>

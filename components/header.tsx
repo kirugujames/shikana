@@ -21,7 +21,6 @@ export function Header() {
       children: [
         { label: "All Events", href: "/shared-ui/events" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
-        { label: "Register Event", href: "/shared-ui/register-event" },
       ],
     },
     { label: "Blogs", href: "/shared-ui/blog" },
@@ -84,16 +83,20 @@ export function Header() {
 
       {/* Main Navbar */}
       <nav className="bg-white border-b border-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-1 py-1">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center">
               <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20%281%29-hiMrQm31Qlu54raVjgqGkovwgmoMWo.png"
+                src="/SFU-LOGO.png"
                 alt="Shikana Frontliners for Unity Party"
-                className="h-12 w-12 object-contain"
+                className="h-18 w-18 object-contain"
               />
-              <span className="hidden sm:block font-bold text-primary text-sm">SFUP</span>
+              {/* <span className="hidden sm:block font-bold text-primary text-sm">Shikana Frontliners for Unity Party</span> */}
+              <span className="hidden sm:flex flex-col justify-center font-bold text-primary text-sm leading-tight max-h-[4.5rem]">
+                <span>Shikana Frontliners</span>
+                <span className = "text-secondary">for Unity Party</span>
+              </span>
             </Link>
 
             {/* Desktop Menu */}
@@ -105,7 +108,7 @@ export function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`font-medium text-sm transition-colors ${isActive(item.href)
+                      className={`font-medium text-md transition-colors ${isActive(item.href)
                         ? "text-secondary border-b-2 border-secondary"
                         : "text-foreground hover:text-secondary"
                         }`}
@@ -115,7 +118,7 @@ export function Header() {
                   ) : (
                     <>
 
-                      <span className="font-medium text-sm text-foreground hover:text-secondary cursor-pointer">
+                      <span className="font-medium text-md text-foreground hover:text-secondary cursor-pointer">
                         {item.label}
                       </span>
 
