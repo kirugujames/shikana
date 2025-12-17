@@ -51,7 +51,7 @@ export function LoginForm({
       sessionStorage.setItem("user", JSON.stringify(user))
       sessionStorage.setItem("token", token)
       toast.success(result.data?.message || "Login successful")
-      router.push("/otp")
+      router.push("/admin/dashboard")
     } catch {
       toast.error("An unexpected error occurred")
     } finally {
@@ -105,7 +105,7 @@ export function LoginForm({
                   Password *
                 </label>
 
-                <a href="#" className="text-sm underline-offset-4 hover:underline">
+                <a href="/forgot-password" className="text-sm underline-offset-4 hover:underline">
                   Forgot Password?
                 </a>
               </div>

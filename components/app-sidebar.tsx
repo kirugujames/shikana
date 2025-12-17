@@ -2,20 +2,29 @@
 
 import * as React from "react"
 import {
-  IconDashboard,
-  IconListDetails,
-  IconChartBar,
-  IconFolder,
-  IconSettings,
-  IconDatabase,
-  IconReport,
-  IconInnerShadowTop,
-  IconFolderFilled,
+    IconDashboard,
+    IconUsers, 
+    IconUserCog,
+    IconCalendar, 
+    IconFileText, 
+    IconBriefcase, 
+    IconShoppingBag,
+    IconFolderFilled, 
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
+import {
+    LayoutDashboard,
+    Users,
+    UserCog,
+    Calendar,
+    FileText,
+    Briefcase,
+    ShoppingBag,
+    ScrollText,
+    FolderOpen,
+} from "lucide-react"
+
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -28,13 +37,15 @@ import {
 } from "@/components/ui/sidebar"
 
 const iconMap = {
-  dashboard: IconDashboard,
-  "list-details": IconListDetails,
-  "chart-bar": IconChartBar,
-  folder: IconFolder,
-  settings: IconSettings,
-  database: IconDatabase,
-  report: IconReport,
+  dashboard: LayoutDashboard,
+  users: Users,
+  "user-cog": UserCog,
+  calendar: Calendar,
+  "file-text": FileText,
+  briefcase: Briefcase,
+  "shopping-bag": ShoppingBag,
+  "scroll-text": ScrollText,
+  folder: FolderOpen,
 }
 
 export interface NavItem {
@@ -57,15 +68,11 @@ export interface User {
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   navItems: NavItem[]
-  documents: DocumentItem[]
-  navSecondary: NavItem[]
   user: User
 }
 
 export function AppSidebar({
   navItems,
-  documents,
-  navSecondary,
   user,
   variant,
   ...props
@@ -82,11 +89,29 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:!p-0"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+              <a
+                href="/admin/dashboard"
+                className="flex items-center gap-3 px-3 py-3 rounded-lg
+               transition-colors hover:bg-muted/40"
+              >
+                {/* Logo */}
+                <img
+                  src="/SFU-LOGO.png"
+                  alt="SFU Party Logo"
+                  className="h-11 w-11 object-contain"
+                />
+
+                {/* Text Block */}
+                <div className="flex flex-col justify-center leading-tight">
+                  <span className="text-base font-bold tracking-wide">
+                    SFU Party
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Admin Panel
+                  </span>
+                </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -95,13 +120,13 @@ export function AppSidebar({
 
       <SidebarContent>
         <NavMain items={resolveIcons(navItems)} />
-        {documents.length == 0 ? null :
+        {/* {documents.length == 0 ? null :
           <NavDocuments items={resolveIcons(documents)} />
-        }
-        <NavSecondary
+        } */}
+        {/* <NavSecondary
           items={resolveIcons(navSecondary)}
           className="mt-auto"
-        />
+        /> */}
       </SidebarContent>
 
       <SidebarFooter>

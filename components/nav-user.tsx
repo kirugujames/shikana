@@ -1,13 +1,11 @@
-"use client"
-
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast" // assuming you are using react-hot-toast
 import {
-  IconCreditCard,
-  IconDotsVertical,
   IconLogout,
-  IconNotification,
   IconUserCircle,
+  IconNotification,
 } from "@tabler/icons-react"
-
 import {
   Avatar,
   AvatarFallback,
@@ -28,6 +26,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import api from "@/lib/axios"
 
 export function NavUser({
   user,
@@ -39,6 +38,28 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+    try {
+      const response = await api.post("/api/users/logout")
+      if (response.status >= 200 && response.status < 300) {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        toast.success("Logged out successfully")
+        router.push("/login")
+      } else {
+        toast.error(response.data?.message || "Failed to log out")
+      }
+    } catch (error) {
+      console.error("Logout error:", error)
+      toast.error("Something went wrong during logout")
+    } finally {
+      setLoggingOut(false)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -59,7 +80,6 @@ export function NavUser({
                   {user.email}
                 </span>
               </div>
-              <IconDotsVertical className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -89,18 +109,18 @@ export function NavUser({
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
                 <IconNotification />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className={loggingOut ? "opacity-50 cursor-not-allowed" : ""}
+            >
               <IconLogout />
-              Log out
+              {loggingOut ? "Logging out..." : "Log out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
