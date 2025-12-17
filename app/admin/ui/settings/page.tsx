@@ -4,8 +4,7 @@ import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { documents, navMain, navSecondary, user } from "../../dashboard/nav-items"
-import  cardData from "../../dashboard/nav-card.json"
+import { navMain, user } from "../../dashboard/nav-items"
 
 export default function Page() {
   return (

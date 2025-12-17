@@ -3,6 +3,7 @@ import { Footer } from "@/components/footer"
 import { EventsHero } from "@/components/events-hero"
 import { EventsGrid } from "@/components/events-grid"
 import { UpcomingHighlight } from "@/components/upcoming-highlight"
+import EventsRegistration from "@/components/events-registration"
 
 export default function EventsPage() {
   return (
@@ -11,7 +12,7 @@ export default function EventsPage() {
       <EventsHero />
       <UpcomingHighlight />
       <EventsGrid />
-      {/* <EventsRegistration /> */}
+      <EventsRegistration />
       <Footer />
     </main>
   )

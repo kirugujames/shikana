@@ -1,7 +1,7 @@
 import { AppSidebar, DocumentItem, NavItem } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { documents, navMain, navSecondary, user } from "../../dashboard/nav-items"
+import { navMain, user } from "../../dashboard/nav-items"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import AddNewBlog from "./components/add-blog"
 import AddNewBlogCategory from "./components/new-category"
@@ -19,10 +19,7 @@ export default function Page() {
       <AppSidebar
         variant="inset"
         navItems={navMain}
-        documents={documents}
-        user={user}
-        navSecondary={navSecondary}
-      />
+        user={user}     />
       <SidebarInset>
         <SiteHeader title="Dashboard" />
         <div className="flex flex-1 flex-col">
