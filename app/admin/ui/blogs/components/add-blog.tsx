@@ -1,148 +1,221 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import api from "@/lib/axios";
-import { toast, Toaster } from "react-hot-toast";
+import type React from "react"
 
-export default function AddNewBlog() {
-    const [title, setTitle] = useState("");
-    const [category, setCategory] = useState("");
-    const [content, setContent] = useState("");
-    const [image, setImage] = useState<string | null>(null); // store Base64 string
-    const [isMain, setIsMain] = useState(false);
-    const [categoryData, setCategoryData] = useState<any[]>([])
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Upload, FileText, Tag, ImageIcon, Star } from "lucide-react"
+import api from "@/lib/axios"
+import { toast, Toaster } from "react-hot-toast"
 
-    useEffect(() => {
-        async function getCategory() {
-            try {
-                const response = await api.get("/api/blog/get/all/blogCategory");
-                setCategoryData(response.data?.data);
-            } catch (error) {
+type AddNewBlogProps = {
+  onSuccess?: () => void
+}
 
-            }
-        }
-        getCategory();
-    }, [])
-    // Convert file to Base64
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+export default function AddNewBlog({ onSuccess }: AddNewBlogProps) {
+  const [title, setTitle] = useState("")
+  const [category, setCategory] = useState("")
+  const [content, setContent] = useState("")
+  const [image, setImage] = useState<string | null>(null)
+  const [isMain, setIsMain] = useState(false)
+  const [categoryData, setCategoryData] = useState<any[]>([])
+  const [fileName, setFileName] = useState<string>("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(reader.result as string); // set Base64 string
-        };
-        reader.readAsDataURL(file);
-    };
 
-    const handleSubmit = async () => {
-        const blogData = {
-            title,
-            category,
-            content,
-            image, // Base64 string
-            isMain: isMain ? "Y" : "N",
-        };
+  useEffect(() => {
+    async function getCategory() {
+      try {
+        const response = await api.get("/api/blog/get/all/blogCategory")
+        setCategoryData(response.data?.data || [])
+      } catch (error) {}
+    }
+    getCategory()
+  }, [])
 
-        try {
-            const response = await api.post("/api/blog/add", blogData);
-            if (response.data?.statusCode === 201) {
-                toast.success(response.data?.message);
-            } else {
-                toast.error(response.data?.message);
-            }
-        } catch (error) {
-            toast.error("Somethin wrong.");
-        }
-    };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-    return (
-        <Card className="w-full mt-10">
-            <Toaster position="top-right" />
-            <CardHeader>
-                <CardTitle>Add New Blog</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-                {/* Title */}
-                <div>
-                    <Label className="mb-1" htmlFor="title">Title</Label>
-                    <Input
-                        required
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter blog title"
-                    />
-                </div>
+    setFileName(file.name)
+    const reader = new FileReader()
+    reader.onloadend = () => setImage(reader.result as string)
+    reader.readAsDataURL(file)
+  }
 
-                {/* Category */}
-                <div>
-                    <Label className="mb-1" htmlFor="category">Category</Label>
-                    <Select
-                        value={category}
-                        onValueChange={(value) => setCategory(value)}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Array.isArray(categoryData) && categoryData.length !== 0 ? (
-                                categoryData.map((data, index) => (
-                                    <SelectItem value={data?.category} key={index}>
-                                        {data?.category}
-                                    </SelectItem>
-                                ))
-                            ) : (
-                                <>no category configured</>
-                            )}
-                        </SelectContent>
+  const handleSubmit = async () => {
+    if (isSubmitting) return
 
-                    </Select>
-                </div>
+    if (!title || !category || !content || !image) {
+      toast.error("All fields are required")
+      return
+    }
 
-                {/* Content */}
-                <div>
-                    <Label className="mb-1" htmlFor="content">Content</Label>
-                    <Textarea
-                        id="content"
-                        value={content}
-                        className="textarea h-14"
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder="Write your blog content"
-                    />
-                </div>
+    try {
+      setIsSubmitting(true)
+      const blogData = { title, category, content, image, isMain: isMain ? "Y" : "N" }
+      const response = await api.post("/api/blog/add", blogData)
+      if (response.data?.statusCode === 201) {
+        toast.success(response.data?.message)
+        setTitle("")
+        setCategory("")
+        setContent("")
+        setImage(null)
+        setFileName("")
+        setIsMain(false)
+        onSuccess?.()
+      } else {
+        toast.error(response.data?.message)
+      }
+    } catch (error) {
+      toast.error("Something went wrong")
+    } finally {
+       setIsSubmitting(false) 
+    }
+  }
 
-                {/* Image */}
-                <div>
-                    <Label className="mb-1" htmlFor="image">Image</Label>
-                    <Input
-                        required
-                        type="file"
-                        id="image"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                    />
-                </div>
+  return (
+    <div className="w-full px-1">
+      <div className="pb-4 mb-6 border-b">
+        <h2 className="text-2xl font-semibold text-foreground">Create New Blog Post</h2>
+        <p className="text-sm text-muted-foreground mt-1">Fill in the details below to publish a new blog post</p>
+      </div>
 
-                {/* isMain */}
-                <div className="flex items-center space-x-2">
-                    <Checkbox
-                        id="isMain"
-                        checked={isMain}
-                        onCheckedChange={(checked) => setIsMain(checked === true)}
-                    />
-                    <Label className="mb-1" htmlFor="isMain">Main Blog</Label>
-                </div>
+      <div className="space-y-6 pb-4">
+        {/* Title and Category Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="title" className="flex items-center gap-2 text-sm font-medium">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              Blog Title
+            </Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter an engaging title for your blog post"
+              className="h-10"
+            />
+          </div>
 
-                <Button className="mt-4" onClick={handleSubmit}>Submit</Button>
-            </CardContent>
-        </Card>
-    );
+          <div className="space-y-2">
+            <Label htmlFor="category" className="flex items-center gap-2 text-sm font-medium">
+              <Tag className="h-4 w-4 text-muted-foreground" />
+              Category
+            </Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="w-full h-10">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryData.length > 0 ? (
+                  categoryData.map((data, idx) => (
+                    <SelectItem value={data.category} key={idx}>
+                      {data.category}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="no-category" disabled>
+                    No categories configured
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="space-y-2">
+          <Label htmlFor="content" className="flex items-center gap-2 text-sm font-medium">
+            <FileText className="h-4 w-4 text-muted-foreground" />
+            Content
+          </Label>
+          <Textarea
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write your blog content here..."
+            className="min-h-[200px] resize-y"
+          />
+          <p className="text-xs text-muted-foreground">{content.length} characters</p>
+        </div>
+
+        {/* Image Upload Section */}
+        <div className="space-y-2">
+          <Label htmlFor="image" className="flex items-center gap-2 text-sm font-medium">
+            <ImageIcon className="h-4 w-4 text-muted-foreground" />
+            Featured Image
+          </Label>
+          <div className="relative">
+            <Input id="image" type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            <Label
+              htmlFor="image"
+              className="flex items-center justify-center gap-3 h-24 border-2 border-dashed border-muted-foreground/25 rounded-lg hover:border-muted-foreground/50 hover:bg-muted/50 transition-colors cursor-pointer"
+            >
+              <Upload className="h-5 w-5 text-muted-foreground" />
+              <div className="text-center">
+                <p className="text-sm font-medium text-foreground">
+                  {fileName ? fileName : "Click to upload an image"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">PNG, JPG, GIF up to 10MB</p>
+              </div>
+            </Label>
+          </div>
+
+          {image && (
+            <div className="mt-4 relative rounded-lg overflow-hidden border border-border">
+              <img src={image || "/placeholder.svg"} alt="Preview" className="w-full h-48 object-cover" />
+              <div className="absolute top-2 right-2">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => {
+                    setImage(null)
+                    setFileName("")
+                  }}
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Main Blog Checkbox */}
+        <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+          <Checkbox id="isMain" checked={isMain} onCheckedChange={(checked: boolean) => setIsMain(checked === true)} />
+          <div className="flex items-center gap-2">
+            <Star className="h-4 w-4 text-muted-foreground" />
+            <Label htmlFor="isMain" className="text-sm font-medium cursor-pointer">
+              Feature this blog post on the main page
+            </Label>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t flex justify-end gap-3">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setTitle("")
+              setCategory("")
+              setContent("")
+              setImage(null)
+              setFileName("")
+              setIsMain(false)
+            }}
+          >
+            Clear Form
+          </Button>
+          <Button onClick={handleSubmit} className="min-w-[120px]">
+            Publish Blog Post
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
 }
