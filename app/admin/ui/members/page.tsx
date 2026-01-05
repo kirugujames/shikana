@@ -29,11 +29,6 @@ export default function Page() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <div className="px-4 lg:px-6">
                 <Tabs defaultValue="allMembers" className="w-full">
-                  {/* <TabsList>
-                    <TabsTrigger value="allMembers">All Members</TabsTrigger>
-                    <TabsTrigger value="addMember">Add Member</TabsTrigger>
-                  </TabsList> */}
-
                   {/* All Members */}
                   <TabsContent value="allMembers" className="w-full">
                     <MembersTable />

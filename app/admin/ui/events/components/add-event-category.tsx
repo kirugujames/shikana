@@ -1,88 +1,148 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Button
-} from "@/components/ui/button";
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
-import {
-  Input
-} from "@/components/ui/input";
-import {
-  Label
-} from "@/components/ui/label";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ImageIcon,
+  FileText,
+  Tag,
+  Upload,
+} from "lucide-react"
+import api from "@/lib/axios"
+import { toast } from "react-hot-toast"
 
-export default function EventsCategoryForm() {
-  const initialFormState = {
+export default function AddEvent() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [formData, setFormData] = useState({
     event_type: "",
     title: "",
-    sub_title: "",
     event_date: "",
     from_time: "",
     to_time: "",
     location: "",
     description: "",
     image: "",
-  };
-
-  const [formData, setFormData] = useState(initialFormState);
+    fileName: "",
+  })
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormData((p) => ({ ...p, [name]: value }))
+  }
 
   const handleSelectChange = (value: string) => {
-    setFormData({ ...formData, event_type: value });
-  };
+    setFormData((p) => ({ ...p, event_type: value }))
+  }
 
-  // Handle file upload and convert to Base64
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    const file = e.target.files?.[0]
+    if (!file) return
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormData(initialFormState);
-  };
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setFormData((p) => ({
+        ...p,
+        image: reader.result as string,
+        fileName: file.name,
+      }))
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return
+
+    const {
+      event_type,
+      title,
+      event_date,
+      from_time,
+      to_time,
+      location,
+      description,
+      image,
+    } = formData
+
+    if (
+      !event_type ||
+      !title ||
+      !event_date ||
+      !from_time ||
+      !to_time ||
+      !location ||
+      !description ||
+      !image
+    ) {
+      toast.error("All fields are required")
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      const response = await api.post("/api/events/add", formData)
+
+      if (response.data?.statusCode === 200) {
+        toast.success(response.data.message)
+        setFormData({
+          event_type: "",
+          title: "",
+          event_date: "",
+          from_time: "",
+          to_time: "",
+          location: "",
+          description: "",
+          image: "",
+          fileName: "",
+        })
+      } else {
+        toast.error(response.data?.message)
+      }
+    } catch {
+      toast.error("Something went wrong")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <Card className="mt-10 p-6">
-      <CardContent>
-        <form
-          onSubmit={handleSubmit}
-          className="grid gap-4 sm:grid-cols-1 md:grid-cols-2"
-        >
-          {/* Event Type */}
-          <div className="mb-0">
-            <Label htmlFor="event_type" className="mb-2 block">
+    <div className="w-full px-1">
+      {/* Header */}
+      <div className="pb-4 mb-6 border-b">
+        <h2 className="text-2xl font-semibold">Create New Event</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Fill in the details below to publish a new event
+        </p>
+      </div>
+
+      <div className="space-y-6 pb-4">
+        {/* Event Type & Title */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Tag className="h-4 w-4" />
               Event Type
             </Label>
             <Select
               value={formData.event_type}
               onValueChange={handleSelectChange}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger>
                 <SelectValue placeholder="Select event type" />
               </SelectTrigger>
               <SelectContent>
@@ -94,141 +154,135 @@ export default function EventsCategoryForm() {
             </Select>
           </div>
 
-          {/* Title */}
-          <div className="mb-0">
-            <Label htmlFor="title" className="mb-2 block">
-              Title
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Event Title
             </Label>
             <Input
-              id="title"
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder=""
-              className="w-full"
+              placeholder="Enter event title"
             />
           </div>
+        </div>
 
-          {/* Sub Title */}
-          <div className="mb-0">
-            <Label htmlFor="sub_title" className="mb-2 block">
-              Sub Title
-            </Label>
-            <Input
-              id="sub_title"
-              name="sub_title"
-              value={formData.sub_title}
-              onChange={handleChange}
-              placeholder=""
-              className="w-full"
-            />
-          </div>
-
-          {/* Event Date */}
-          <div className="mb-0">
-            <Label htmlFor="event_date" className="mb-2 block">
+        {/* Date & Time */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
               Event Date
             </Label>
             <Input
-              id="event_date"
-              name="event_date"
               type="date"
+              name="event_date"
               value={formData.event_date}
               onChange={handleChange}
-              className="w-full"
             />
           </div>
 
-          {/* From Time */}
-          <div className="mb-0">
-            <Label htmlFor="from_time" className="mb-2 block">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
               From Time
             </Label>
             <Input
-              id="from_time"
-              name="from_time"
               type="time"
+              name="from_time"
               value={formData.from_time}
               onChange={handleChange}
-              className="w-full"
             />
           </div>
 
-          {/* To Time */}
-          <div className="mb-0">
-            <Label htmlFor="to_time" className="mb-2 block">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
               To Time
             </Label>
             <Input
-              id="to_time"
-              name="to_time"
               type="time"
+              name="to_time"
               value={formData.to_time}
               onChange={handleChange}
-              className="w-full"
             />
           </div>
+        </div>
 
-          {/* Location */}
-          <div className="mb-0">
-            <Label htmlFor="location" className="mb-2 block">
-              Location
-            </Label>
-            <Input
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder=""
-              className="w-full"
+        {/* Location */}
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <MapPin className="h-4 w-4" />
+            Location
+          </Label>
+          <Input
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="Event location"
+          />
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Description
+          </Label>
+          <Textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="min-h-[150px]"
+            placeholder="Describe the event..."
+          />
+        </div>
+
+        {/* Image Upload */}
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <ImageIcon className="h-4 w-4" />
+            Event Banner
+          </Label>
+
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          <Label
+            htmlFor="image"
+            className="flex items-center justify-center gap-3 h-24 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50"
+          >
+            <Upload className="h-5 w-5" />
+            <span>
+              {formData.fileName || "Click to upload event image"}
+            </span>
+          </Label>
+
+          {formData.image && (
+            <img
+              src={formData.image}
+              className="mt-4 rounded-lg max-h-48 object-cover"
             />
-          </div>
+          )}
+        </div>
 
-          {/* Description */}
-          <div className="mb-0 ">
-            <Label htmlFor="description" className="mb-2 block">
-              Description
-            </Label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder=""
-              rows={4}
-              className="w-full textarea h-10 border rounded p-2"
-            />
-          </div>
-
-          {/* Image Upload */}
-          <div className="mb-0 ">
-            <Label htmlFor="image" className="mb-2 block">
-              Image Upload
-            </Label>
-            <Input
-              type="file"
-              id="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full"
-            />
-            {formData.image && (
-              <img
-                src={formData.image}
-                alt="Preview"
-                className="mt-2 max-h-48 rounded"
-              />
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <div className="md:col-span-2">
-            <Button type="submit" className="w-full mt-4">
-              Submit
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
+        {/* Footer */}
+        <div className="pt-4 border-t flex justify-end">
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="min-w-[140px]"
+          >
+            {isSubmitting ? "Publishing..." : "Publish Event"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
 }

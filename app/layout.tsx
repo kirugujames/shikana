@@ -14,9 +14,9 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "SFUP - Shikana Frontliners for Unity Party",
   description:
-    "Join the movement for unity, progress, and inclusive governance. Discover our vision for a stronger Tanzania.",
+    "Join the movement for unity, progress, and inclusive governance. Discover our vision for a stronger Kenya.",
   generator: "v0.app",
-  keywords: ["politics", "unity", "party", "governance", "Tanzania", "SFUP"],
+  keywords: ["politics", "unity", "party", "governance", "Kenya", "SFUP"],
   openGraph: {
     title: "SFUP - Shikana Frontliners for Unity Party",
     description: "Join the movement for unity, progress, and inclusive governance.",

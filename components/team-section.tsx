@@ -1,32 +1,61 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
+
 export function TeamSection() {
   const team = [
     {
-      name: "Chairperson",
+      name: "Steve James",
       title: "Party Leader",
-      description: "Leading the party with vision and integrity towards a united Tanzania.",
-      image: "/political-leader.png",
+      description: "Leading the party with vision and integrity towards a united Kenya.",
+      image: "",
     },
     {
-      name: "Secretary General",
+      name: "Steve James",
       title: "Executive Administration",
       description: "Ensuring smooth operations and implementation of party policies and initiatives.",
-      image: "/government-official.jpg",
+      image: "",
     },
     {
-      name: "Treasurer",
+      name: "Steve Steve James",
       title: "Financial Stewardship",
       description: "Managing party resources with transparency and accountability.",
-      image: "/professional-administrator.jpg",
+      image: "",
     },
     {
-      name: "Communications Director",
+      name: "Steve James",
       title: "Public Engagement",
       description: "Communicating our vision and values to citizens across the nation.",
-      image: "/communications-specialist.jpg",
+      image: "",
     },
   ]
+
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(" ")
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase()
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  }
+
+  const getAvatarColor = (name: string) => {
+    const colors = [
+      "bg-primary/10 text-primary",
+      "bg-secondary/10 text-secondary",
+      "bg-accent/10 text-accent",
+      "bg-chart-1/10 text-chart-1",
+      "bg-chart-2/10 text-chart-2",
+      "bg-chart-3/10 text-chart-3",
+      "bg-chart-4/10 text-chart-4",
+      "bg-chart-5/10 text-chart-5",
+    ]
+    let hash = 0
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    const index = Math.abs(hash) % colors.length
+    return colors[index]
+  }
 
   return (
     <section className="w-full py-8 md:py-12 bg-background">
@@ -42,7 +71,17 @@ export function TeamSection() {
           {team.map((member, index) => (
             <div key={index} className="text-center">
               <div className="mb-4 rounded-lg overflow-hidden border border-border">
-                <img src={member.image || "/placeholder.svg"} alt={member.name} className="w-full h-64 object-cover" />
+                <Avatar className="w-full h-64 rounded-lg">
+                  <AvatarImage src={member.image} alt={member.name} className="object-cover" />
+                  <AvatarFallback
+                    className={cn(
+                      "rounded-lg text-4xl font-bold",
+                      getAvatarColor(member.name)
+                    )}
+                  >
+                    {getInitials(member.name)}
+                  </AvatarFallback>
+                </Avatar>
               </div>
               <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
               <p className="text-secondary font-semibold mb-3">{member.title}</p>

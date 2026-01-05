@@ -25,9 +25,13 @@ export function Header() {
     },
     { label: "Blogs", href: "/shared-ui/blog" },
     { label: "Contact Us", href: "/shared-ui/contact" },
-    { label: "Careers", href: "/shared-ui/careers" },
+    { label: "Work With Us", children: [
+        { label: "Careers", href: "/shared-ui/careers" },
+        { label: "Political Positions", href: "/shared-ui/political-position" },
+      ], },
     { label: "Donate", href: "/shared-ui/donate" },
     { label: "Join Us", href: "/shared-ui/register" },
+    { label: "Shop", href: "/shared-ui/listings" },
     { label: "Login", href: "/shared-ui/login" },
   ]
 

@@ -11,7 +11,7 @@ type DocumentItem = {
   file: string
 }
 
-// ✅ Dynamic import — SSR OFF
+// Dynamic import — SSR OFF
 const PdfReaderModal = dynamic(
   () => import("@/components/ui/PdfReaderModal").then(mod => mod.PdfReaderModal),
   { ssr: false }
@@ -25,10 +25,10 @@ const documents: DocumentItem[] = [
     file: "/documents/constitution.pdf",
   },
   {
-    title: "Party Manifesto",
+    title: "Party Ideology",
     description: "Our vision, commitments, and roadmap for national transformation.",
-    category: "Manifesto",
-    file: "/documents/manifesto.pdf",
+    category: "Ideology",
+    file: "/documents/ideology.pdf",
   },
   {
     title: "Policy Framework",

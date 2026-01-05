@@ -4,10 +4,11 @@ import { AppSidebar, NavItem } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { navMain, user } from "../../dashboard/nav-items"
-import { BlogsTable } from "./components/blogs-table"
+import { AuditLogsTable } from "./components/auditTrail-table"
+
+
 
 export default function AdminUsersPage() {
-  
   return (
     <SidebarProvider
       style={
@@ -19,9 +20,9 @@ export default function AdminUsersPage() {
     >
       <AppSidebar variant="inset" navItems={navMain} user={user} />
       <SidebarInset>
-        <SiteHeader title="Blogs" />
+        <SiteHeader title="Audit Trails" />
         <div className="flex flex-1 flex-col p-4">
-          <BlogsTable />
+          <AuditLogsTable />
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -15,7 +15,7 @@ The event will feature inspiring speeches from party leadership, live cultural p
 
 The Unity Rally demonstrates the strength of our movement and the broad support we enjoy across all regions and demographics. This is an opportunity to connect with like-minded citizens, share your ideas, and be part of something bigger than ourselves.
 
-Whether you're a long-time supporter or new to our movement, the Unity Rally 2025 welcomes you. Together, we will demonstrate our commitment to unity, progress, and a brighter future for all Tanzanians.`,
+Whether you're a long-time supporter or new to our movement, the Unity Rally 2025 welcomes you. Together, we will demonstrate our commitment to unity, progress, and a brighter future for all Kenyans.`,
     speakers: ["Dr. Leadership Name", "Regional Coordinator", "Youth Representative", "Community Leader"],
     activities: [
       "Opening Ceremony & National Anthem",

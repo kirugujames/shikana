@@ -7,16 +7,7 @@ import { navMain, user } from "../../dashboard/nav-items"
 import { AdminUsersTable, AdminUser } from "./components/admin-users"
 
 export default function AdminUsersPage() {
-  const handleEdit = (user: AdminUser) => {
-    alert(`Edit user: ${user.username}`)
-    // You can open a modal or navigate to edit page here
-  }
-
-  const handleDelete = (user: AdminUser) => {
-    alert(`Delete user: ${user.username}`)
-    // Call delete API here
-  }
-
+  
   return (
     <SidebarProvider
       style={
@@ -30,7 +21,7 @@ export default function AdminUsersPage() {
       <SidebarInset>
         <SiteHeader title="Admin Users" />
         <div className="flex flex-1 flex-col p-4">
-          <AdminUsersTable onEdit={handleEdit} onDelete={handleDelete} />
+          <AdminUsersTable />
         </div>
       </SidebarInset>
     </SidebarProvider>

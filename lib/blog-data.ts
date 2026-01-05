@@ -23,7 +23,7 @@ Key initiatives include community engagement programs, transparent policy-making
     image: "/placeholder.svg?key=economy1",
     category: "Economy",
     readTime: "5 min read",
-    content: `Strategic investments in infrastructure and education are key drivers of sustainable development and prosperity for all citizens. Our economic vision focuses on creating opportunities for all Tanzanians.
+    content: `Strategic investments in infrastructure and education are key drivers of sustainable development and prosperity for all citizens. Our economic vision focuses on creating opportunities for all Kenyans.
 
 We believe that economic growth must be inclusive and sustainable. This means investing in infrastructure that connects rural and urban areas, supporting small and medium enterprises, and developing a skilled workforce through quality education.
 
@@ -40,7 +40,7 @@ Our policy initiatives include tax incentives for job creators, infrastructure d
     readTime: "4 min read",
     content: `Meet the visionary leaders of SFUP who are committed to bringing about transformative change and better governance. Our leadership team brings decades of experience in public service, business, and community development.
 
-Each leader is driven by a commitment to serving our nation and improving the lives of all citizens. They bring diverse perspectives and expertise to the table, ensuring that our policies reflect the needs and aspirations of all Tanzanians.
+Each leader is driven by a commitment to serving our nation and improving the lives of all citizens. They bring diverse perspectives and expertise to the table, ensuring that our policies reflect the needs and aspirations of all Kenyans .
 
 Our leaders are accessible, transparent, and accountable to the people they serve. Through regular community engagement and open dialogue, they ensure that government remains responsive to citizen needs.`,
   },
@@ -57,18 +57,18 @@ Our leaders are accessible, transparent, and accountable to the people they serv
 
 We propose expanding primary healthcare services in rural areas, training more healthcare professionals, and implementing preventive health programs. Digital health technologies will help us reach remote communities and improve service delivery.
 
-Our commitment is to ensure that healthcare is not a privilege for the few, but a right for all Tanzanians. Through strategic investments and policy reforms, we will build a healthcare system that serves everyone.`,
+Our commitment is to ensure that healthcare is not a privilege for the few, but a right for all Kenyans. Through strategic investments and policy reforms, we will build a healthcare system that serves everyone.`,
   },
   {
     id: 5,
     title: "Education as Foundation for Change",
-    excerpt: "Quality education empowers individuals and communities. Discover our vision for transforming Tanzania's education system.",
+    excerpt: "Quality education empowers individuals and communities. Discover our vision for transforming Kenya's education system.",
     date: "February 28, 2025",
     author: "Education Policy Team",
     image: "/placeholder.svg?key=education1",
     category: "Education",
     readTime: "7 min read",
-    content: `Quality education empowers individuals and communities. Our vision is to transform Tanzania's education system to prepare students for the challenges and opportunities of the 21st century.
+    content: `Quality education empowers individuals and communities. Our vision is to transform Kenya's education system to prepare students for the challenges and opportunities of the 21st century.
 
 We are committed to improving teacher training, updating curricula, and providing adequate learning resources. Education should develop critical thinking, creativity, and problem-solving skills, not just rote learning.
 
@@ -87,7 +87,7 @@ Our initiatives include vocational training programs, digital literacy for all s
 
 Our youth programs include leadership development, civic education, and internship opportunities in government and non-governmental organizations. We encourage young people to engage in policy-making and community service.
 
-By empowering youth, we create a generation of engaged citizens committed to building a better Tanzania. Youth participation strengthens democracy and ensures policies reflect the needs of all age groups.`,
+By empowering youth, we create a generation of engaged citizens committed to building a better Kenya. Youth participation strengthens democracy and ensures policies reflect the needs of all age groups.`,
   },
   {
     id: 7,
@@ -128,7 +128,7 @@ Our initiatives include renewable energy investments, environmental education, a
     image: "/placeholder.svg?key=tech1",
     category: "Technology",
     readTime: "6 min read",
-    content: `Digital innovation is driving national competitiveness. Our digital transformation strategy positions Tanzania as a leader in the African digital economy.
+    content: `Digital innovation is driving national competitiveness. Our digital transformation strategy positions Kenya as a leader in the African digital economy.
 
 We are investing in broadband infrastructure, digital skills training, and support for tech startups. Digital services in government will improve efficiency and citizen satisfaction.
 
