@@ -12,6 +12,7 @@ import { useState } from "react"
 import { Spinner } from "./ui/spinner"
 import api from "@/lib/axios";
 import { useAuth } from "@/context/auth-context";
+import { Roles } from "@/lib/roles";
 import { Eye, EyeOff } from "lucide-react"
 import toast, { Toaster } from 'react-hot-toast';
 import { Card, CardContent } from "./ui/card"
@@ -42,6 +43,7 @@ export function LoginForm({
         "/api/users/login",
         { username, password },
         { validateStatus: () => true }
+        
       )
 
       if (result.data?.statusCode !== 200) {
@@ -49,13 +51,21 @@ export function LoginForm({
         return
       }
       const { user, token } = result?.data?.data
+      const data = JSON.parse(localStorage.getItem("user") ?? "");
 
       login(user, token) // Use context login
+      localStorage.setItem("user", JSON.stringify(user))
 
       toast.success(result.data?.message || "Login successful")
-      // Redirect happens in logout, but for login we generally want specific redirects.
-      // Context login doesn't redirect.
-      router.push("/shared-ui/political-position")
+
+      if (data?.role_id == '1') {
+        router.push("/admin/dashboard")
+      }
+      else if (data?.role_id == '2') {
+        router.push("/shared-ui/political-position")
+      }
+
+      // router.push("/otp")
     } catch {
       toast.error("An unexpected error occurred")
     } finally {

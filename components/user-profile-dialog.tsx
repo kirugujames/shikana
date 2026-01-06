@@ -54,12 +54,12 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                             </div>
                         )}
 
-                        {user.role_id && (
+                        {/* {user.role_id && (
                             <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                                 <Shield className="text-secondary h-4 w-4" />
                                 <span className="text-sm capitalize">Role ID: {user.role_id}</span>
                             </div>
-                        )}
+                        )} */}
                     </div>
 
                     <Button
