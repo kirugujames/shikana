@@ -14,8 +14,13 @@ export type Member = {
   last_name: string
   member_code: string
   county: string
+  constituency: string
+  ward: string
   email: string
   phone: string
+  dob: string
+  gender: string
+  area_of_interest: string
 //   joinedAt: string
   status: "ACTIVE" | "INACTIVE"
 
@@ -45,9 +50,15 @@ export function ViewMemberDialog({
         <div className="space-y-4 text-sm">
           <Detail label="First Name" value={member.first_name} />
           <Detail label="Last Name" value={member.last_name} />
-          <Detail label="Full Name" value={member.member_code} />
+          <Detail label="Membership Code" value={member.member_code} />
           <Detail label="Email" value={member.email} />
           <Detail label="Phone" value={member.phone} />
+          <Detail label="County" value={member.county} />
+          <Detail label="Constituency" value={member.constituency} />
+          <Detail label="Ward" value={member.ward} />
+          <Detail label="Date of Birth" value={member.dob} />
+          <Detail label="Gender" value={member.gender} />
+          <Detail label="Area of Interest" value={member.area_of_interest} /> 
 
           <div className="flex justify-between">
             <span className="text-muted-foreground">Status</span>

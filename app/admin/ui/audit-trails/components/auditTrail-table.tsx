@@ -49,13 +49,12 @@ export function AuditLogsTable() {
   useEffect(() => {
     const fetchAuditLogs = async () => {
       try {
-        // TEMP: API not ready – safe fallback
-        const res = await api.get("/api/audit-logs/get-all")
+        const res = await api.get("/api/audit/all")
         const logsArray = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data?.data)
-          ? res.data.data
-          : []
+            ? res.data.data
+            : []
         setData(logsArray)
       } catch (err) {
         console.error(err)

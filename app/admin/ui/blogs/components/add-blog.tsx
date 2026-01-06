@@ -13,6 +13,18 @@ import { Upload, FileText, Tag, ImageIcon, Star } from "lucide-react"
 import api from "@/lib/axios"
 import { toast, Toaster } from "react-hot-toast"
 
+const BLOG_CATEGORIES = [
+  "Party News",
+  "Policy Updates",
+  "Events",
+  "Press Releases",
+  "Opinion",
+  "Community Outreach",
+  "Youth Engagement",
+  "Legislative Updates",
+  "Campaigns",
+]
+
 type AddNewBlogProps = {
   onSuccess?: () => void
 }
@@ -23,20 +35,8 @@ export default function AddNewBlog({ onSuccess }: AddNewBlogProps) {
   const [content, setContent] = useState("")
   const [image, setImage] = useState<string | null>(null)
   const [isMain, setIsMain] = useState(false)
-  const [categoryData, setCategoryData] = useState<any[]>([])
   const [fileName, setFileName] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-
-  useEffect(() => {
-    async function getCategory() {
-      try {
-        const response = await api.get("/api/blog/get/all/blogCategory")
-        setCategoryData(response.data?.data || [])
-      } catch (error) {}
-    }
-    getCategory()
-  }, [])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -75,7 +75,7 @@ export default function AddNewBlog({ onSuccess }: AddNewBlogProps) {
     } catch (error) {
       toast.error("Something went wrong")
     } finally {
-       setIsSubmitting(false) 
+      setIsSubmitting(false)
     }
   }
 
@@ -113,17 +113,11 @@ export default function AddNewBlog({ onSuccess }: AddNewBlogProps) {
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categoryData.length > 0 ? (
-                  categoryData.map((data, idx) => (
-                    <SelectItem value={data.category} key={idx}>
-                      {data.category}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="no-category" disabled>
-                    No categories configured
+                {BLOG_CATEGORIES.map((cat, idx) => (
+                  <SelectItem value={cat} key={idx}>
+                    {cat}
                   </SelectItem>
-                )}
+                ))}
               </SelectContent>
             </Select>
           </div>
