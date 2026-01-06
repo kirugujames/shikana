@@ -252,18 +252,6 @@ export function RegisterForm() {
                     <option value="Female">Female</option>
                   </select>
                 </div>
-                <div className="space-y-2">
-                <Label>Sex *</Label>
-                <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
               </div>
 
               {/* Doc Type + Number */}
@@ -291,7 +279,7 @@ export function RegisterForm() {
                     required
                     value={idNo}
                     onChange={(e) => setIdNo(e.target.value)}
-                    className="w-full px-4 bg-background py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors"
+                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                     placeholder="01234567"
                   />
                 </div>
