@@ -1,7 +1,4 @@
 "use client"
-
-import type React from "react"
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -23,6 +20,7 @@ import {
 } from "lucide-react"
 import api from "@/lib/axios"
 import { toast } from "react-hot-toast"
+import { useState } from "react"
 
 type AddNewEventProps = {
   onSuccess?: () => void
@@ -38,7 +36,7 @@ export default function AddNewEvent({ onSuccess }: AddNewEventProps) {
     location: "",
     description: "",
     image: "",
-    isMainEvent: false,
+    is_main: false,
     isPaid: false,
     amount: "",
   }
@@ -55,8 +53,7 @@ export default function AddNewEvent({ onSuccess }: AddNewEventProps) {
     formData.from_time &&
     formData.to_time &&
     formData.location
-  ) &&
-  (!formData.isPaid || Boolean(formData.amount))
+  )
 
 
   const handleChange = (
@@ -83,27 +80,10 @@ export default function AddNewEvent({ onSuccess }: AddNewEventProps) {
   }
 
   const handleSubmit = async () => {
-    if (
-      !formData.event_type ||
-      !formData.title ||
-      !formData.event_date ||
-      !formData.from_time ||
-      !formData.to_time ||
-      !formData.location
-    ) {
-      toast.error("Please fill in all required fields")
-      return
-    }
-
-    if (formData.isPaid && !formData.amount) {
-      toast.error("Please enter the amount for a paid event")
-      return
-    }
-
     const payload = {
       ...formData,
       paid: formData.isPaid,
-      amount: formData.isPaid ? Number(formData.amount) : 0,
+      amount: formData.amount ? Number(formData.amount) : 0,
     }
 
     try {
@@ -200,9 +180,9 @@ export default function AddNewEvent({ onSuccess }: AddNewEventProps) {
           <div className="flex flex-wrap gap-6 pt-2">
             <div className="flex items-center gap-2">
               <Checkbox
-                checked={formData.isMainEvent}
+                checked={formData.is_main}
                 onCheckedChange={(checked: any) =>
-                  setFormData({ ...formData, isMainEvent: !!checked })
+                  setFormData({ ...formData, is_main: !!checked })
                 }
               />
               <Label>Main Event</Label>
