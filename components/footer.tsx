@@ -20,7 +20,7 @@ export function Footer() {
           On mobile (grid-cols-1), content will stack vertically.
         */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
-          
+
           {/* 1. About Us (1/5 column width) */}
           <div>
             <h3 className="text-xl font-bold mb-4">About Us</h3>
@@ -94,21 +94,32 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">Contact Info</h3>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail size={16} className="flex-shrink-0" />
-                <a href="mailto:info@sfup.org" className="text-white/80 hover:text-white transition-colors">
-                  info@sfup.org
-                </a>
+              <li className="flex items-start gap-2">
+                <Mail size={16} className="flex-shrink-0 mt-1" />
+                <div>
+                  <a href="mailto:shikana@gmail.co.ke" className="text-white/80 hover:text-white transition-colors block">
+                    shikana@gmail.co.ke
+                  </a>
+                  <a href="mailto:info@shikana.co.ke" className="text-white/80 hover:text-white transition-colors block">
+                    info@shikana.co.ke
+                  </a>
+                </div>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="flex-shrink-0" />
-                <a href="tel:+1234567890" className="text-white/80 hover:text-white transition-colors">
-                  +254700000000
+                <a href="tel:+254706357064" className="text-white/80 hover:text-white transition-colors">
+                  0706357064
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <MapPin size={16} className="flex-shrink-0" />
-                <span className="text-white/80">National Headquarters</span>
+              <li className="flex items-start gap-2">
+                <MapPin size={16} className="flex-shrink-0 mt-1" />
+                <div className="text-white/80">
+                  <p>Kikinga House, Kiambu Road</p>
+                  <p>Opposite Kiambu Referrals Hospital</p>
+                  <p>Kiambu County</p>
+                  <p className="mt-1">P.O BOX 18234 – 00100</p>
+                  <p>Nairobi, Kenya</p>
+                </div>
               </li>
             </ul>
           </div>
