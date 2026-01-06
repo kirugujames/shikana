@@ -43,7 +43,7 @@ export function LoginForm({
         "/api/users/login",
         { username, password },
         { validateStatus: () => true }
-        
+
       )
 
       if (result.data?.statusCode !== 200) {
@@ -57,12 +57,16 @@ export function LoginForm({
       localStorage.setItem("user", JSON.stringify(user))
 
       toast.success(result.data?.message || "Login successful")
-
-      if (data?.role_id == '1') {
+      if (result.data.data?.user?.role_id == 1) {
         router.push("/admin/dashboard")
+        return
       }
-      else if (data?.role_id == '2') {
+      else if (result.data.data?.user?.role_id == 2) {
         router.push("/shared-ui/political-position")
+        return
+      }
+      else {
+        router.push("/login")
       }
 
       // router.push("/otp")
