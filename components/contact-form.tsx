@@ -4,19 +4,61 @@ import type React from "react"
 
 import { useState } from "react"
 import { Mail, Phone, MapPin, Send } from "lucide-react"
+import api from "@/lib/axios"
+import toast, { Toaster } from "react-hot-toast"
+import { Spinner } from "./ui/spinner"
 
 export function ContactForm() {
-  const [submitted, setSubmitted] = useState(false)
-  const [nationalId, setNationalId] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check if all fields are filled
+  const isValid = Object.values(formData).every((value) => value.trim() !== "")
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 3000)
+
+    if (!isValid) return
+
+    setLoading(true)
+
+    try {
+      const response = await api.post("/api/contact/submit", formData)
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Message sent successfully! We'll get back to you soon.")
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
+      } else {
+        toast.error("Failed to send message. Please try again.")
+      }
+    } catch (err: any) {
+      console.error(err)
+      toast.error(err.response?.data?.message || "Something went wrong. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <section className="w-full py-16 md:py-24 bg-background">
+      <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Info */}
@@ -31,8 +73,11 @@ export function ContactForm() {
                 <Mail className="text-secondary flex-shrink-0 mt-1" size={24} />
                 <div>
                   <h3 className="font-bold text-foreground mb-1">Email</h3>
-                  <a href="mailto:info@sfup.org" className="text-foreground/70 hover:text-secondary transition-colors">
-                    info@sfup.org
+                  <a href="mailto:shikana@gmail.co.ke" className="text-foreground/70 hover:text-secondary transition-colors block">
+                    shikana@gmail.co.ke
+                  </a>
+                  <a href="mailto:info@shikana.co.ke" className="text-foreground/70 hover:text-secondary transition-colors block">
+                    info@shikana.co.ke
                   </a>
                 </div>
               </div>
@@ -40,8 +85,8 @@ export function ContactForm() {
                 <Phone className="text-secondary flex-shrink-0 mt-1" size={24} />
                 <div>
                   <h3 className="font-bold text-foreground mb-1">Phone</h3>
-                  <a href="tel:+254700000000" className="text-foreground/70 hover:text-secondary transition-colors">
-                    +254700000000
+                  <a href="tel:+254706357064" className="text-foreground/70 hover:text-secondary transition-colors">
+                    0706357064
                   </a>
                 </div>
               </div>
@@ -50,7 +95,14 @@ export function ContactForm() {
                 <div>
                   <h3 className="font-bold text-foreground mb-1">Address</h3>
                   <p className="text-foreground/70">
-                    National Headquarters
+                    Kikinga House, Kiambu Road
+                    <br />
+                    Opposite Kiambu Referrals Hospital
+                    <br />
+                    Kiambu County
+                    <br />
+                    <br />
+                    P.O BOX 18234 – 00100
                     <br />
                     Nairobi, Kenya
                   </p>
@@ -63,18 +115,15 @@ export function ContactForm() {
           <div className="lg:col-span-2 bg-card border border-border rounded-lg p-8">
             <h3 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h3>
 
-            {submitted && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-                ✓ Thank you for your message! We'll get back to you soon.
-              </div>
-            )}
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
                   <input
                     type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                     placeholder="First name"
@@ -84,6 +133,9 @@ export function ContactForm() {
                   <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
                   <input
                     type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                     placeholder="Last name"
@@ -93,6 +145,9 @@ export function ContactForm() {
                   <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                     placeholder="your@email.com"
@@ -104,6 +159,9 @@ export function ContactForm() {
                 <label className="block text-sm font-medium text-foreground mb-2">Subject *</label>
                 <input
                   type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   placeholder="How can we help?"
@@ -113,6 +171,9 @@ export function ContactForm() {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Message *</label>
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows={5}
                   required
                   className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
@@ -120,25 +181,23 @@ export function ContactForm() {
                 />
               </div>
 
-              {/* <button
-                type="submit"
-                className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
-              >
-                <Send size={18} />
-                Send Message
-              </button> */}
               <button
                 type="submit"
-                disabled={!nationalId.trim()}
-                className="w-full bg-secondary text-white py-3 rounded-lg font-bold
-             hover:bg-secondary/90 transition-colors
-             flex items-center justify-center gap-2
-             disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!isValid || loading}
+                className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Verify Status
+                {loading ? (
+                  <>
+                    <Spinner />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={18} />
+                    Send Message
+                  </>
+                )}
               </button>
-
-
             </form>
           </div>
         </div>
