@@ -23,13 +23,12 @@ import api from "@/lib/axios"
 
 type AuditLog = {
   id: number
-  user: string
+  user: string | null
   action: string
   entity: string
-  entityId: string
   description: string
   ipAddress: string
-  timestamp: string
+  createdAt: string
 }
 
 type SortField = keyof AuditLog | null
@@ -80,8 +79,9 @@ export function AuditLogsTable() {
 
     let filtered = data.filter((log) => {
       const term = searchTerm.toLowerCase()
+      const userName = String(log.user || "System")
       return (
-        log.user.toLowerCase().includes(term) ||
+        userName.toLowerCase().includes(term) ||
         log.action.toLowerCase().includes(term) ||
         log.entity.toLowerCase().includes(term) ||
         log.description.toLowerCase().includes(term) ||
@@ -186,7 +186,6 @@ export function AuditLogsTable() {
               </TableHead>
 
               <TableHead>Entity</TableHead>
-              <TableHead>Entity ID</TableHead>
 
               <TableHead>Description</TableHead>
 
@@ -196,7 +195,7 @@ export function AuditLogsTable() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleSort("timestamp")}
+                  onClick={() => handleSort("createdAt")}
                   className="hover:bg-gray-100"
                 >
                   Time <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -222,15 +221,13 @@ export function AuditLogsTable() {
                     {(currentPage - 1) * itemsPerPage + idx + 1}
                   </TableCell>
 
-                  <TableCell>{log.user}</TableCell>
+                  <TableCell>{log.user || "System"}</TableCell>
 
                   <TableCell>
                     <Badge variant="outline">{log.action}</Badge>
                   </TableCell>
 
                   <TableCell>{log.entity}</TableCell>
-
-                  <TableCell>{log.entityId}</TableCell>
 
                   <TableCell
                     className="max-w-xs truncate"
@@ -242,7 +239,7 @@ export function AuditLogsTable() {
                   <TableCell>{log.ipAddress}</TableCell>
 
                   <TableCell>
-                    {new Date(log.timestamp).toLocaleString()}
+                    {new Date(log.createdAt).toLocaleString()}
                   </TableCell>
                 </TableRow>
               ))

@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { AuthProvider } from "@/context/auth-context"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,7 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

@@ -26,15 +26,27 @@ const documents: DocumentItem[] = [
   },
   {
     title: "Party Ideology",
-    description: "Our vision, commitments, and roadmap for national transformation.",
+    description: "Our core beliefs, values, and guiding philosophy for national transformation.",
     category: "Ideology",
-    file: "/documents/ideology.pdf",
+    file: "/documents/SHIKANA FRONTLINERS PARTY - IDEOLOGY.pdf",
   },
   {
-    title: "Policy Framework",
-    description: "Detailed policy positions across key sectors.",
+    title: "Party Manifesto",
+    description: "Our comprehensive strategic plan and pledges for governance and development.",
+    category: "Manifesto",
+    file: "/documents/SHIKANA MANIFESTO.pdf",
+  },
+  {
+    title: "Party Election and Nomination Rules",
+    description: "Rules and regulations conducting internal party elections and candidate nominations.",
+    category: "Legal",
+    file: "/documents/ELECTION AND NOMINATION RULES.pdf",
+  },
+  {
+    title: "Party Privacy Policy",
+    description: "Our commitment to protecting your personal data and privacy rights.",
     category: "Policy",
-    file: "/documents/party-policy.pdf",
+    file: "/documents/SFUP Privacy Policy.pdf",
   },
 ]
 
@@ -83,7 +95,7 @@ export function PartyDocumentsSection() {
 
               <button
                 onClick={() => setActiveDoc(doc)}
-                className="inline-flex items-center gap-2 font-semibold text-secondary hover:text-secondary/80 transition"
+                className="inline-flex items-center gap-2 font-semibold text-primary hover:text-secondary/80 transition"
               >
                 <Eye size={18} />
                 Read Document

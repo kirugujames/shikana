@@ -8,9 +8,15 @@ import toast, { Toaster } from "react-hot-toast"
 import { Spinner } from "./ui/spinner"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Label } from "recharts"
+import { CancelMembership } from "./cancel-membership"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
+
+const MEMBERSHIP_TYPES = [
+  { value: "Ordinary", label: "Ordinary Membership", fee: 100 },
+  { value: "Life", label: "Life Membership", fee: 5000 },
+]
 
 export function RegisterForm() {
   const [submitted, setSubmitted] = useState(false)
@@ -36,7 +42,9 @@ export function RegisterForm() {
   const [wards, setWardsData] = useState<any[]>([]);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const registrationFee = 1000 // Fixed amount
+  const [membershipType, setMembershipType] = useState("")
+
+  const registrationFee = MEMBERSHIP_TYPES.find(type => type.value === membershipType)?.fee || 0
 
   const resetForm = () => {
     setFirstName("")
@@ -78,7 +86,7 @@ export function RegisterForm() {
       setCounty(county.name);
       getchSubCounties(county.id);
     }
-    
+
   }
 
   const subcountyChange = (data: any) => {
@@ -369,13 +377,13 @@ export function RegisterForm() {
                     onChange={(e) => subcountyChange(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                  {
-                    Array.isArray(subCountys) && subCountys.map((subcounty: any) => (
-                      <option key={subcounty.id} value={subcounty.name}>
-                        {subcounty.name}
-                      </option>
-                    ))
-                  }
+                    {
+                      Array.isArray(subCountys) && subCountys.map((subcounty: any) => (
+                        <option key={subcounty.id} value={subcounty.name}>
+                          {subcounty.name}
+                        </option>
+                      ))
+                    }
                   </select>
                 </div>
               </div>
@@ -391,12 +399,12 @@ export function RegisterForm() {
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
                     {
-                    Array.isArray(wards) && wards.map((ward: any) => (
-                      <option key={ward.id} value={ward.name}>
-                        {ward.name}
-                      </option>
-                    ))    
-                  }
+                      Array.isArray(wards) && wards.map((ward: any) => (
+                        <option key={ward.id} value={ward.name}>
+                          {ward.name}
+                        </option>
+                      ))
+                    }
 
                   </select>
                 </div>
@@ -419,15 +427,40 @@ export function RegisterForm() {
               </div>
 
               <div className="border-t border-border pt-6 mt-8">
-                <h4 className="text-lg font-bold text-foreground mb-4">Payment Information</h4>
+                <h4 className="text-lg font-bold text-foreground mb-4">Membership & Payment Information</h4>
+
+                {/* Membership Type Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-foreground mb-2">Membership Type *</label>
+                  <select
+                    required
+                    value={membershipType}
+                    onChange={(e) => setMembershipType(e.target.value)}
+                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  >
+                    <option value="">Select Membership Type</option>
+                    {MEMBERSHIP_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label} - KES {type.fee.toLocaleString()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 {/* Registration Fee Display */}
-                <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-foreground">Registration Fee</span>
-                    <span className="text-2xl font-bold text-secondary">KES {registrationFee.toLocaleString()}</span>
+                {membershipType && (
+                  <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Registration Fee</p>
+                        <p className="text-sm font-medium text-foreground mt-1">
+                          {MEMBERSHIP_TYPES.find(t => t.value === membershipType)?.label}
+                        </p>
+                      </div>
+                      <span className="text-2xl font-bold text-secondary">KES {registrationFee.toLocaleString()}</span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Payment Method Selection */}
                 <div className="mb-6">
@@ -524,8 +557,12 @@ export function RegisterForm() {
               </button>
 
               <p className="text-xs text-muted-foreground text-center mt-4 text-pretty">
-                By registering, you agree to receive updates and communications from SFUP. You will receive a payment
-                prompt on your phone to complete the registration.
+                By registering, you agree to our Privacy Policy and consent to receive updates and communications from SFUP. To complete your registration, you will receive a payment prompt on your phone.
+              </p>
+              <p className="text-center mt-2">
+                <span className="text-xs text-muted-foreground">Need to leave the party? </span>
+                <CancelMembership />
+                <span className="text-xs text-muted-foreground"> to unregister at any time.</span>
               </p>
             </form>
           </div>

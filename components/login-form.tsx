@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
 import api from "@/lib/axios";
+import { useAuth } from "@/context/auth-context";
 import { Eye, EyeOff } from "lucide-react"
 import toast, { Toaster } from 'react-hot-toast';
 import { Card, CardContent } from "./ui/card"
@@ -23,6 +24,7 @@ export function LoginForm({
   className,
   ...props
 }: LoginFormProps) {
+  const { login } = useAuth()
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -47,11 +49,13 @@ export function LoginForm({
         return
       }
       const { user, token } = result?.data?.data
-      // IMPORTANT: Swapped localStorage usage to follow best practices for token/user data in this environment.
-      sessionStorage.setItem("user", JSON.stringify(user))
-      sessionStorage.setItem("token", token)
+
+      login(user, token) // Use context login
+
       toast.success(result.data?.message || "Login successful")
-      router.push("/admin/dashboard")
+      // Redirect happens in logout, but for login we generally want specific redirects.
+      // Context login doesn't redirect.
+      router.push("/shared-ui/political-position")
     } catch {
       toast.error("An unexpected error occurred")
     } finally {
