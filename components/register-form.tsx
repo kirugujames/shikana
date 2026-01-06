@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CheckCircle, Loader2, CheckCircleIcon, XCircle } from "lucide-react"
 import api from "@/lib/axios"
 import toast, { Toaster } from "react-hot-toast"
@@ -31,6 +31,9 @@ export function RegisterForm() {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
   const [paymentPhoneNumber, setPaymentPhoneNumber] = useState("")
+  const [counties, setCountiesData] = useState<any[]>([]);
+  const [subCountys, setSubCountiesData] = useState<any[]>([]);
+  const [wards, setWardsData] = useState<any[]>([]);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const registrationFee = 1000 // Fixed amount
@@ -52,6 +55,57 @@ export function RegisterForm() {
     setPaymentPhoneNumber("")
     setPaymentStatus("idle")
     setErrorMessage(null)
+  }
+
+  useEffect(() => {
+    async function fetchCounties() {
+      try {
+        const response = await api.get("/api/locations/counties");
+        console.log("Counties response:", response.data.data);
+        setCountiesData(response.data.data);
+      } catch (e) {
+      }
+    }
+
+    fetchCounties();
+  }, []);
+
+  const handleCountyChange = (data: any) => {
+    console.log("Selected county data:", data);
+    const county = counties.find(c => c.name === data);
+    console.log("Matched county:", county);
+    if (county) {
+      setCounty(county.name);
+      getchSubCounties(county.id);
+    }
+    
+  }
+
+  const subcountyChange = (data: any) => {
+    console.log("Selected subcounty data:", data);
+    const subCounty = subCountys.find(c => c.name === data);
+    if (subCounty) {
+      setConstituency(subCounty.name);
+      fetchWards(subCounty.id);
+    }
+  }
+
+  const getchSubCounties = async (data: any) => {
+    try {
+      const response = await api.get(`/api/locations/counties/${data}/subcounties`);
+      setSubCountiesData(response.data.data);
+    } catch (e) {
+      setSubCountiesData([]);
+    }
+  }
+
+  const fetchWards = async (data: any) => {
+    try {
+      const response = await api.get(`/api/locations/subcounties/${data}/wards`);
+      setWardsData(response.data.data);
+    } catch (e) {
+      setWardsData([]);
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -293,15 +347,16 @@ export function RegisterForm() {
                     name="county"
                     required
                     value={county}
-                    onChange={(e) => setCounty(e.target.value)}
+                    onChange={(e) => handleCountyChange(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                    <option value="">Select County</option>
-                    <option value="Nairobi">Nairobi</option>
-                    <option value="Kisumu">Kisumu</option>
-                    <option value="Nakuru">Nakuru</option>
-                    <option value="Mombasa">Mombasa</option>
-                    <option value="Kitui">Kitui</option>
+                    {
+                      Array.isArray(counties) && counties.map((county: any) => (
+                        <option key={county.id} value={county.name}>
+                          {county.name}
+                        </option>
+                      ))
+                    }
                   </select>
                 </div>
 
@@ -311,15 +366,16 @@ export function RegisterForm() {
                     name="constituency"
                     required
                     value={Constituency}
-                    onChange={(e) => setConstituency(e.target.value)}
+                    onChange={(e) => subcountyChange(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                    <option value="">Select Constituency</option>
-                    <option value="Nairobi">Nairobi</option>
-                    <option value="Kisumu">Kisumu</option>
-                    <option value="Nakuru">Nakuru</option>
-                    <option value="Mombasa">Mombasa</option>
-                    <option value="Kitui">Kitui</option>
+                  {
+                    Array.isArray(subCountys) && subCountys.map((subcounty: any) => (
+                      <option key={subcounty.id} value={subcounty.name}>
+                        {subcounty.name}
+                      </option>
+                    ))
+                  }
                   </select>
                 </div>
               </div>
@@ -334,12 +390,14 @@ export function RegisterForm() {
                     onChange={(e) => setWard(e.target.value)}
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                    <option value="">Select Ward</option>
-                    <option value="Nairobi">Nairobi</option>
-                    <option value="Kisumu">Kisumu</option>
-                    <option value="Nakuru">Nakuru</option>
-                    <option value="Mombasa">Mombasa</option>
-                    <option value="Kitui">Kitui</option>
+                    {
+                    Array.isArray(wards) && wards.map((ward: any) => (
+                      <option key={ward.id} value={ward.name}>
+                        {ward.name}
+                      </option>
+                    ))    
+                  }
+
                   </select>
                 </div>
 
@@ -383,10 +441,9 @@ export function RegisterForm() {
                         <label
                           key={method}
                           className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all
-                            ${
-                              isSelected
-                                ? "border-secondary bg-secondary/10 ring-2 ring-secondary/20"
-                                : "border-border hover:bg-muted hover:border-secondary/50"
+                            ${isSelected
+                              ? "border-secondary bg-secondary/10 ring-2 ring-secondary/20"
+                              : "border-border hover:bg-muted hover:border-secondary/50"
                             }`}
                         >
                           <input
