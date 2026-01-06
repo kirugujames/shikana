@@ -15,7 +15,7 @@ const slides = [
       "Join the Shikana Frontliners for Unity Party in building a stronger, more prosperous nation through unity and progress.",
   },
   {
-    gif: "/unity.gif",
+    gif: "/Sfu-login-bg.avif",
     title: "Unity, Progress, Prosperity",
     description:
       "A movement driven by the people, for the people — shaping the future of our nation together.",

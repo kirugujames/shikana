@@ -5,13 +5,13 @@ export function TimelineSection() {
     {
       year: "2024",
       title: "Coming Together of Like-Minded Citizens",
-      description: "Shikana Frontliners for Unity Party started as a dream by like minded Kenyan driven by change and system the deliver for citizens.",
+      description: "Shikana Frontliners for Unity Party started as a dream by like minded Kenyan driven by the need for a better managed country.",
     },
     
     {
       year: "2025",
       title: "Party Registration",
-      description: "Registration of SFU party and Launched national campaign focusing on unity, transparency, and inclusive governance.",
+      description: "Registration of SFU party and Launch for national member recruitment.",
     },
     
   ]

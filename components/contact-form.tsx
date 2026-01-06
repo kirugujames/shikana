@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react"
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
+  const [nationalId, setNationalId] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,12 +72,21 @@ export function ContactForm() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Full Name *</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
                   <input
                     type="text"
                     required
                     className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    placeholder="Your name"
+                    placeholder="First name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    placeholder="Last name"
                   />
                 </div>
                 <div>
@@ -110,13 +120,25 @@ export function ContactForm() {
                 />
               </div>
 
-              <button
+              {/* <button
                 type="submit"
                 className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <Send size={18} />
                 Send Message
+              </button> */}
+              <button
+                type="submit"
+                disabled={!nationalId.trim()}
+                className="w-full bg-secondary text-white py-3 rounded-lg font-bold
+             hover:bg-secondary/90 transition-colors
+             flex items-center justify-center gap-2
+             disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Verify Status
               </button>
+
+
             </form>
           </div>
         </div>
