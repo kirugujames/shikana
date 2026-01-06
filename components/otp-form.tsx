@@ -46,11 +46,11 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
         return
       }
       toast.success(response.data?.message);
-      if (data?.role_name == Roles.ADMIN) {
+      if (data?.role_id == '1') {
         router.push("/admin/dashboard")
       }
-      else if (data?.role_name == Roles.USER) {
-        router.push("/users/dashboard")
+      else if (data?.role_id == '2') {
+        router.push("/shared-ui/political-position")
       }
     } catch (error) {
       setIsLoading(false)
