@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(null)
         sessionStorage.removeItem("user")
         sessionStorage.removeItem("token")
-        router.push("/shared-ui/login")
+        router.push("/login")
     }
 
     return (

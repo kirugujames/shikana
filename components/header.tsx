@@ -179,6 +179,9 @@ export function Header() {
             <p className="text-sm font-medium">
               Shikana Frontliners for Unity Party
             </p>
+            <p className="text-sm font-medium">
+              Truth, Always, Conquers
+            </p>
             <p className="text-sm font-medium flex">
               <Phone className="me-2" size={18} />0706357064
             </p>
@@ -239,7 +242,7 @@ export function Header() {
                       {item.label === "Login" ? (
                         user ? (
                           <div
-                            className="flex items-center gap-2 cursor-pointer"
+                            className="flex items-center cursor-pointer"
                             onClick={(e) => {
                               e.preventDefault()
                               setShowProfileDialog(true)
@@ -248,7 +251,6 @@ export function Header() {
                             <div className="h-8 w-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold">
                               {user.first_name?.[0]?.toUpperCase() || user.username?.[0]?.toUpperCase()}
                             </div>
-                            <span className="text-sm font-medium">{user.first_name || user.username}</span>
                           </div>
                         ) : (
                           <Button variant="outline" className="bg-secondary hover:bg-secondary/90 text-white" onClick={navigateLogin}>

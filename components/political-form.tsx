@@ -125,7 +125,7 @@ export default function PoliticalRegistrationForm() {
 
           {/* Registration Form */}
           <div className="lg:col-span-2 bg-card border border-border rounded-lg p-8">
-            <h3 className="text-2xl font-bold text-foreground mb-6">Political Party Registration</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-6">Aspirant Registration</h3>
 
             {!user ? (
               <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">

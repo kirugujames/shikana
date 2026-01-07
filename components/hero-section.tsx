@@ -9,19 +9,19 @@ const SLIDE_DURATION = 6000 // 6 seconds
 
 const slides = [
   {
-    gif: "/deer.gif",
+    gif: "/Sfu-login-bg.avif",
     title: "Together We Rise for a United Tomorrow",
     description:
       "Join the Shikana Frontliners for Unity Party in building a stronger, more prosperous nation through unity and progress.",
   },
   {
-    gif: "/Sfu-login-bg.avif",
+    gif: "/sfu-image.jfif",
     title: "Unity, Progress, Prosperity",
     description:
-      "A movement driven by the people, for the people — shaping the future of our nation together.",
+      "A movement driven by the people, for the people.",
   },
   {
-    gif: "/future.gif",
+    gif: "/deer.gif",
     title: "The Future Is Ours",
     description:
       "A bold vision for tomorrow, driven by unity, courage, and collective action.",

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin,  Mailbox } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -42,6 +42,21 @@ export function Footer() {
               <li>
                 <Link href="/manifesto" className="text-white/80 hover:text-white transition-colors">
                   Party Manifesto
+                </Link>
+              </li>
+              <li>
+                <Link href="/ideology" className="text-white/80 hover:text-white transition-colors">
+                  Party Ideology
+                </Link>
+              </li>
+              <li>
+                <Link href="/rules" className="text-white/80 hover:text-white transition-colors">
+                  Party Election and Nomination Rules
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="text-white/80 hover:text-white transition-colors">
+                  Party Privacy Policy
                 </Link>
               </li>
             </ul>
@@ -115,8 +130,11 @@ export function Footer() {
                 <MapPin size={16} className="flex-shrink-0 mt-1" />
                 <div className="text-white/80">
                   <p>Kikinga House, Kiambu Road</p>
-                  <p>Opposite Kiambu Referrals Hospital</p>
-                  <p>Kiambu County</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2">
+                <Mailbox size={16} className="flex-shrink-0 mt-1" />
+                <div className="text-white/80">
                   <p className="mt-1">P.O BOX 18234 – 00100</p>
                   <p>Nairobi, Kenya</p>
                 </div>
