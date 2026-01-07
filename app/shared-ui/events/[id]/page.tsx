@@ -15,6 +15,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
    
       useEffect(() => {
        async function fetchEvents() {
+        alert(use(params).id);
          try {
            const res = await api.get(`api/events/get/by/id/${use(params).id}`)
            const eventsArray = Array.isArray(res.data)
