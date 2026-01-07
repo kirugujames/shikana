@@ -7,10 +7,28 @@ import { Footer } from '@/components/footer'
 import { EventDetail } from '@/components/event-detail'
 import { events } from '@/lib/events-data'
 import { ArrowLeft } from 'lucide-react'
+import api from '@/lib/axios'
+import { useState, useEffect } from 'react'
 
 export default function EventPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const event = events.find((e) => e.id === parseInt(id))
+  const [events, setEvents] = useState<any[]>([]);
+   
+      useEffect(() => {
+       async function fetchEvents() {
+         try {
+           const res = await api.get(`api/events/get/by/id/${use(params).id}`)
+           const eventsArray = Array.isArray(res.data)
+             ? res.data
+             : Array.isArray(res.data?.data)
+               ? res.data.data
+               : []
+           setEvents(eventsArray)
+         } catch (error) {
+           console.error("Error fetching events:", error)
+         }
+       }
+       fetchEvents();
+     }, [])
 
   if (!event) {
     return (
@@ -46,7 +64,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
             </Link>
           </div>
         </div>
-        <EventDetail event={event} />
+        <EventDetail event={events[0]} />
       </article>
       <Footer />
     </main>
