@@ -57,7 +57,7 @@ export function JobsTable() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await api.get("/api/jobs/get-all")
+        const res = await api.get("/api/jobs/all")
         const jobsArray = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data?.data)
@@ -89,8 +89,8 @@ export function JobsTable() {
     let filtered = data.filter((job) => {
       const term = searchTerm.toLowerCase()
       return (
-        job.title.toLowerCase().includes(term) ||
-        job.type.toLowerCase().includes(term)
+        job.job_title.toLowerCase().includes(term) ||
+        job?.type.toLowerCase().includes(term)
       )
     })
 
@@ -232,7 +232,7 @@ export function JobsTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((job, idx) => (
+              paginatedData.map((job:any, idx:any) => (
                 <TableRow
                   key={job.id}
                   className="hover:bg-muted/50 transition-colors"
@@ -243,15 +243,15 @@ export function JobsTable() {
 
                   <TableCell
                     className="max-w-xs truncate"
-                    title={job.title}
+                    title={job?.job_title}
                   >
-                    {job.title}
+                    {job?.job_title}
                   </TableCell>
 
-                  <TableCell>{job.type}</TableCell>
+                  <TableCell> {job?.job_title.slice(0, 20)}{job?.job_title.length > 20 ? "..." : ""}</TableCell>
 
                   <TableCell>
-                    {new Date(job.postedDate).toLocaleDateString()}
+                    {new Date(job.createdAt).toLocaleDateString()}
                   </TableCell>
 
                   <TableCell className="text-right">

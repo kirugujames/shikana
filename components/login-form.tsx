@@ -51,11 +51,11 @@ export function LoginForm({
         return
       }
       const { user, token } = result?.data?.data
-      const data = JSON.parse(localStorage.getItem("user") ?? "");
 
-      login(user, token) // Use context login
+      // Use context login
       localStorage.setItem("user", JSON.stringify(user))
-
+      localStorage.setItem("token", JSON.stringify(token))
+      login(user, token)
       toast.success(result.data?.message || "Login successful")
       if (result.data.data?.user?.role_id == 1) {
         router.push("/admin/dashboard")

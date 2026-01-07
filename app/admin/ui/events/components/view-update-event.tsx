@@ -1,6 +1,4 @@
 "use client"
-
-import { useEffect, useState, useMemo } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,6 +16,7 @@ import {
 import { ArrowUpDown, ChevronLeft, ChevronRight, Search, MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react"
 import api from "@/lib/axios"
 import AddNewEvent from "./add-event"
+import { useEffect, useMemo, useState } from "react"
 
 type Event = {
   id: number
@@ -118,7 +117,7 @@ export function EventsTable() {
       const response = await api.post(`/api/events/mark-main/${event.id}`, {
         is_main: !event.is_main,
       })
-      setData((prev) => prev.map((e) => (e.id === event.id ? { ...e, is_main: !e.is_main } : e)))
+      setData((prev:any) => prev.map((e:any) => (e.id === event.id ? { ...e, is_main: !e.is_main } : e)))
     } catch (err) {
       console.error("Failed to update main status", err)
     }
@@ -171,7 +170,7 @@ export function EventsTable() {
           <Input
             placeholder="Search events..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setSearchTerm(e.target.value)
               setCurrentPage(1)
             }}
@@ -235,7 +234,7 @@ export function EventsTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((event, idx) => (
+              paginatedData.map((event: any, idx: number) => (
                 <TableRow key={event.id} className="group hover:bg-muted/50 transition-colors">
                   <TableCell>{(currentPage - 1) * itemsPerPage + idx + 1}</TableCell>
                   <TableCell>
@@ -312,7 +311,7 @@ export function EventsTable() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p: number) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -346,7 +345,7 @@ export function EventsTable() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p:any) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
               Next
