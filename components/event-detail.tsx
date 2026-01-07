@@ -25,9 +25,9 @@ export function EventDetail({ event }: { event: Event }) {
   const [isLiked, setIsLiked] = useState(false)
 
   // Get related events (same category, different event)
-  const relatedEvents = events
-    .filter((e) => e.category === event.category && e.id !== event.id)
-    .slice(0, 3)
+  // const relatedEvents = events
+  //   .filter((e) => e.category === event?.category && e.id !== event?.id)
+  //   .slice(0, 3)
 
   return (
     <section className="w-full py-12 md:py-20 bg-background">
@@ -36,21 +36,21 @@ export function EventDetail({ event }: { event: Event }) {
         <div className="mb-12">
           <div className="relative rounded-lg overflow-hidden mb-8">
             <img
-              src={event.image || '/placeholder.svg'}
-              alt={event.title}
+              src={event?.image || '/placeholder.svg'}
+              alt={event?.title}
               className="w-full h-96 object-cover"
             />
             <div className="absolute top-4 left-4">
               <span className="inline-block bg-secondary text-white px-4 py-2 rounded-full font-bold text-sm">
-                {event.category}
+                {event?.category}
               </span>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">{event.title}</h1>
-              <p className="text-lg text-foreground/70">{event.description}</p>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">{event?.title}</h1>
+              <p className="text-lg text-foreground/70">{event?.description}</p>
             </div>
             <div className="flex gap-3">
               <button
@@ -76,28 +76,28 @@ export function EventDetail({ event }: { event: Event }) {
                 <Calendar className="text-secondary" size={20} />
                 <span className="text-sm text-foreground/60 font-medium">Date</span>
               </div>
-              <p className="text-lg font-bold text-foreground">{event.date}</p>
+              <p className="text-lg font-bold text-foreground">{event?.date}</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4">
               <div className="flex items-center gap-3 mb-2">
                 <Clock className="text-secondary" size={20} />
                 <span className="text-sm text-foreground/60 font-medium">Time</span>
               </div>
-              <p className="text-lg font-bold text-foreground">{event.time}</p>
+              <p className="text-lg font-bold text-foreground">{event?.time}</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4">
               <div className="flex items-center gap-3 mb-2">
                 <MapPin className="text-secondary" size={20} />
                 <span className="text-sm text-foreground/60 font-medium">Location</span>
               </div>
-              <p className="text-lg font-bold text-foreground">{event.location}</p>
+              <p className="text-lg font-bold text-foreground">{event?.location}</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4">
               <div className="flex items-center gap-3 mb-2">
                 <Users className="text-secondary" size={20} />
                 <span className="text-sm text-foreground/60 font-medium">Capacity</span>
               </div>
-              <p className="text-lg font-bold text-foreground">{event.capacity}</p>
+              <p className="text-lg font-bold text-foreground">{event?.capacity}</p>
             </div>
           </div>
         </div>
@@ -108,18 +108,18 @@ export function EventDetail({ event }: { event: Event }) {
             {/* Main Content */}
             <div className="prose prose-lg max-w-none mb-12">
               <div className="text-foreground/80 leading-relaxed space-y-6">
-                {event.content.split('\n\n').map((paragraph, index) => (
+                {event?.description.split('\n\n').map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
               </div>
             </div>
 
             {/* Speakers Section */}
-            {event.speakers && event.speakers.length > 0 && (
+            {event?.speakers && event?.speakers.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-bold text-foreground mb-6">Speakers & Participants</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {event.speakers.map((speaker, index) => (
+                  {event?.speakers.map((speaker, index) => (
                     <div
                       key={index}
                       className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
@@ -135,12 +135,12 @@ export function EventDetail({ event }: { event: Event }) {
             )}
 
             {/* Activities Section */}
-            {event.activities && event.activities.length > 0 && (
+            {/* {event?.activities && event?.activities.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-bold text-foreground mb-6">Event Activities</h2>
                 <div className="bg-muted rounded-lg p-8">
                   <ul className="space-y-3">
-                    {event.activities.map((activity, index) => (
+                    {event?.activities.map((activity, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <span className="text-secondary font-bold text-lg mt-1">✓</span>
                         <span className="text-foreground font-medium">{activity}</span>
@@ -149,17 +149,17 @@ export function EventDetail({ event }: { event: Event }) {
                   </ul>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Sidebar */}
           <div>
             {/* Venue Facilities */}
-            {event.venueFacilities && event.venueFacilities.length > 0 && (
+            {/* {event?.venueFacilities && event?.venueFacilities.length > 0 && (
               <div className="bg-card border border-border rounded-lg p-6 mb-6">
                 <h3 className="text-lg font-bold text-foreground mb-4">Venue Facilities</h3>
                 <ul className="space-y-3">
-                  {event.venueFacilities.map((facility, index) => (
+                  {event?.venueFacilities.map((facility, index) => (
                     <li key={index} className="flex items-center gap-3 text-foreground/80">
                       <span className="w-2 h-2 bg-secondary rounded-full"></span>
                       {facility}
@@ -167,7 +167,7 @@ export function EventDetail({ event }: { event: Event }) {
                   ))}
                 </ul>
               </div>
-            )}
+            )} */}
 
             {/* CTA Buttons */}
             <div className="space-y-3 mb-8">
@@ -201,33 +201,33 @@ export function EventDetail({ event }: { event: Event }) {
         </div>
 
         {/* Related Events */}
-        {relatedEvents.length > 0 && (
+        {/* {relatedEvents.length > 0 && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-foreground mb-8">Related Events</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedEvents.map((relatedEvent) => (
                 <Link
-                  key={relatedEvent.id}
-                  href={`/events/${relatedEvent.id}`}
+                  key={relatedEvent?.id}
+                  href={`/events/${relatedEvent?.id}`}
                   className="group bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="relative overflow-hidden h-40">
                     <img
-                      src={relatedEvent.image || '/placeholder.svg'}
-                      alt={relatedEvent.title}
+                      src={relatedEvent?.image || '/placeholder.svg'}
+                      alt={relatedEvent?.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <div className="p-4">
                     <span className="text-xs font-bold bg-secondary text-white px-2 py-1 rounded mb-2 inline-block">
-                      {relatedEvent.category}
+                      {relatedEvent?.category}
                     </span>
                     <h3 className="font-bold text-foreground mb-2 group-hover:text-secondary transition-colors">
-                      {relatedEvent.title}
+                      {relatedEvent?.title}
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-foreground/60 mb-4">
                       <Calendar size={16} />
-                      {relatedEvent.date}
+                      {relatedEvent?.date}
                     </div>
                     <div className="inline-flex items-center gap-2 text-secondary font-bold group-hover:gap-3 transition-all text-sm">
                       View Event <ArrowRight size={14} />
@@ -237,7 +237,7 @@ export function EventDetail({ event }: { event: Event }) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </section>
   )
