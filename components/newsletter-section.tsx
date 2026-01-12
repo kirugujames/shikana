@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { Mail, CheckCircle } from "lucide-react"
 import { TextShimmer } from "./motion-primitives/text-shimmer"
+import Link from "next/link"
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("")
@@ -42,8 +43,16 @@ export function NewsletterSection() {
         </p>
 
         <p className="text-sm text-muted-foreground mb-6">
-          We respect your privacy. No spam — unsubscribe anytime.
+          We respect your privacy. No spam —{" "}
+          <Link
+            href="/unsubscribe"
+            className="text-secondary hover:text-primary underline hover:underline-offset-2 transition-colors"
+          >
+            unsubscribe
+          </Link>{" "}
+          anytime.
         </p>
+
 
         {/* FORM / SUCCESS */}
         {!submitted ? (

@@ -40,10 +40,10 @@ export function BlogPreview() {
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-bold text-secondary uppercase">{blog.category}</span>
-                      <span className="text-sm text-muted-foreground">{blog.date}</span>
+                      <span className="text-sm text-muted-foreground">{new Date(blog.createdAt).toLocaleDateString("en-KE")}</span>
                     </div>
                     <h3 className="text-xl font-bold text-primary mb-3">{blog.title}</h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">{blog.excerpt}</p>
+                    <p className="text-muted-foreground mb-4 line-clamp-2">{blog.content}</p>
                     <Link
                       href={`/shared-ui/blog/${blog.id}`}
                       className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"

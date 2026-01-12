@@ -27,7 +27,7 @@ export function EventsPreview() {
     <section className="py-8 md:py-12 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Upcoming Events</h2>
-        <p className="text-lg text-muted-foreground mb-16">Be part of our journey and connect with the community</p>
+        <p className="text-lg text-muted-foreground mb-8">Be part of our journey and connect with the community</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {
@@ -44,7 +44,7 @@ export function EventsPreview() {
                     <div className="space-y-2 mb-4 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar size={16} />
-                        {event.date}
+                        {event.event_date}
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <MapPin size={16} />

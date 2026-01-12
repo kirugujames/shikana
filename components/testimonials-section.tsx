@@ -5,15 +5,15 @@ export function TestimonialsSection() {
     {
       id: 1,
       quote:
-        "The Shikana Frontliners represent true leadership and a genuine commitment to unity. I've never felt more hopeful about our future.",
+        "The Shikana Frontliners represent true leadership and a genuine commitment to unity. When we lift each other up and celebrate each other’s successes, we amplify our collective achievements.",
       author: "Nicholas Mutunga",
-      role: "ICT Manager",
+      role: "IT Expert",
       // image: "/communications-specialist.jpg",
     },
     {
       id: 2,
       quote:
-        "This is the change we've been waiting for.",
+        "This is the change we want for our country. The more we are, the greater our impact will be in our world.",
       author: "Grace Nyambura",
       role: "Local Business Owner",
       // image: "/government-official.jpg",
@@ -21,7 +21,7 @@ export function TestimonialsSection() {
     {
       id: 3,
       quote:
-        "Finally, a party that listens to young voices and invests in our future.",
+        "Finally, at Shikana, we’re proud to be a party that listens to young voices and amplify the voices of everyday Kenyans to fight for and invests in a better future. Shikana is a force to reckon with!",
       author: "Gideon Njoroge",
       role: "Youth Advocate",
       // image: "/political-leader.png",

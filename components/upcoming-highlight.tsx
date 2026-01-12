@@ -49,11 +49,11 @@ export function UpcomingHighlight() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Calendar className="text-secondary flex-shrink-0" size={20} />
-                <span className="text-foreground font-medium">{events[0]?.date}</span>
+                <span className="text-foreground font-medium">{events[0]?.event_date}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="text-secondary flex-shrink-0" size={20} />
-                <span className="text-foreground font-medium">{events[0]?.time}</span>
+                <span className="text-foreground font-medium">{events[0]?.from_time} - {events[0]?.to_time}</span>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="text-secondary flex-shrink-0" size={20} />
@@ -68,7 +68,7 @@ export function UpcomingHighlight() {
             <div className="flex gap-4 pt-4">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 bg-secondary text-white px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+                className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
               >
                 Register Now
                 <ArrowRight size={18} />

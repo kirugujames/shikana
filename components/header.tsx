@@ -44,10 +44,19 @@ export function Header() {
       label: "Get Involved",
       children: [
         { label: "Become a Member", href: "/shared-ui/register" },
+        { label: "Donate", href: "/shared-ui/donate" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
         { label: "Careers", href: "/shared-ui/careers" },
-        { label: "Political Positions", href: "/shared-ui/political-position" },
+        { label: "Political Aspirant", href: "/shared-ui/political-position" },
         { label: "Shop Merchandise", href: "/shared-ui/listings" },
+      ],
+    },
+
+    {
+      label: "Support",
+      children: [
+        { label: "Contact Us", href: "/shared-ui/contact" },
+        { label: "FAQs", href: "/shared-ui/faq" },
       ],
     },
   ]
@@ -107,41 +116,53 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={`text-base font-medium transition-colors pb-1
-                        ${isActive(item.href)
+            ${isActive(item.href)
                           ? "text-secondary border-b-2 border-secondary"
                           : "text-foreground hover:text-secondary"}
-                      `}
+          `}
                     >
                       {item.label}
                     </Link>
                   ) : (
                     <>
+                      {/* Parent button with highlight on hover */}
                       <button
-                        className="text-base font-medium hover:text-secondary focus:outline-none"
+                        className="text-base font-medium hover:text-secondary focus:outline-none focus:text-secondary relative"
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
                         {item.label}
+
+                        {/* Optional small underline/highlight when open */}
+                        <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-secondary scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                       </button>
 
+                      {/* Dropdown card */}
                       <div
                         className="
-                          absolute left-0 top-full mt-4
-                          invisible opacity-0 translate-y-2
-                          group-hover:visible group-hover:opacity-100 group-hover:translate-y-0
-                          transition-all duration-200 ease-out
-                          bg-white border border-border rounded-md shadow-lg w-56
-                        "
+              absolute left-1/2 transform -translate-x-1/2 top-full mt-4
+              invisible opacity-0 translate-y-3
+              group-hover:visible group-hover:opacity-100 group-hover:translate-y-0
+              transition-all duration-300 ease-out
+              bg-white border border-border rounded-lg shadow-lg w-56
+              z-50
+            "
                       >
-                        {item.children.map((sub) => (
-                          <Link
-                            key={sub.label}
-                            href={sub.href}
-                            className="block px-4 py-2 text-sm hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
+                        {/* Triangle pointer */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-3 h-3 bg-white rotate-45 border-l border-t border-border"></div>
+
+                        {/* Dropdown links */}
+                        <div className="py-2">
+                          {item.children.map((sub) => (
+                            <Link
+                              key={sub.label}
+                              href={sub.href}
+                              className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </>
                   )}
@@ -149,14 +170,15 @@ export function Header() {
               ))}
             </div>
 
+
             {/* Right Actions */}
             <div className="hidden md:flex items-center gap-5">
-              <Button
+              {/* <Button
                 onClick={() => router.push("/shared-ui/donate")}
                 className="bg-secondary text-white hover:bg-secondary/90 transition-colors"
               >
                 Donate
-              </Button>
+              </Button> */}
 
               {user ? (
                 <button
@@ -244,12 +266,12 @@ export function Header() {
               )}
 
               {/* Mobile Donate CTA */}
-              <Button
+              {/* <Button
                 onClick={() => router.push("/shared-ui/donate")}
                 className="w-full bg-secondary text-white"
               >
                 Donate
-              </Button>
+              </Button> */}
             </div>
           )}
 
