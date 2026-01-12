@@ -6,12 +6,14 @@ import { BlogPreview } from "@/components/blog-preview"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { Footer } from "@/components/footer"
+import { OurIdeology } from "@/components/ui/ourIdeology"
 
 export default function Home() {
   return (
     <main className="w-full">
       <Header />
       <HeroSection />
+      <OurIdeology />
       <WhyChooseUs />
       <EventsPreview />
       <BlogPreview />

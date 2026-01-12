@@ -107,7 +107,7 @@ export function HeroSection() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/register"
+            href="/shared-ui/register"
             className="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-8 py-4 rounded-lg font-bold transition-colors"
           >
             Join the Movement
@@ -115,7 +115,7 @@ export function HeroSection() {
           </Link>
 
           <Link
-            href="/donate"
+            href="/shared-ui/donate"
             className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-bold transition-colors"
           >
             Support Us Today
