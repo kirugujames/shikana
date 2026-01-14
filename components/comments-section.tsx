@@ -122,9 +122,9 @@ export function CommentsSection({ articleId }: { articleId: number }) {
               <p className="text-muted-foreground text-sm max-w-sm">
                 Join the conversation! You must be logged in to post a comment.
               </p>
-              <Link href="/shared-ui/login">
+              <Link href="/login">
                 <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-white">
-                  Login / Register
+                  Login 
                 </Button>
               </Link>
             </div>

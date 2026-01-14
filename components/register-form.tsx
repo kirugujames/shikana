@@ -354,8 +354,10 @@ export function RegisterForm() {
             </div>
 
             <h3 className="text-2xl font-bold text-foreground mb-2">Registration Form</h3>
-            <p className="text-sm text-foreground/60 mb-6">Register by filling out the membership registration form below.</p>
-
+            <p className="text-sm text-foreground/60 mb-6">
+              Register by filling out the membership registration form below. All fields with
+              <span className="text-secondary">*</span> require mandatory response.
+            </p>
             {submitted && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
                 ✓ Thank you for registering! We'll be in touch soon.
@@ -554,34 +556,53 @@ export function RegisterForm() {
                   Disability & Special Needs
                 </h4>
 
-                {/* PWD and NCPWD Number fields */}
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-foreground mb-3">
-                    Are you a PWD (Person with Disability)? *
-                  </label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="pwd"
-                        value="yes"
-                        checked={isPWD === "yes"}
-                        onChange={(e) => setIsPWD(e.target.value)}
-                        className="w-4 h-4 text-secondary"
-                      />
-                      <span className="text-foreground">Yes</span>
+                {/* PWD and Special Interest Group fields */}
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Are you a PWD (Person with Disability)? *
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="pwd"
-                        value="no"
-                        checked={isPWD === "no"}
-                        onChange={(e) => setIsPWD(e.target.value)}
-                        className="w-4 h-4 text-secondary"
-                      />
-                      <span className="text-foreground">No</span>
-                    </label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="pwd"
+                          value="yes"
+                          checked={isPWD === "yes"}
+                          onChange={(e) => setIsPWD(e.target.value)}
+                          className="w-4 h-4 text-secondary"
+                        />
+                        <span className="text-foreground">Yes</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="pwd"
+                          value="no"
+                          checked={isPWD === "no"}
+                          onChange={(e) => setIsPWD(e.target.value)}
+                          className="w-4 h-4 text-secondary"
+                        />
+                        <span className="text-foreground">No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
+                    <select
+                      value={specialInterest}
+                      onChange={(e) => setSpecialInterest(e.target.value)}
+                      required
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    >
+                      <option value="">Select Interest Group</option>
+                      <option value="Elders">Elders</option>
+                      <option value="Youths">Youths</option>
+                      <option value="Women League">Women League</option>
+                      <option value="Diaspora">Diaspora</option>
+                      <option value="Marginalized">Marginalized Communities</option>
+                    </select>
                   </div>
                 </div>
 
@@ -680,15 +701,27 @@ export function RegisterForm() {
                   </div>
                 </div>
 
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-foreground mb-2">Street / Village</label>
-                  <input
-                    type="text"
-                    value={streetVillage}
-                    onChange={(e) => setStreetVillage(e.target.value)}
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    placeholder="e.g., Westlands, Lavington"
-                  />
+                <div className="grid md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Street / Village (Optional)</label>
+                    <input
+                      type="text"
+                      value={streetVillage}
+                      onChange={(e) => setStreetVillage(e.target.value)}
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      placeholder="e.g., Westlands, Lavington"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Local Leader (Optional)</label>
+                    <input
+                      type="text"
+                      value={localLeader}
+                      onChange={(e) => setLocalLeader(e.target.value)}
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      placeholder="Referred by (Name of Local Leader)"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -871,36 +904,6 @@ export function RegisterForm() {
 
 
 
-              {/* Special Interest and Local Leader fields */}
-              <div className="grid md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
-                  <select
-                    value={specialInterest}
-                    onChange={(e) => setSpecialInterest(e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                  >
-                    <option value="">Select Interest Group</option>
-                    <option value="Elders">Elders</option>
-                    <option value="Youths">Youths</option>
-                    <option value="Women League">Women League</option>
-                    <option value="Diaspora">Diaspora</option>
-                    <option value="Marginalized">Marginalized Communities</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Local Leader (Optional)</label>
-                  <input
-                    type="text"
-                    value={localLeader}
-                    onChange={(e) => setLocalLeader(e.target.value)}
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    placeholder="Referred by (Name of Local Leader)"
-                  />
-                </div>
-              </div>
 
               {/* SECTION 6: MEMBER DECLARATION */}
               <div className="border-t border-border pt-8">
@@ -909,8 +912,8 @@ export function RegisterForm() {
                 </h4>
 
                 {/* Verification Code and declaration checkboxes */}
-                {/* <div className="mt-6 space-y-4">
-                  <div>
+                <div className="mt-6 space-y-4">
+                  {/* <div className="hidden">
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Verification Code (Sent via SMS) *
                     </label>
@@ -922,7 +925,7 @@ export function RegisterForm() {
                       className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                       placeholder="Enter 6-digit code"
                     />
-                  </div>
+                  </div> */}
 
                   <label className="flex items-start gap-3 cursor-pointer p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
                     <input
@@ -930,11 +933,10 @@ export function RegisterForm() {
                       checked={politicalDeclaration}
                       onChange={(e) => setPoliticalDeclaration(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0"
+                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
-                    <span className="text-sm text-foreground">
-                      I hereby affirm/declare/confirm/verify that I am not a registered member of any other registered
-                      political party in Kenya. *
+                    <span className="text-sm text-foreground cursor-pointer">
+                      I hereby affirm that I am not a member of any other registered political party in Kenya. *
                     </span>
                   </label>
 
@@ -944,16 +946,13 @@ export function RegisterForm() {
                       checked={termsConsent}
                       onChange={(e) => setTermsConsent(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0"
+                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
-                    <span className="text-sm text-foreground">
-                      I have read and understand the terms and conditions, the privacy policy, and the applicable other
-                      policies. I consent to having my application information stored and used for member recruitment
-                      purposes as per the data protection policy and commit to abide by the Rules and Regulations of
-                      Shikana Frontliners for Unity Party. *
+                    <span className="text-sm text-foreground cursor-pointer">
+                      I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
                     </span>
                   </label>
-                </div> */}
+                </div>
               </div>
 
               {/* SECTION 7: VERIFICATION METHOD */}
@@ -965,7 +964,7 @@ export function RegisterForm() {
                 {/* Verification method selection */}
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-foreground mb-3">
-                    How would you like to receive verification link? *
+                    How would you like to receive Membership Number? *
                   </label>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -977,7 +976,7 @@ export function RegisterForm() {
                         onChange={(e) => setVerificationMethod(e.target.value)}
                         className="w-4 h-4 text-secondary"
                       />
-                      <span className="text-foreground">Send Link by SMS</span>
+                      <span className="text-foreground">Send Membership Number by SMS</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -988,7 +987,7 @@ export function RegisterForm() {
                         onChange={(e) => setVerificationMethod(e.target.value)}
                         className="w-4 h-4 text-secondary"
                       />
-                      <span className="text-foreground">Send Link by Email</span>
+                      <span className="text-foreground">Send Membership Number by Email</span>
                     </label>
                   </div>
                 </div>

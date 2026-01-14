@@ -6,6 +6,10 @@ export function MissionVision() {
   return (
     <section className="w-full py-8 md:py-12 bg-background">
       <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground">What We Stand For</h2>
+          <div className="h-1.5 w-24 bg-secondary mx-auto mt-4 rounded-full"></div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Vision */}
           <div className="space-y-4">

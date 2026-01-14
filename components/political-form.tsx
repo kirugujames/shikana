@@ -202,7 +202,7 @@ export default function PoliticalRegistrationForm() {
                   </div>
 
                   {/* Phone Number */}
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
                     <input
                       type="tel"
@@ -214,7 +214,7 @@ export default function PoliticalRegistrationForm() {
                       className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="+254712345678 or 0712345678"
                     />
-                  </div>
+                  </div> */}
 
                   {/* Membership Number */}
                   <div>
@@ -233,7 +233,7 @@ export default function PoliticalRegistrationForm() {
 
                   {/* Position Dropdown */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Position *</label>
+                    <label className="block text-sm font-medium text-foreground mb-2">Elective Position *</label>
                     <select
                       name="position"
                       value={formData.position}
@@ -248,6 +248,14 @@ export default function PoliticalRegistrationForm() {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* Consent */}
+                  <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+                    <input type="checkbox" id="political-consent" required className="w-4 h-4 rounded mt-1 cursor-pointer" />
+                    <label htmlFor="political-consent" className="text-sm text-foreground cursor-pointer">
+                      I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
+                    </label>
                   </div>
 
                   {/* Submit Button */}

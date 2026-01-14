@@ -12,11 +12,16 @@ export default function AboutPage() {
     <main className="w-full">
       <Header />
       <AboutHero />
-      <MissionVision />
-      <ValuesSection />
-      <PartyDocumentsSection />
-      <TeamSection />
-      <TimelineSection />
+      <div id="mission-vision" className="scroll-mt-24">
+        <MissionVision />
+        <ValuesSection />
+      </div>
+      <div id="team" className="scroll-mt-24">
+        <TeamSection />
+      </div>
+      <div id="timeline" className="scroll-mt-24">
+        <TimelineSection />
+      </div>
       <Footer />
     </main>
   )

@@ -94,11 +94,11 @@ export function LoginForm({
                 className="h-24 mx-auto w-24 object-contain align-center"
               />
               <h1 className="text-2xl font-bold tracking-tight">
-                Welcome to SFU Party
+                Welcome to SFUP
               </h1>
 
               <p className="text-sm text-muted-foreground">
-                Enter your username and password to continue
+                Enter your email/phone number and password to continue
               </p>
             </div>
 
@@ -111,7 +111,7 @@ export function LoginForm({
                 name="username"
                 required
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="john.doe"
+                placeholder="email/phone number(07..)"
               />
             </div>
 

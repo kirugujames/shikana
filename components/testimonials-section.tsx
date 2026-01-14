@@ -22,7 +22,7 @@ export function TestimonialsSection() {
       id: 3,
       quote:
         "Finally, at Shikana, we’re proud to be a party that listens to young voices and amplify the voices of everyday Kenyans to fight for and invests in a better future. Shikana is a force to reckon with!",
-      author: "Gideon Njoroge",
+      author: "Ber’nita Ammi’mor",
       role: "Youth Advocate",
       // image: "/political-leader.png",
     },

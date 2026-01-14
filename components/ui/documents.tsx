@@ -34,7 +34,7 @@ const documents: DocumentItem[] = [
     title: "Party Manifesto",
     description: "Our comprehensive strategic plan and pledges for governance and development.",
     category: "Manifesto",
-    file: "/documents/SHIKANA MANIFESTO.pdf",
+    file: "/documents/Party Manifesto.pdf",
   },
   {
     title: "Party Election and Nomination Rules",

@@ -12,7 +12,7 @@ const slides = [
     gif: "/Sfu-login-bg.avif",
     title: "Together We Rise for a United Tomorrow",
     description:
-      "Join the Shikana Frontliners for Unity Party in building a stronger, more prosperous nation through unity and progress.",
+      "Join the Shikana Frontliners for Unity Party in building a Kenya that our people are proud to live in.",
   },
   {
     gif: "/sfu-image.jfif",
@@ -74,7 +74,7 @@ export function HeroSection() {
       </div>
 
       {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-primary/80" />
+      <div className="absolute inset-0 bg-primary/50" />
 
       {/* PREVIOUS BUTTON */}
       <button

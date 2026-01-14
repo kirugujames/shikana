@@ -26,29 +26,30 @@ export function Header() {
     {
       label: "About",
       children: [
-        { label: "What We Stand For", href: "/shared-ui/about" },
-        { label: "Leadership", href: "/shared-ui/about" },
-        { label: "Our Journey", href: "/shared-ui/about" },
+        { label: "What We Stand For", href: "/shared-ui/about#mission-vision" },
+        { label: "Leadership", href: "/shared-ui/about#team" },
+        { label: "Our Journey", href: "/shared-ui/about#timeline" },
       ],
     },
     { label: "Events", href: "/shared-ui/events" },
     {
       label: "Media",
       children: [
-        { label: "News", href: "/shared-ui/blog" },
-        { label: "Blogs", href: "/shared-ui/blog" },
-        { label: "Publications", href: "/shared-ui/blog" },
+        { label: "News & Blogs", href: "/shared-ui/blog" },
+        { label: "Publications", href: "/shared-ui/publications" },
       ],
     },
     {
       label: "Get Involved",
       children: [
         { label: "Become a Member", href: "/shared-ui/register" },
-        { label: "Donate", href: "/shared-ui/donate" },
+        { label: "Become An Aspirant", href: "/shared-ui/political-position" },
+        { label: "Party Positions", href: "/shared-ui/party-position" },
+        { label: "Find a Local Group", href: "/shared-ui" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
         { label: "Careers", href: "/shared-ui/careers" },
-        { label: "Political Aspirant", href: "/shared-ui/political-position" },
-        { label: "Shop Merchandise", href: "/shared-ui/listings" },
+        { label: "Donate", href: "/shared-ui/donate" },
+        { label: "Shop", href: "/shared-ui/listings" },
       ],
     },
 
@@ -69,7 +70,7 @@ export function Header() {
       <div className="bg-secondary text-primary-foreground py-1">
         <InfiniteSlider gap={80} reverse>
           <p className="text-sm font-medium">Shikana Frontliners for Unity Party</p>
-          <p className="text-sm font-medium">“Truth, Always, Conquers”</p>
+          <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
           <p className="text-sm flex items-center gap-2"><Phone size={16} />0738 030 398</p>
           <p className="text-sm flex items-center gap-2"><Mail size={16} />info@shikana.co.ke</p>
           <div className="flex gap-4">
@@ -98,11 +99,11 @@ export function Header() {
                 className="h-18 w-18 object-contain"
               />
               <div className="hidden sm:flex flex-col leading-tight">
-                <span className="font-bold text-primary text-md">
+                <span className="font-bold text-secondary text-md">
                   Shikana Frontliners for Unity Party
                 </span>
-                <span className="text-sm text-secondary italic">
-                  Truth, Always, Conquers
+                <span className="text-sm text-primary">
+                  --- Truth, Always, Conquers ---
                 </span>
 
               </div>
@@ -256,7 +257,8 @@ export function Header() {
                 </button>
               ) : (
                 <button
-                  onClick={() => {router.push("/login")
+                  onClick={() => {
+                    router.push("/login")
                     setIsMenuOpen(false)
                   }}
                   className="w-full bg-primary text-white"

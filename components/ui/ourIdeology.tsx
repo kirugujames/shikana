@@ -8,7 +8,7 @@ export function OurIdeology() {
   const principles = [
     {
       icon: Shield,
-      title: "SHIKANA - Unity",
+      title: "Unity",
       subtitle: "National Consciousness",
       description:
         "Our core commitment to transcend ethnic, political, and social divisions, building a stronger nation united through National Identity, National Autonomy, National Pride, and National Unity.",
@@ -43,17 +43,17 @@ export function OurIdeology() {
         <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-3">What We Believe</h2>
           <p className="text-lg text-muted-foreground">
-            Our Ideology defines everything we believe
+            The Unity of All Kenyans
           </p>
         </div>
 
         {/* Main Ideology Statement */}
         <div className="space-y-4 max-w-4xl mx-auto text-center mb-12">
           <p className="text-lg leading-relaxed text-foreground/80">
-            As a core national value enshrined in our Constitution of Kenya, SHIKANA represents the deliberate
-            commitment to transcend ethnic, political, and social divisions to work together as one nation in search for
-            our Nation's Consciousness – manifested through National Identity, National Autonomy, National Pride, and
-            National Unity.
+            As a core National Value enshrined in our Constitution, SHIKANA represents
+            deliberate commitment to UNITY. This transcends ethnic, political,
+            and social divisions where we the people must work together in search for our Nation’s
+            Consciousness - manifested through National Identity, National Autonomy, National Pride and National Unity.
           </p>
         </div>
 
@@ -79,8 +79,28 @@ export function OurIdeology() {
         </div>
       </div>
 
+      {/* ideology */}
+      <div className="text-center mt-8">
+        <h2 className="text-4xl md:text-5xl font-bold text-primary mb-3">Our Idealogy</h2>
+        {/* <p className="text-lg text-muted-foreground">
+            The Unity of All Kenyans
+          </p> */}
+      </div>
+
+      {/* Main Ideology Statement */}
+      <div className="space-y-4 max-w-4xl mx-auto text-center mb-4">
+        <p className="text-lg leading-relaxed text-foreground/80">
+          Our Party is founded on the idea of nationalism which encompasses social and fiscal conservatism.
+          On the one hand we have a fundamental duty of preserving our national and traditional beliefs of a morally stable,
+          cohesive and just society. Further, we have an obligation as a country
+          to ensure that we have an economically empowered people which can be achieved through focusing on equitably
+          allocating and prudently managing our national and natural resources, for the collective benefit and protection of the interest of our Cultures, Communities, Constituencies, Counties and the Country (5Cs).
+        </p>
+      </div>
+
+
       {/* Join Us Section */}
-      <div className="w-full py-10 md:py-16">
+      <div className="w-full py-5 md:py-8">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-bold text-primary text-center mb-3">
           Join Us
@@ -88,11 +108,10 @@ export function OurIdeology() {
 
         {/* Intro statement */}
         <p className="text-lg md:text-xl leading-relaxed text-foreground/80 text-center max-w-3xl mx-auto mb-8">
-          There are multiple ways to get involved with <span className="font-semibold text-primary">SHIKANA FRONTLINERS FOR UNITY PARTY</span>
-          and contribute to our mission. 
+          Multiple ways to get involved with <span className="font-semibold text-primary">SHIKANA FRONTLINERS FOR UNITY PARTY.</span>
         </p>
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
           <li className="flex items-start gap-1">
             <span className="text-secondary font-bold mt-1">✓</span>
             <Link
@@ -108,7 +127,7 @@ export function OurIdeology() {
               href="/shared-ui/volunteer"
               className="text-foreground/80 hover:text-primary hover:underline transition-colors"
             >
-              Volunteer In Party Activities
+              Become a Volunteer
             </Link>
           </li>
           <li className="flex items-start gap-1">
@@ -126,18 +145,27 @@ export function OurIdeology() {
               href="/shared-ui/political-position"
               className="text-foreground/80 hover:text-primary hover:underline transition-colors"
             >
-              Political Aspirant
+              Become An Aspirant
             </Link>
           </li>
-          <li className="flex items-start gap-1">
+          {/* <li className="flex items-start gap-1">
             <span className="text-secondary font-bold mt-1">✓</span>
             <Link
               href="/shared-ui/listings"
               className="text-foreground/80 hover:text-primary hover:underline transition-colors"
             >
-              Shop Merchandise
+              Shop 
             </Link>
-          </li>
+          </li> */}
+          {/* <li className="flex items-start gap-1">
+            <span className="text-secondary font-bold mt-1">✓</span>
+            <Link
+              href="/shared-ui/donate"
+              className="text-foreground/80 hover:text-primary hover:underline transition-colors"
+            >
+              Donate
+            </Link>
+          </li> */}
         </ul>
       </div>
     </section>
