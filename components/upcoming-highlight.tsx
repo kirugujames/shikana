@@ -81,10 +81,10 @@ export function UpcomingHighlight() {
                   <ArrowRight size={18} />
                 </Link>
                 <Link
-                  href={`/shared-ui/events/${events[0]?.id}`}
+                  href={`/shared-ui/events/${events[0]?.id}/register?title=${encodeURIComponent(events[0]?.title || '')}&date=${encodeURIComponent(events[0]?.event_date || '')}&location=${encodeURIComponent(events[0]?.location || '')}&isPaid=${events[0]?.isPaid}&amount=${events[0]?.amount}`}
                   className="inline-flex items-center gap-2 border-2 border-secondary text-secondary px-6 py-3 rounded-lg font-bold hover:bg-secondary/10 transition-colors"
                 >
-                  View Details
+                  Book Now
                 </Link>
               </div>
             </div>

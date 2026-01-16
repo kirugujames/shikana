@@ -2,26 +2,28 @@
 
 import * as React from "react"
 import {
-    IconDashboard,
-    IconUsers, 
-    IconUserCog,
-    IconCalendar, 
-    IconFileText, 
-    IconBriefcase, 
-    IconShoppingBag,
-    IconFolderFilled, 
+  IconDashboard,
+  IconUsers,
+  IconUserCog,
+  IconCalendar,
+  IconFileText,
+  IconBriefcase,
+  IconShoppingBag,
+  IconFolderFilled,
 } from "@tabler/icons-react"
 
 import {
-    LayoutDashboard,
-    Users,
-    UserCog,
-    Calendar,
-    FileText,
-    Briefcase,
-    ShoppingBag,
-    ScrollText,
-    FolderOpen,
+  LayoutDashboard,
+  Users,
+  UserCog,
+  Calendar,
+  FileText,
+  Briefcase,
+  ShoppingBag,
+  ScrollText,
+
+  FolderOpen,
+  HandHeart,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -46,6 +48,7 @@ const iconMap = {
   "shopping-bag": ShoppingBag,
   "scroll-text": ScrollText,
   folder: FolderOpen,
+  "hand-heart": HandHeart,
 }
 
 export interface NavItem {

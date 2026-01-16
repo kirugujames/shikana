@@ -130,12 +130,12 @@ export function EventsGrid() {
                     </Link>
 
                     <Link
-                      href={`/shared-ui/events/${event?.id}/register`}
+                      href={`/shared-ui/events/${event?.id}/register?title=${encodeURIComponent(event?.title || '')}&date=${encodeURIComponent(event?.event_date || '')}&location=${encodeURIComponent(event?.location || '')}&isPaid=${event?.isPaid}&amount=${event?.amount}`}
                       className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold
                border border-primary text-primary rounded-md
                hover:bg-primary hover:text-white transition-colors"
                     >
-                      Register
+                      Book Now
                     </Link>
 
                   </div>

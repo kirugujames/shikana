@@ -165,3 +165,22 @@ html {
 .animate-zoom {
   animation: zoom 6s ease-in-out forwards;
 }
+
+/* Marquee Animation */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+}
+
+.pause-on-hover:hover {
+  animation-play-state: paused;
+}
