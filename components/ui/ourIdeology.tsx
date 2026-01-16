@@ -8,10 +8,10 @@ export function OurIdeology() {
   const principles = [
     {
       icon: Shield,
-      title: "Unity",
+      title: "Resilience",
       subtitle: "National Consciousness",
       description:
-        "Our core commitment to transcend ethnic, political, and social divisions, building a stronger nation united through National Identity, National Autonomy, National Pride, and National Unity.",
+        "Our journey upward as we navigate the challenging terrain of life’s many trials teaches us resilience and reminds us all to believe in our inner strength.",
     },
     {
       icon: Users,

@@ -5,29 +5,30 @@ import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
 import { motion, AnimatePresence } from "motion/react"
 import { Cookie } from "lucide-react"
+import { useCookie } from "@/context/cookie-context"
 
 export function CookieConsent() {
-    const [showBanner, setShowBanner] = useState(false)
+    const { consent, updateConsent } = useCookie()
+    const [isVisible, setIsVisible] = useState(false)
     const pathname = usePathname()
 
     useEffect(() => {
         // Hide on admin routes
-        if (!pathname.startsWith("/admin")) {
+        if (!pathname.startsWith("/admin") && consent === null) {
             // Delay showing for a smoother entry
-            const timer = setTimeout(() => setShowBanner(true), 1000)
+            const timer = setTimeout(() => setIsVisible(true), 1000)
             return () => clearTimeout(timer)
+        } else {
+            setIsVisible(false)
         }
-    }, []) // Only run on mount (reload) to show the banner once per page load
+    }, [pathname, consent])
 
     const handleAction = (action: "accept" | "decline") => {
-        localStorage.setItem("cookie-consent", action)
-        setShowBanner(false)
+        updateConsent(action)
+        setIsVisible(false)
     }
 
-    // Check if we are on an admin route
-    const isAdminRoute = pathname.startsWith("/admin")
-
-    if (!showBanner || isAdminRoute) return null
+    if (!isVisible) return null
 
     return (
         <AnimatePresence>
@@ -64,7 +65,7 @@ export function CookieConsent() {
                                 Decline
                             </Button>
                             <Button
-                                className="flex-1 bg-secondary hover:bg-secondary/90 text-white rounded-lg font-semibold"
+                                className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold"
                                 onClick={() => handleAction("accept")}
                             >
                                 Accept All

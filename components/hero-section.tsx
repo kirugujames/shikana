@@ -21,7 +21,7 @@ const slides = [
       "A movement driven by the people, for the people.",
   },
   {
-    gif: "/deer.gif",
+    gif: "/unity-img.jpg",
     title: "The Future Is Ours",
     description:
       "A bold vision for tomorrow, driven by unity, courage, and collective action.",
@@ -62,7 +62,6 @@ export function HeroSection() {
 
   return (
     <section className="relative w-full min-h-[85vh] overflow-hidden flex items-center justify-center">
-
       {/* BACKGROUND GIF */}
       <div className="absolute inset-0">
         <img

@@ -39,7 +39,7 @@ export function TestimonialsSection() {
             <div key={testimonial.id} className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20">
               <Quote className="text-secondary mb-4" size={32} />
               <p className="text-white mb-6 text-lg leading-relaxed italic">"{testimonial.quote}"</p>
-              <div className="flex items-center space-x-4"> 
+              <div className="flex items-center space-x-4">
                 {/* <img
                   src={testimonial.image}
                   alt={testimonial.author}

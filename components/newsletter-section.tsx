@@ -26,7 +26,7 @@ export function NewsletterSection() {
   }
 
   return (
-    <section className="py-10 md:py-14 px-4 bg-gray-50">
+    <section className="py-10 md:py-14 px-4 bg-muted transition-colors">
       <div className="max-w-2xl mx-auto text-center">
 
         {/* ICON */}
@@ -54,7 +54,7 @@ export function NewsletterSection() {
         </p>
 
 
-     
+
         {/* FORM / SUCCESS */}
         {!submitted ? (
           <form onSubmit={handleSubmit} className="mb-4">

@@ -3,9 +3,13 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import api from "@/lib/axios"
+import { BlogCardSkeleton } from "./skeleton-loaders"
+import { ProfessionalEmptyState } from "./empty-state"
+import { BookOpen } from "lucide-react"
 
 export function BlogPreview() {
   const [blogs, setBlogs] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     async function fetchBlogs() {
       try {
@@ -16,8 +20,8 @@ export function BlogPreview() {
             ? res.data.data
             : []
         setBlogs(eventsArray)
-      } catch (error) {
-        console.error("Error fetching blogs:", error)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -32,29 +36,37 @@ export function BlogPreview() {
         <p className="text-lg text-muted-foreground mb-16">Stay updated with our latest articles and announcements</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {
-            blogs.length === 0 ? (<p className="col-span-full text-center text-muted-foreground">No blog articles available</p>) : (
-              blogs.map((blog) => (
-                <article key={blog.id} className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                  <img src={blog.image || "/placeholder.svg"} alt={blog.title} className="w-full h-48 object-cover" />
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-secondary uppercase">{blog.category}</span>
-                      <span className="text-sm text-muted-foreground">{new Date(blog.createdAt).toLocaleDateString("en-KE")}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-primary mb-3">{blog.title}</h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">{blog.content}</p>
-                    <Link
-                      href={`/shared-ui/blog/${blog.id}`}
-                      className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
-                    >
-                      Read More <ArrowRight size={16} />
-                    </Link>
+          {loading ? (
+            [...Array(3)].map((_, i) => <BlogCardSkeleton key={i} />)
+          ) : blogs.length === 0 ? (
+            <div className="col-span-full">
+              <ProfessionalEmptyState
+                icon={BookOpen}
+                title="No Articles Available"
+                description="We are currently preparing local insights. Stay tuned for updates."
+              />
+            </div>
+          ) : (
+            blogs.map((blog) => (
+              <article key={blog.id} className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <img src={blog.image || "/placeholder.svg"} alt={blog.title} className="w-full h-48 object-cover" />
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-secondary uppercase">{blog.category}</span>
+                    <span className="text-sm text-muted-foreground">{new Date(blog.createdAt).toLocaleDateString("en-KE")}</span>
                   </div>
-                </article>
-              ))
-            )
-          }
+                  <h3 className="text-xl font-bold text-primary mb-3">{blog.title}</h3>
+                  <p className="text-muted-foreground mb-4 line-clamp-2">{blog.content}</p>
+                  <Link
+                    href={`/shared-ui/blog/${blog.id}`}
+                    className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
+                  >
+                    Read More <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </article>
+            ))
+          )}
         </div>
 
         {blogs.length > 0 && (

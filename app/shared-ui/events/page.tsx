@@ -12,7 +12,7 @@ export default function EventsPage() {
       <EventsHero />
       <UpcomingHighlight />
       <EventsGrid />
-      <EventsRegistration />
+      {/* <EventsRegistration /> */}
       <Footer />
     </main>
   )

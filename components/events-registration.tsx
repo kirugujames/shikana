@@ -49,17 +49,6 @@ export default function EventsRegistration() {
 
   const [consent, setConsent] = useState(false)
 
-  // const formData = {
-  //     fullName,
-  //     email,
-  //     consent,
-  //   }
-
-
-
-
-
-
   return (
     <main className="px-4">
       <div className="max-w-4xl mx-auto">
@@ -114,8 +103,6 @@ export default function EventsRegistration() {
             <h1>Select event through lookup</h1>
           </div>
 
-
-
           {/* Consent */}
           <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
             <input
@@ -141,6 +128,4 @@ export default function EventsRegistration() {
       </Card>
     </main>
   )
-
-
 }

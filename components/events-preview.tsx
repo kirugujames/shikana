@@ -3,10 +3,13 @@ import Link from "next/link"
 import { Calendar, MapPin, ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import api from "@/lib/axios"
+import { EventCardSkeleton } from "./skeleton-loaders"
+import { ProfessionalEmptyState } from "./empty-state"
 
 export function EventsPreview() {
 
   const [events, setEvents] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     async function fetchEvents() {
       try {
@@ -17,8 +20,8 @@ export function EventsPreview() {
             ? res.data.data
             : []
         setEvents(eventsArray)
-      } catch (error) {
-        console.error("Error fetching events:", error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchEvents();
@@ -30,38 +33,53 @@ export function EventsPreview() {
         <p className="text-lg text-muted-foreground mb-8">Be part of our journey and connect with the community</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {
-            events.length === 0 ? (<p className="col-span-full text-center text-muted-foreground">No events available</p>) : (
-              events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
-                >
-                  <img src={event.image || "/placeholder.svg"} alt={event.title} className="w-full h-48 object-cover" />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-primary mb-3">{event.title}</h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">{event.description}</p>
-                    <div className="space-y-2 mb-4 text-sm">
+          {loading ? (
+            [...Array(3)].map((_, i) => <EventCardSkeleton key={i} />)
+          ) : events.length === 0 ? (
+            <div className="col-span-full">
+              <ProfessionalEmptyState
+                icon={Calendar}
+                title="No Events Available"
+                description="We are currently planning our next community engagements. Check back soon for updates!"
+              />
+            </div>
+          ) : (
+            events.map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+              >
+                <img src={event.image || "/placeholder.svg"} alt={event.title} className="w-full h-48 object-cover" />
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-primary mb-3">{event.title}</h3>
+                  <p className="text-muted-foreground mb-4 line-clamp-2">{event.description}</p>
+                  <div className="space-y-2 mb-4 text-sm">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar size={16} />
                         {event.event_date}
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin size={16} />
-                        {event.location}
-                      </div>
+                      {event.isPaid && (
+                        <span className="text-xs font-bold text-secondary">
+                          KES {event.amount}
+                        </span>
+                      )}
                     </div>
-                    <Link
-                      href={`/shared-ui/events/${event.id}`}
-                      className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
-                    >
-                      Learn More <ArrowRight size={16} />
-                    </Link>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin size={16} />
+                      {event.location}
+                    </div>
                   </div>
+                  <Link
+                    href={`/shared-ui/events/${event.id}`}
+                    className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
+                  >
+                    Learn More <ArrowRight size={16} />
+                  </Link>
                 </div>
-              ))
-            )
-          }
+              </div>
+            ))
+          )}
         </div>
         {events.length > 0 && (
 
