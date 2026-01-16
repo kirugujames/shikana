@@ -187,7 +187,7 @@ export function EventDetail({ event }: { event: Event }) {
                 href={`/shared-ui/register-event?id=${event?.id}`}
                 className="block w-full bg-secondary text-white px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors text-center"
               >
-                Register Now
+                Book Now
               </Link>
             </div>
 
