@@ -10,33 +10,37 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
+  Download,
   Search,
 } from "lucide-react"
 import api from "@/lib/axios"
+import { AddDonationDialog } from "./add-donation-dialog"
+import { exportToCSV } from "@/lib/export-utils"
 
-type AuditLog = {
+type Donation = {
   id: number
-  user: string
-  action: string
-  entity: string
-  entityId: string
-  description: string
-  ipAddress: string
-  timestamp: string
+  firstname: string
+  lastname: string
+  email: string
+  phone: string
+  amount: number
+  created_at: string
+  type: "individual" | "organization"
+  is_anonymous: boolean
+  company_name?: string
 }
 
-type SortField = keyof AuditLog | null
+type SortField = keyof Donation | null
 type SortDirection = "asc" | "desc"
 
 export function DonationsTable() {
-  const [data, setData] = useState<AuditLog[]>([])
+  const [data, setData] = useState<Donation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -46,25 +50,26 @@ export function DonationsTable() {
 
   const itemsPerPage = 10
 
-  useEffect(() => {
-    const fetchAuditLogs = async () => {
-      try {
-        // TEMP: API not ready – safe fallback
-        const res = await api.get("/api/audit-logs/get-all")
-        const logsArray = Array.isArray(res.data)
-          ? res.data
-          : Array.isArray(res.data?.data)
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const res = await api.get("/api/donations/all")
+      const donationsArray = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.data?.data)
           ? res.data.data
           : []
-        setData(logsArray)
-      } catch (err) {
-        console.error(err)
-        setError("Failed to load audit logs")
-      } finally {
-        setLoading(false)
-      }
+      setData(donationsArray)
+    } catch (err) {
+      console.error(err)
+      setError("Failed to load donations")
+    } finally {
+      setLoading(false)
     }
-    fetchAuditLogs()
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
 
   const handleSort = (field: SortField) => {
@@ -79,15 +84,17 @@ export function DonationsTable() {
   const filteredAndSortedData = useMemo(() => {
     if (!Array.isArray(data)) return []
 
-    let filtered = data.filter((log) => {
+    let filtered = data.filter((donation) => {
       const term = searchTerm.toLowerCase()
-      return (
-        log.user.toLowerCase().includes(term) ||
-        log.action.toLowerCase().includes(term) ||
-        log.entity.toLowerCase().includes(term) ||
-        log.description.toLowerCase().includes(term) ||
-        log.ipAddress.includes(term)
-      )
+      const searchFields = [
+        donation.firstname,
+        donation.lastname,
+        donation.email,
+        donation.company_name,
+        donation.phone
+      ]
+
+      return searchFields.some(field => field?.toLowerCase().includes(term))
     })
 
     if (sortField) {
@@ -99,6 +106,10 @@ export function DonationsTable() {
           return sortDirection === "asc"
             ? aVal.localeCompare(bVal)
             : bVal.localeCompare(aVal)
+        }
+
+        if (typeof aVal === "number" && typeof bVal === "number") {
+          return sortDirection === "asc" ? aVal - bVal : bVal - aVal
         }
 
         return 0
@@ -114,13 +125,24 @@ export function DonationsTable() {
     currentPage * itemsPerPage
   )
 
+  const handleExport = () => {
+    const csvData = filteredAndSortedData.map(item => ({
+      Name: item.is_anonymous ? "Anonymous" : item.type === 'organization' ? item.company_name : `${item.firstname} ${item.lastname}`,
+      Email: item.email,
+      Phone: item.phone,
+      Amount: item.amount,
+      Date: new Date(item.created_at).toLocaleDateString()
+    }))
+    exportToCSV(csvData, "donations_export")
+  }
+
   if (loading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-5 w-[220px] bg-gray-300" />
+        <Skeleton className="h-5 w-[220px]" />
         <div className="rounded-lg border p-4 space-y-3">
           {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full bg-gray-300" />
+            <Skeleton key={i} className="h-12 w-full" />
           ))}
         </div>
       </div>
@@ -129,32 +151,37 @@ export function DonationsTable() {
 
   if (error) {
     return (
-      <div className="rounded-lg border bg-gray-100 p-8 text-center">
-        <p className="text-sm font-medium text-gray-700">{error}</p>
+      <div className="rounded-lg border bg-destructive/10 p-8 text-center text-destructive">
+        <p className="text-sm font-medium">{error}</p>
+        <Button variant="outline" onClick={fetchData} className="mt-4">Retry</Button>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+      {/* Header Actions */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search audit logs..."
+            placeholder="Search donations..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value)
               setCurrentPage(1)
             }}
-            className="pl-9 bg-transparent"
+            className="pl-9"
           />
         </div>
 
-        <Badge variant="secondary" className="h-9 px-3">
-          {filteredAndSortedData.length} logs
-        </Badge>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
+          <AddDonationDialog onSuccess={fetchData} />
+        </div>
       </div>
 
       {/* Table */}
@@ -162,45 +189,21 @@ export function DonationsTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>#</TableHead>
-
               <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort("user")}
-                  className="hover:bg-gray-100"
-                >
-                  User <ArrowUpDown className="ml-2 h-4 w-4" />
+                <Button variant="ghost" size="sm" onClick={() => handleSort("firstname")}>
+                  Name <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
-
+              <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort("action")}
-                  className="hover:bg-gray-100"
-                >
-                  Action <ArrowUpDown className="ml-2 h-4 w-4" />
+                <Button variant="ghost" size="sm" onClick={() => handleSort("amount")}>
+                  Amount <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
-
-              <TableHead>Entity</TableHead>
-              <TableHead>Entity ID</TableHead>
-
-              <TableHead>Description</TableHead>
-
-              <TableHead>IP Address</TableHead>
-
               <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort("timestamp")}
-                  className="hover:bg-gray-100"
-                >
-                  Time <ArrowUpDown className="ml-2 h-4 w-4" />
+                <Button variant="ghost" size="sm" onClick={() => handleSort("created_at")}>
+                  Date <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
             </TableRow>
@@ -209,41 +212,29 @@ export function DonationsTable() {
           <TableBody>
             {paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="h-32 text-center text-muted-foreground">
-                  No audit logs found
+                <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                  No donations found
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((log, idx) => (
-                <TableRow
-                  key={log.id}
-                  className="hover:bg-muted/50 transition-colors"
-                >
+              paginatedData.map((donation) => (
+                <TableRow key={donation.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell>
-                    {(currentPage - 1) * itemsPerPage + idx + 1}
+                    {donation.is_anonymous ? (
+                      <span className="italic text-muted-foreground">Anonymous</span>
+                    ) : (
+                      <span className="font-medium">
+                        {donation.type === 'organization' ? donation.company_name : `${donation.firstname} ${donation.lastname}`}
+                      </span>
+                    )}
                   </TableCell>
-
-                  <TableCell>{log.user}</TableCell>
-
+                  <TableCell>{donation.email || "-"}</TableCell>
+                  <TableCell>{donation.phone || "-"}</TableCell>
+                  <TableCell className="font-medium">
+                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(donation.amount)}
+                  </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{log.action}</Badge>
-                  </TableCell>
-
-                  <TableCell>{log.entity}</TableCell>
-
-                  <TableCell>{log.entityId}</TableCell>
-
-                  <TableCell
-                    className="max-w-xs truncate"
-                    title={log.description}
-                  >
-                    {log.description}
-                  </TableCell>
-
-                  <TableCell>{log.ipAddress}</TableCell>
-
-                  <TableCell>
-                    {new Date(log.timestamp).toLocaleString()}
+                    {new Date(donation.created_at).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))
@@ -258,7 +249,7 @@ export function DonationsTable() {
           <p className="text-sm text-muted-foreground">
             Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
             {Math.min(currentPage * itemsPerPage, filteredAndSortedData.length)} of{" "}
-            {filteredAndSortedData.length} logs
+            {filteredAndSortedData.length} donations
           </p>
 
           <div className="flex items-center gap-2">

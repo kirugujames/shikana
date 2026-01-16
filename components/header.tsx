@@ -11,6 +11,7 @@ import { Button } from "./ui/button"
 import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 import { useAuth } from "@/context/auth-context"
 import { UserProfileDialog } from "./user-profile-dialog"
+import { SearchDialog } from "./search-dialog"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -281,6 +282,7 @@ export function Header() {
       </nav>
 
       <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
+      <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
     </header>
   )
 }

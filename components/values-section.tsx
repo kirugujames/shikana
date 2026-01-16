@@ -99,7 +99,7 @@ export function ValuesSection() {
 
   return (
     <section className="w-full py-6 md:py-12 bg-muted/50">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Our Party Values</h2>
           <p className="text-lg text-foreground/80 leading-relaxed">
@@ -117,14 +117,14 @@ export function ValuesSection() {
                 key={index}
                 className="bg-background p-6 rounded-xl border border-border shadow-sm hover:shadow-md hover:border-secondary/50 transition-all duration-300 group"
               >
-                <div className="flex items-start gap-4">
-                  <div className="bg-secondary/10 p-3 rounded-lg group-hover:bg-secondary/20 transition-colors">
-                    <Icon size={24} className="text-secondary" />
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="bg-secondary/10 p-3 rounded-lg group-hover:bg-secondary/20 transition-colors">
+                      <Icon size={24} className="text-secondary" />
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground">{value.title}</h3>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">{value.title}</h3>
-                    <p className="text-sm text-foreground/70 leading-relaxed">{value.description}</p>
-                  </div>
+                  <p className="text-sm text-foreground/70 leading-relaxed">{value.description}</p>
                 </div>
               </div>
             )
