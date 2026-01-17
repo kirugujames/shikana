@@ -98,20 +98,20 @@ export function AppSidebar({
     if (!role) return navItems
 
     const r = role.toLowerCase()
-    const superAdminRole = Roles.SUPER_ADMIN.toLowerCase()
-    const adminRole = Roles.ADMIN.toLowerCase()
-    const contentAdminRole = Roles.CONTENT_ADMIN.toLowerCase()
 
-    if (r === superAdminRole) {
+    // Check for SUPER_ADMIN
+    if (r === Roles.SUPER_ADMIN.toLowerCase() || r.includes("super_admin")) {
       return navItems
     }
 
-    if (r === adminRole) {
+    // Check for ADMIN
+    if (r === Roles.ADMIN.toLowerCase() || r === "admin" || r.includes("role_admin")) {
       return navItems.filter(item => item.title !== "Audit Trail")
     }
 
-    if (r === contentAdminRole) {
-      const allowed = ["Events", "Blogs", "Jobs"]
+    // Check for CONTENT_ADMIN
+    if (r === Roles.CONTENT_ADMIN.toLowerCase() || r.includes("content_admin")) {
+      const allowed = ["Events", "Blogs"] // Only Events and Blogs
       return navItems.filter(item => allowed.includes(item.title))
     }
 
