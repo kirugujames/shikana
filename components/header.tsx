@@ -225,9 +225,19 @@ export function Header() {
               {/* Navigation */}
               {navItems.map((item) => (
                 <div key={item.label}>
-                  <span className="block text-base font-semibold text-foreground">
-                    {item.label}
-                  </span>
+                  {item.children ? (
+                    <span className="block text-base font-semibold text-foreground">
+                      {item.label}
+                    </span>
+                  ) : (
+                    <Link
+                      href={item.href || "#"}
+                      className="block text-base font-semibold text-foreground hover:text-secondary transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                   {item.children && (
                     <div className="pl-4 mt-3 space-y-3">
                       {item.children.map((sub) => (
