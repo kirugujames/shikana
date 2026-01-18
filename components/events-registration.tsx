@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ChevronRight, Send, Loader2 } from 'lucide-react'
 import api from "@/lib/axios"
-import { toast } from 'sonner'
 import { useSearchParams } from 'next/navigation'
+import toast, { Toaster } from 'react-hot-toast'
 
 interface EventsRegistrationProps {
   eventId?: string | number
@@ -68,7 +68,7 @@ function RegistrationForm({ eventId }: EventsRegistrationProps) {
 
       // Note: In a real app, you might want to validate the ID or handle the submission 
       // even if the event details weren't fetched. The ID is passed from the route.
-      await api.post('/api/events/register', payload)
+      await api.post('/api/events/book-event', payload)
       toast.success("Registration successful!")
       setFormData({ firstName: '', lastName: '', email: '', phone: '' })
       setPaymentMethod('')
@@ -83,6 +83,7 @@ function RegistrationForm({ eventId }: EventsRegistrationProps) {
 
   return (
     <main className="px-4 py-8 md:py-12">
+      <Toaster/>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-3">Register for {event.title}</h1>

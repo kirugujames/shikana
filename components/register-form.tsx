@@ -176,6 +176,7 @@ export function RegisterForm() {
         streetVillage,
         membershipStatus,
         specialInterest,
+        membershipNumber,
         localLeader,
         verificationCode,
         politicalDeclaration,

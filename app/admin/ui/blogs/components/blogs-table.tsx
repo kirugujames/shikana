@@ -15,9 +15,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ArrowUpDown, ChevronLeft, ChevronRight, Search, MoreHorizontal, Eye, Pencil, Trash2, Plus } from "lucide-react"
-import api from "@/lib/axios"
+import { toast } from "react-hot-toast"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 import AddNewBlog from "./add-blog"
+import api from "@/lib/axios"
 
 type Blog = {
   id: number
@@ -42,6 +55,11 @@ export function BlogsTable() {
 
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null)
+  const [blogToDelete, setBlogToDelete] = useState<Blog | null>(null)
 
   // Fetch blogs
   const fetchBlogs = async () => {
@@ -105,6 +123,44 @@ export function BlogsTable() {
 
   const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
   const paginatedData = filteredAndSortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
+  const handleView = (blog: Blog) => {
+    setSelectedBlog(blog)
+    setIsViewDialogOpen(true)
+  }
+
+  const handleEdit = (blog: Blog) => {
+    setSelectedBlog(blog)
+    setIsEditDialogOpen(true)
+  }
+
+  const handleDelete = (blog: Blog) => {
+    setBlogToDelete(blog)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const confirmDelete = async () => {
+    if (!blogToDelete) return
+    try {
+      const response = await api.delete(`/api/blog/delete/${blogToDelete.id}`)
+      if (
+        response.data?.success === true ||
+        response.data?.statusCode === 200 ||
+        response.data?.message?.includes("successfully")
+      ) {
+        toast.success(response.data?.message || "Blog deleted successfully")
+        fetchBlogs()
+      } else {
+        toast.error(response.data?.message || "Delete failed")
+      }
+    } catch (error) {
+      console.error("Delete failed", error)
+      toast.error("An error occurred while deleting")
+    } finally {
+      setIsDeleteDialogOpen(false)
+      setBlogToDelete(null)
+    }
+  }
 
   if (loading) {
     return (
@@ -170,6 +226,33 @@ export function BlogsTable() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          {selectedBlog && (
+            <AddNewBlog
+              mode="view"
+              initialData={selectedBlog}
+              onSuccess={() => setIsViewDialogOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          {selectedBlog && (
+            <AddNewBlog
+              mode="edit"
+              initialData={selectedBlog}
+              onSuccess={() => {
+                setIsEditDialogOpen(false)
+                fetchBlogs()
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Blog Table */}
       <div className="rounded-lg border bg-card overflow-auto">
         <Table>
@@ -228,16 +311,19 @@ export function BlogsTable() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => alert("View blog")}>
+                        <DropdownMenuItem onClick={() => handleView(blog)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => alert("Edit blog")}>
+                        <DropdownMenuItem onClick={() => handleEdit(blog)}>
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => handleDelete(blog)}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete
                         </DropdownMenuItem>
@@ -307,6 +393,27 @@ export function BlogsTable() {
           </div>
         </div>
       )}
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the blog post
+              "{blogToDelete?.title}" and remove the data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setBlogToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className={cn(buttonVariants({ variant: "destructive" }))}
+            >
+              Delete Blog
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

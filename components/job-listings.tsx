@@ -33,7 +33,7 @@ export function JobListings() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await api.get("/jobs/all")
+        const res = await api.get("/api/jobs/all")
         const backendJobs: BackendJob[] = res.data.data
 
         const formattedJobs: Job[] = backendJobs.map((job: BackendJob) => ({

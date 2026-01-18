@@ -1,19 +1,9 @@
 "use client"
 
 import * as React from "react"
-import {
-  IconDashboard,
-  IconUsers,
-  IconUserCog,
-  IconCalendar,
-  IconFileText,
-  IconBriefcase,
-  IconShoppingBag,
-  IconFolderFilled,
-} from "@tabler/icons-react"
+// Tabler icon import removed
 
 import {
-  LayoutDashboard,
   Users,
   UserCog,
   Calendar,
@@ -21,10 +11,12 @@ import {
   Briefcase,
   ShoppingBag,
   ScrollText,
-
   FolderOpen,
   HandHeart,
+  FolderMinus,
+  LayoutDashboard,
 } from "lucide-react"
+import { Roles } from "@/lib/roles"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -80,10 +72,50 @@ export function AppSidebar({
   variant,
   ...props
 }: AppSidebarProps) {
+  const [role, setRole] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userData = localStorage.getItem("user")
+      if (userData) {
+        try {
+          const parsed = JSON.parse(userData)
+          setRole(parsed?.role_name || null)
+        } catch (e) {
+          console.error("Error parsing user data from localStorage", e)
+        }
+      }
+    }
+  }, [])
+
+  const filteredNavItems = React.useMemo(() => {
+    if (!role) return navItems
+
+    const r = role.toLowerCase()
+
+    // Check for SUPER_ADMIN
+    if (r === Roles.SUPER_ADMIN.toLowerCase() || r.includes("super_admin")) {
+      return navItems
+    }
+
+    // Check for ADMIN
+    if (r === Roles.ADMIN.toLowerCase() || r === "admin" || r.includes("role_admin")) {
+      return navItems.filter(item => item.title !== "Audit Trail")
+    }
+
+    // Check for CONTENT_ADMIN
+    if (r === Roles.CONTENT_ADMIN.toLowerCase() || r.includes("content_admin")) {
+      const allowed = ["Events", "Blogs"] // Only Events and Blogs
+      return navItems.filter(item => allowed.includes(item.title))
+    }
+
+    return navItems
+  }, [navItems, role])
+
   const resolveIcons = <T extends { icon: keyof typeof iconMap }>(items: T[]) =>
     items.map((item) => ({
       ...item,
-      icon: iconMap[item.icon] ?? IconFolderFilled,
+      icon: iconMap[item.icon] ?? FolderMinus,
     }))
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -122,7 +154,7 @@ export function AppSidebar({
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={resolveIcons(navItems)} />
+        <NavMain items={resolveIcons(filteredNavItems)} />
         {/* {documents.length == 0 ? null :
           <NavDocuments items={resolveIcons(documents)} />
         } */}
