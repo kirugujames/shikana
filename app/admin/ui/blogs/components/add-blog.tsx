@@ -13,6 +13,18 @@ import { Upload, FileText, Tag, ImageIcon, Star } from "lucide-react"
 import api from "@/lib/axios"
 import { toast, Toaster } from "react-hot-toast"
 
+const BLOG_CATEGORIES = [
+  "Party News",
+  "Policy Updates",
+  "Events",
+  "Press Releases",
+  "Opinion",
+  "Community Outreach",
+  "Youth Engagement",
+  "Legislative Updates",
+  "Campaigns",
+]
+
 type AddNewBlogProps = {
   onSuccess?: () => void
   initialData?: any
@@ -152,17 +164,11 @@ export default function AddNewBlog({ onSuccess, initialData, mode = "add" }: Add
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categoryData.length > 0 ? (
-                  categoryData.map((data, idx) => (
-                    <SelectItem value={data.category} key={idx}>
-                      {data.category}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="no-category" disabled>
-                    No categories configured
+                {BLOG_CATEGORIES.map((cat, idx) => (
+                  <SelectItem value={cat} key={idx}>
+                    {cat}
                   </SelectItem>
-                )}
+                ))}
               </SelectContent>
             </Select>
           </div>

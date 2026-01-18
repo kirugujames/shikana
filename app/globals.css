@@ -120,11 +120,17 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
-.textarea{
+
+html {
+  scroll-behavior: smooth;
+}
+
+.textarea {
   resize: none;
 }
 
@@ -135,6 +141,7 @@
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -149,6 +156,7 @@
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.1);
   }
@@ -156,4 +164,23 @@
 
 .animate-zoom {
   animation: zoom 6s ease-in-out forwards;
+}
+
+/* Marquee Animation */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+}
+
+.pause-on-hover:hover {
+  animation-play-state: paused;
 }

@@ -23,7 +23,6 @@ import {
 } from "lucide-react"
 import api from "@/lib/axios"
 import { toast } from "react-hot-toast"
-
 type AddNewEventProps = {
   onSuccess?: () => void
   initialData?: any

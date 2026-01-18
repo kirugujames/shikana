@@ -39,7 +39,7 @@ export function MerchandiseTable() {
   const fetchMerchandise = async () => {
     try {
       setLoading(true)
-      const res = await api.get("/api/merchandise/get-all")
+      const res = await api.get("/api/merchandise/all")
       const items = Array.isArray(res.data) ? res.data : (res.data?.data ?? [])
       setData(items)
     } catch (err) {

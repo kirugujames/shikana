@@ -16,7 +16,7 @@ export function DonateHero() {
         <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
           Your contribution helps us build a united, prosperous nation. Every donation makes a difference.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="#donation-options"
             className="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-8 py-4 rounded-lg font-bold transition-colors"
@@ -24,7 +24,7 @@ export function DonateHero() {
             Make a Donation
             <TrendingUp size={20} />
           </Link>
-        </div>
+        </div> */}
       </div>
     </section>
   )

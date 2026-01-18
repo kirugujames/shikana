@@ -1,6 +1,4 @@
 "use client"
-
-import { useEffect, useState, useMemo } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,6 +29,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { useEffect, useMemo, useState } from "react"
 
 type Event = {
   id: number
@@ -136,7 +135,7 @@ export function EventsTable() {
       const response = await api.post(`/api/events/mark-main/${event.id}`, {
         is_main: !event.is_main,
       })
-      setData((prev) => prev.map((e) => (e.id === event.id ? { ...e, is_main: !e.is_main } : e)))
+      setData((prev: any) => prev.map((e: any) => (e.id === event.id ? { ...e, is_main: !e.is_main } : e)))
     } catch (err) {
       console.error("Failed to update main status", err)
     }
@@ -224,7 +223,7 @@ export function EventsTable() {
           <Input
             placeholder="Search events..."
             value={searchTerm}
-            onChange={(e) => {
+            onChange={(e: any) => {
               setSearchTerm(e.target.value)
               setCurrentPage(1)
             }}
@@ -279,16 +278,12 @@ export function EventsTable() {
           <TableBody>
             {paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="h-32 text-center">
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Search className="h-8 w-8 opacity-40" />
-                    <p className="text-sm font-medium">No events found</p>
-                    {searchTerm && <p className="text-xs">Try adjusting your search terms</p>}
-                  </div>
+                <TableCell colSpan={9} className="h-32 text-center text-muted-foreground">
+                  No events found
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((event, idx) => (
+              paginatedData.map((event: any, idx: number) => (
                 <TableRow key={event.id} className="group hover:bg-muted/50 transition-colors">
                   <TableCell>{(currentPage - 1) * itemsPerPage + idx + 1}</TableCell>
                   <TableCell>
@@ -366,7 +361,7 @@ export function EventsTable() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p: number) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -400,7 +395,7 @@ export function EventsTable() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p: any) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
               Next

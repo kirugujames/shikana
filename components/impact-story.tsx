@@ -15,7 +15,7 @@ export function ImpactStory() {
       icon: Users,
       stat: "50,000+",
       label: "Members Mobilized",
-      description: "Active community members working toward our vision",
+      description: "Active party members working toward our vision",
     },
     {
       icon: MapPin,
@@ -43,7 +43,7 @@ export function ImpactStory() {
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">Your Impact</h2>
           <p className="text-lg text-foreground/70">
-            See how donations have helped us build a stronger movement and communities
+            See how donations have helped us build a stronger movement.
           </p>
         </div>
 

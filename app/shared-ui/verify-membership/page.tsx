@@ -7,67 +7,74 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Search, UserCheck, UserX } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import Link from "next/link"
+import api from "@/lib/axios"
+import toast from "react-hot-toast"
 
-// Mock Data for verification
-const MOCK_MEMBERS = [
-    {
-        id: "12345678",
-        name: "John Doe",
-        membershipNo: "SFU-2024-001",
-        status: "Active",
-        branch: "Nairobi Central",
-    },
-    {
-        id: "87654321",
-        name: "Jane Smith",
-        membershipNo: "SFU-2024-002",
-        status: "Active",
-        branch: "Mombasa",
-    },
-    {
-        id: "11223344",
-        name: "Alice Johnson",
-        membershipNo: "SFU-2024-003",
-        status: "Pending",
-        branch: "Kisumu",
-    },
-]
+type Member = {
+    id: number
+    first_name: string
+    last_name: string
+    member_code: string
+    county: string
+    constituency: string
+    ward: string
+    email: string
+    phone: string
+    status: "ACTIVE" | "INACTIVE"
+}
 
 export default function VerifyMembershipPage() {
     const [nationalId, setNationalId] = useState("")
     const [isOpen, setIsOpen] = useState(false)
-    const [searchResult, setSearchResult] = useState<(typeof MOCK_MEMBERS)[0] | null>(null)
+    const [searchResult, setSearchResult] = useState<Member | null>(null)
+    const [loading, setLoading] = useState(false)
     const [hasSearched, setHasSearched] = useState(false)
 
-    const handleVerify = (e: React.FormEvent) => {
+    const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!nationalId.trim()) return
 
-        // Simulating API call
-        const result = MOCK_MEMBERS.find((m) => m.id === nationalId.trim())
-        setSearchResult(result || null)
-        setHasSearched(true)
-        setIsOpen(true)
+        setLoading(true)
+        setSearchResult(null)
+        setHasSearched(false)
+
+        try {
+            const response = await api.get(`/api/members/get/member/idno/${nationalId.trim()}`)
+            if (response.data?.statusCode === 200 || response.data?.data) {
+                setSearchResult(response.data.data)
+            } else {
+                setSearchResult(null)
+            }
+        } catch (error) {
+            console.error("Verification error:", error)
+            setSearchResult(null)
+            // Optional: toast.error("Could not verify details. Please try again.")
+        } finally {
+            setLoading(false)
+            setHasSearched(true)
+            setIsOpen(true)
+        }
     }
 
     const handleClose = () => {
         setIsOpen(false)
         setHasSearched(false)
+        setNationalId("")
     }
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center p-4 bg-muted/30">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="text-center space-y-2">
-                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2">
-                        <Search className="w-6 h-6 text-primary" />
+                    <div className="mx-auto flex items-center justify-center mb-2">
+                        <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-24 h-auto" />
                     </div>
                     <CardTitle className="text-2xl font-bold">Verify Membership</CardTitle>
                     <CardDescription>
@@ -97,16 +104,27 @@ export default function VerifyMembershipPage() {
                         </div>
                         <button
                             type="submit"
-                            disabled={!nationalId.trim()}
+                            disabled={!nationalId.trim() || loading}
                             className="w-full bg-secondary text-white py-3 rounded-lg font-bold
              hover:bg-secondary/90 transition-colors
              flex items-center justify-center gap-2
              disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Verify Status
+                            {loading ? (
+                                <>
+                                    <Loader2 className="animate-spin" size={20} />
+                                    Verifying...
+                                </>
+                            ) : (
+                                "Verify Status"
+                            )}
                         </button>
 
-
+                        <div className="text-center mt-4">
+                            <Button variant="link" asChild className="text-muted-foreground">
+                                <Link href="/">Back to Home</Link>
+                            </Button>
+                        </div>
                     </form>
 
                 </CardContent>
@@ -118,16 +136,12 @@ export default function VerifyMembershipPage() {
                         <DialogTitle className="text-center text-xl flex flex-col items-center gap-2">
                             {searchResult ? (
                                 <>
-                                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-2">
-                                        <UserCheck className="w-6 h-6" />
-                                    </div>
+                                    <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-16 h-auto mb-2" />
                                     Member Verified
                                 </>
                             ) : (
                                 <>
-                                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-2">
-                                        <UserX className="w-6 h-6" />
-                                    </div>
+                                    <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-16 h-auto mb-2" />
                                     Member Not Found
                                 </>
                             )}
@@ -139,20 +153,24 @@ export default function VerifyMembershipPage() {
                             <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div className="space-y-1">
                                     <p className="text-muted-foreground">Full Name</p>
-                                    <p className="font-semibold">{searchResult.name}</p>
+                                    <p className="font-semibold">{searchResult.first_name} {searchResult.last_name}</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-muted-foreground">Membership No</p>
-                                    <p className="font-semibold">{searchResult.membershipNo}</p>
+                                    <p className="text-muted-foreground">Membership Code</p>
+                                    <p className="font-semibold">{searchResult.member_code}</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-muted-foreground">Branch</p>
-                                    <p className="font-semibold">{searchResult.branch}</p>
+                                    <p className="text-muted-foreground">County</p>
+                                    <p className="font-semibold">{searchResult.county}</p>
                                 </div>
                                 <div className="space-y-1">
+                                    <p className="text-muted-foreground">Constituency</p>
+                                    <p className="font-semibold">{searchResult.constituency}</p>
+                                </div>
+                                <div className="space-y-1 col-span-2">
                                     <p className="text-muted-foreground">Status</p>
                                     <span
-                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${searchResult.status === "Active"
+                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${searchResult.status === "ACTIVE"
                                             ? "bg-green-100 text-green-800"
                                             : "bg-yellow-100 text-yellow-800"
                                             }`}
@@ -188,3 +206,4 @@ export default function VerifyMembershipPage() {
         </div>
     )
 }
+

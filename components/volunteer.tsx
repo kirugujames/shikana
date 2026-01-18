@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { Send, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
 
 const AREAS_OF_INTEREST = [
   "Policy & Strategy",
@@ -87,9 +88,9 @@ export function Volunteer() {
             <div className="space-y-3">
               {/* General Volunteering Option */}
               <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted transition-colors"
-                style={{ 
+                style={{
                   borderColor: volunteerType === "general" ? "hsl(var(--secondary))" : undefined,
-                  backgroundColor: volunteerType === "general" ? "hsl(var(--secondary)/.1)" : undefined 
+                  backgroundColor: volunteerType === "general" ? "hsl(var(--secondary)/.1)" : undefined
                 }}>
                 <input
                   type="radio"
@@ -112,9 +113,9 @@ export function Volunteer() {
 
               {/* Event-Specific Option */}
               <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted transition-colors"
-                style={{ 
+                style={{
                   borderColor: volunteerType === "event" ? "hsl(var(--secondary))" : undefined,
-                  backgroundColor: volunteerType === "event" ? "hsl(var(--secondary)/.1)" : undefined 
+                  backgroundColor: volunteerType === "event" ? "hsl(var(--secondary)/.1)" : undefined
                 }}>
                 <input
                   type="radio"
@@ -240,8 +241,7 @@ export function Volunteer() {
                   className="w-4 h-4 rounded mt-1"
                 />
                 <label htmlFor="consent" className="text-sm text-foreground cursor-pointer">
-                  I consent to having my application information stored and used for volunteer
-                  recruitment purposes, and I agree to the privacy policy.
+                  I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
                 </label>
               </div>
 

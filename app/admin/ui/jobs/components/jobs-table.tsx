@@ -51,7 +51,10 @@ import AddJob from "./add-job"
 type Job = {
   id: number
   title: string
+  job_title: string
   type: string
+  location: string
+  description: string
   postedDate: string
 }
 
@@ -77,17 +80,17 @@ export function JobsTable() {
 
   const fetchJobs = async () => {
     try {
-      setLoading(true)
       const res = await api.get("/api/jobs/all")
-      const backendJobs = Array.isArray(res.data)
+      const jobsArray = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.data)
           ? res.data.data
           : []
 
-      const formattedJobs: Job[] = backendJobs.map((job: any) => ({
+      const formattedJobs: Job[] = jobsArray.map((job: any) => ({
         id: job.id,
         title: job.job_title || job.title || "Untitled Job",
+        job_title: job.job_title || job.title || "Untitled Job", // Ensure job_title is present for filtering and editing
         type: job.type || "Full-time",
         location: job.location || "",
         description: job.description || "",
@@ -336,7 +339,7 @@ export function JobsTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((job, idx) => (
+              paginatedData.map((job: any, idx: any) => (
                 <TableRow
                   key={job.id}
                   className="hover:bg-muted/50 transition-colors"
@@ -347,12 +350,12 @@ export function JobsTable() {
 
                   <TableCell
                     className="max-w-xs truncate"
-                    title={job.title}
+                    title={job?.title}
                   >
-                    {job.title}
+                    {job?.title}
                   </TableCell>
 
-                  <TableCell>{job.type}</TableCell>
+                  <TableCell> {job?.type} </TableCell>
 
                   <TableCell>
                     {new Date(job.postedDate).toLocaleDateString()}

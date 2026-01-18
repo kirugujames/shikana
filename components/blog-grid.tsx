@@ -7,6 +7,9 @@ import { Calendar, User, ArrowRight } from "lucide-react"
 import { Button } from "./ui/button"
 import { toast } from "sonner"
 import { Toaster } from "react-hot-toast"
+import { BlogCardSkeleton } from "./skeleton-loaders"
+import { ProfessionalEmptyState } from "./empty-state"
+import { BookOpen } from "lucide-react"
 
 interface Article {
   id: number
@@ -21,8 +24,8 @@ interface Article {
 
 export function BlogGrid() {
   const [articles, setArticles] = useState<Article[]>([])
-  const [categories, setCategories] = useState<String[]>(["ALL"]) 
-  const [ refetchFlag, setRefetchFlag ] = useState(false);
+  const [categories, setCategories] = useState<String[]>(["ALL"])
+  const [refetchFlag, setRefetchFlag] = useState(false);
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -40,8 +43,8 @@ export function BlogGrid() {
         // Fetch Categories
         const categoryRes = await api.get("api/blog/get/all/blogCategory")
         if (categoryRes.data.statusCode === 201) {
-        setCategories(prev => [...prev, ...categoryRes.data?.data.map((cat: { category: string }) => cat.category) ]);
-        console.log('catergory data1', categoryRes.data.data);
+          setCategories(prev => [...prev, ...categoryRes.data?.data.map((cat: { category: string }) => cat.category)]);
+          console.log('catergory data1', categoryRes.data.data);
 
         }
         console.log('catergory data', categoryRes.data.data);
@@ -56,25 +59,25 @@ export function BlogGrid() {
     fetchData()
   }, [refetchFlag])
 
-  const handleCategoryClick = async(category: String) => {
-    if(category === "ALL"){
+  const handleCategoryClick = async (category: String) => {
+    if (category === "ALL") {
       setRefetchFlag(!refetchFlag);
       return;
     }
-     try {
-       setArticles([]);
-       setLoading(true);
-       const  response  =  await api.get(`api/blog/get/all/blog/by/category?category=${category}`);
-       setArticles(response.data.data);
-       setLoading(false);
-     } catch (error) {
-       toast.error("Failed to load articles for the selected category.");
-     }
+    try {
+      setArticles([]);
+      setLoading(true);
+      const response = await api.get(`api/blog/get/all/blog/by/category?category=${category}`);
+      setArticles(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to load articles for the selected category.");
+    }
   }
 
   return (
     <section className="w-full py-8 md:py-12 bg-background">
-      <Toaster position="top-right"/>
+      <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-8 text-balance">
@@ -83,34 +86,59 @@ export function BlogGrid() {
 
           {/* CATEGORY BUTTONS */}
           <div className="flex flex-wrap gap-3">
-            {Array.isArray(categories) &&  categories.length !== 0 ? (
-              categories.map((category,index) => (
-              <button
-               onClick={()=>handleCategoryClick(categories[index])}
-                key={index}
-                className={`px-4 py-1 rounded-lg font-medium transition-colors ${categories[index] === "ALL"
+            {Array.isArray(categories) && categories.length !== 0 ? (
+              categories.map((category, index) => (
+                <button
+                  onClick={() => handleCategoryClick(categories[index])}
+                  key={index}
+                  className={`px-4 py-1 rounded-lg font-medium transition-colors ${categories[index] === "ALL"
                     ? "bg-secondary text-white"
                     : "bg-muted text-foreground hover:bg-secondary hover:text-white"
-                  }`}
-              >
-                {categories[index]}
-              </button>
-            ))
-            ): (
+                    }`}
+                >
+                  {categories[index]}
+                </button>
+              ))
+            ) : (
               <Button variant="secondary" className="px-4 py-2 rounded-lg font-medium transition-colors">All</Button>
             )}
           </div>
         </div>
 
-        {/* Loading & Error */}
-        {loading && <p className="text-center">Loading articles...</p>}
-        {error && <p className="text-center text-red-500">{error}</p>}
+        {/* Loading State */}
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <BlogCardSkeleton key={i} />
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <ProfessionalEmptyState
+            icon={BookOpen}
+            title="Unable to Load Articles"
+            description={error}
+            action={
+              <Button onClick={() => setRefetchFlag(!refetchFlag)} variant="outline">
+                Try Again
+              </Button>
+            }
+          />
+        )}
 
         {/* Articles Grid */}
         {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.length === 0 ? (
-              <p className="text-center col-span-full">No articles found.</p>
+              <div className="col-span-full">
+                <ProfessionalEmptyState
+                  icon={BookOpen}
+                  title="No Articles Found"
+                  description="We haven't published any articles in this category yet. Please check back later for updates."
+                />
+              </div>
             ) : (
               articles.map((article) => (
                 <article

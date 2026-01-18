@@ -45,7 +45,7 @@ export function DeleteAdminUserDialog({
         </DialogHeader>
 
         <p className="text-sm text-muted-foreground">
-          Are you sure you want to delete <b>{user.username}</b>?  
+          Are you sure you want to delete <b>{user.firstName + " " + user.lastName}</b>?  
           This action cannot be undone.
         </p>
 

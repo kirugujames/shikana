@@ -4,11 +4,12 @@ import type React from "react"
 
 import { useState } from "react"
 import { Send } from "lucide-react"
+import Link from "next/link"
 
-interface propsData{
-  id:any;
+interface propsData {
+  id: any;
 }
-export function ApplicationForm({id}: propsData) {
+export function ApplicationForm({ id }: propsData) {
   const [submitted, setSubmitted] = useState(false)
   const [fullName, setFullName] = useState("")
 
@@ -44,7 +45,7 @@ export function ApplicationForm({id}: propsData) {
                 type="text"
                 required
                 value={id}
-                onChange={(e)=>setFullName(e.target.value)}
+                onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
                 placeholder="Your full name"
               />
@@ -73,29 +74,29 @@ export function ApplicationForm({id}: propsData) {
             </div>
 
             {/* Areas of Interest */}
-            { id=="volunteer" ?
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-3">Areas of Interest</label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {[
-                  "Policy & Strategy",
-                  "Campaign Operations",
-                  "Communications",
-                  "Community Engagement",
-                  "Finance & Administration",
-                  "Youth Programs",
-                  "Digital Strategy",
-                  "Other",
-                ].map((area) => (
-                  <label key={area} className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="w-4 h-4 rounded" />
-                    <span className="text-foreground">{area}</span>
-                  </label>
-                ))}
+            {id == "volunteer" ?
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-3">Areas of Interest</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {[
+                    "Policy & Strategy",
+                    "Campaign Operations",
+                    "Communications",
+                    "Community Engagement",
+                    "Finance & Administration",
+                    "Youth Programs",
+                    "Digital Strategy",
+                    "Other",
+                  ].map((area) => (
+                    <label key={area} className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" className="w-4 h-4 rounded" />
+                      <span className="text-foreground">{area}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-            :
-            null
+              :
+              null
             }
             {/* CV Upload */}
             <div>
@@ -121,10 +122,9 @@ export function ApplicationForm({id}: propsData) {
 
             {/* Consent */}
             <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
-              <input type="checkbox" id="consent" required className="w-4 h-4 rounded mt-1" />
+              <input type="checkbox" id="consent" required className="w-4 h-4 rounded mt-1 cursor-pointer" />
               <label htmlFor="consent" className="text-sm text-foreground cursor-pointer">
-                I consent to having my application information stored and used for recruitment purposes, and I agree to
-                SFUP's privacy policy.
+                I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
               </label>
             </div>
 

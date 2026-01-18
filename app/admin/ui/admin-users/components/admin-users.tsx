@@ -27,8 +27,10 @@ import { DeleteAdminUserDialog } from "./delete-admin-user-dialog"
 
 export type AdminUser = {
   id: number
-  username: string
+  firstName: string
+  lastName: string
   email: string
+  role: string
 }
 
 type SortField = keyof AdminUser | null
@@ -81,8 +83,10 @@ export function AdminUsersTable() {
     let filtered = data.filter((u) => {
       const q = searchTerm.toLowerCase()
       return (
-        u.username.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q)
+        u.firstName.toLowerCase().includes(q) ||
+        u.lastName.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        u.role.toLowerCase().includes(q)
       )
     })
 
@@ -109,11 +113,11 @@ export function AdminUsersTable() {
   )
 
   const handleExport = () => {
-    const headers = ["#", "Username", "Email"]
+    const headers = ["#", "First Name", "Last Name", "Email", "Role"]
     const csv = [
       headers.join(","),
       ...filteredAndSortedData.map((u, i) =>
-        [i + 1, u.username, u.email].join(",")
+        [i + 1, u.firstName, u.lastName, u.email, u.role].join(",")
       ),
     ].join("\n")
 
@@ -192,9 +196,19 @@ export function AdminUsersTable() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleSort("username")}
+                    onClick={() => handleSort("firstName")}
                   >
-                    Username
+                    FirstName
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort("lastName")}
+                  >
+                    LastName
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </Button>
                 </TableHead>
@@ -208,6 +222,16 @@ export function AdminUsersTable() {
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </Button>
                 </TableHead>
+                <TableHead>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort("role")}
+                  >
+                    Role
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -215,7 +239,7 @@ export function AdminUsersTable() {
             <TableBody>
               {paginatedData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-32 text-center">
+                  <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
                     No admin users found
                   </TableCell>
                 </TableRow>
@@ -225,10 +249,10 @@ export function AdminUsersTable() {
                     <TableCell>
                       {(currentPage - 1) * itemsPerPage + idx + 1}
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {user.username}
-                    </TableCell>
+                    <TableCell className="font-medium">{user.firstName}</TableCell>
+                    <TableCell className="font-medium">{user.lastName}</TableCell>
                     <TableCell>{user.email}</TableCell>
+                    <TableCell className="font-medium">{user.role}</TableCell>
                     <TableCell className="text-right flex gap-2 justify-end">
                       <Button
                         size="sm"

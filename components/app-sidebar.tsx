@@ -1,19 +1,9 @@
 "use client"
 
 import * as React from "react"
-import {
-  IconDashboard,
-  IconUsers,
-  IconUserCog,
-  IconCalendar,
-  IconFileText,
-  IconBriefcase,
-  IconShoppingBag,
-  IconFolderFilled,
-} from "@tabler/icons-react"
+// Tabler icon import removed
 
 import {
-  LayoutDashboard,
   Users,
   UserCog,
   Calendar,
@@ -22,6 +12,9 @@ import {
   ShoppingBag,
   ScrollText,
   FolderOpen,
+  HandHeart,
+  FolderMinus,
+  LayoutDashboard,
 } from "lucide-react"
 import { Roles } from "@/lib/roles"
 
@@ -47,6 +40,7 @@ const iconMap = {
   "shopping-bag": ShoppingBag,
   "scroll-text": ScrollText,
   folder: FolderOpen,
+  "hand-heart": HandHeart,
 }
 
 export interface NavItem {
@@ -121,7 +115,7 @@ export function AppSidebar({
   const resolveIcons = <T extends { icon: keyof typeof iconMap }>(items: T[]) =>
     items.map((item) => ({
       ...item,
-      icon: iconMap[item.icon] ?? IconFolderFilled,
+      icon: iconMap[item.icon] ?? FolderMinus,
     }))
   return (
     <Sidebar collapsible="offcanvas" {...props}>

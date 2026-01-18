@@ -24,7 +24,7 @@ export function CreateAdminUserDialog({ open, onOpenChange, onSuccess }: Props) 
     first_name: "",
     last_name: "",
     email: "",
-    role_id: 1,
+    role_id: "",
   })
 
   const handleSubmit = async () => {
@@ -38,7 +38,7 @@ export function CreateAdminUserDialog({ open, onOpenChange, onSuccess }: Props) 
       await api.post("/api/users/register", form)
       onSuccess()
       onOpenChange(false)
-      setForm({ first_name: "", last_name: "", email: "", role_id: 1 })
+      setForm({ first_name: "", last_name: "", email: "", role_id: "" })
     } catch (err: any) {
       const message =
         err?.response?.data?.message || "Failed to create user"
@@ -51,7 +51,7 @@ export function CreateAdminUserDialog({ open, onOpenChange, onSuccess }: Props) 
   return (
     <Dialog
       open={open}
-      onOpenChange={loading ? () => {} : onOpenChange}
+      onOpenChange={loading ? () => { } : onOpenChange}
     >
       <DialogContent>
         <DialogHeader>
@@ -79,6 +79,14 @@ export function CreateAdminUserDialog({ open, onOpenChange, onSuccess }: Props) 
             value={form.email}
             onChange={(e) =>
               setForm({ ...form, email: e.target.value })
+            }
+          />
+          <Input
+            placeholder="Role"
+            type="text"
+            value={form.role_id}
+            onChange={(e) =>
+              setForm({ ...form, role_id: e.target.value })
             }
           />
         </div>

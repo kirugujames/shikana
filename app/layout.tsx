@@ -1,12 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
 import "./globals.css"
+import { cookies } from "next/headers"
+import { CookieProvider } from "@/context/cookie-context"
+import { AuthProvider } from "@/context/auth-context"
+import { CookieConsent } from "@/components/cookie-consent"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -30,15 +34,23 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const initialConsent = (cookieStore.get("cookie-consent")?.value as "accept" | "decline") || null
+
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          <CookieProvider initialConsent={initialConsent}>
+            {children}
+            <CookieConsent />
+          </CookieProvider>
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

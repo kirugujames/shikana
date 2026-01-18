@@ -20,7 +20,7 @@ export function DonationOptions() {
   const [email, setEmail] = useState("")
   const [isAnonymous, setIsAnonymous] = useState(false)
 
-  const presetAmounts = [500, 1000, 5000, 10000, 100000]
+  const presetAmounts = [500, 5000, 10000, 50000, 300000]
 
   const personalDetailsValid =
     isAnonymous ||
@@ -84,7 +84,7 @@ export function DonationOptions() {
         <div className="bg-card border rounded-lg p-8">
 
           {/* Donation Type */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <label className="block text-sm font-medium mb-4">Donation Type</label>
             <div className="flex gap-4">
               {(["one-time", "monthly"] as const).map((type) => (
@@ -102,7 +102,7 @@ export function DonationOptions() {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Amount */}
           <div className="mb-8">
@@ -134,11 +134,23 @@ export function DonationOptions() {
                 setSelectedAmount(Number.isNaN(value) ? null : value)
               }}
               className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Custom amount"
+              placeholder="Other amount"
             />
           </div>
 
           {/* Personal Details */}
+          <div className="flex items-center gap-3 p-4 mb-4 bg-muted rounded-lg">
+            <input
+              type="checkbox"
+              id="anonymous"
+              checked={isAnonymous}
+              onChange={(e) => setIsAnonymous(e.target.checked)}
+              className="w-4 h-4 rounded"
+            />
+            <label htmlFor="anonymous" className="cursor-pointer">
+              Make this donation anonymous
+            </label>
+          </div>
           <div className="space-y-4 mb-8">
             <div>
               <label className="block text-sm font-medium mb-2">First Name</label>
@@ -170,18 +182,7 @@ export function DonationOptions() {
                 placeholder="your@email.com"
               />
             </div>
-            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
-              <input
-                type="checkbox"
-                id="anonymous"
-                checked={isAnonymous}
-                onChange={(e) => setIsAnonymous(e.target.checked)}
-                className="w-4 h-4 rounded"
-              />
-              <label htmlFor="anonymous" className="cursor-pointer">
-                Make this donation anonymous
-              </label>
-            </div>
+            
           </div>
 
           {/* Payment Method */}

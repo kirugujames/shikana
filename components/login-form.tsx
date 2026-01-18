@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
 import api from "@/lib/axios";
+import { useAuth } from "@/context/auth-context";
+import { Roles } from "@/lib/roles";
 import { Eye, EyeOff } from "lucide-react"
 import toast, { Toaster } from 'react-hot-toast';
 import { Card, CardContent } from "./ui/card"
@@ -23,6 +25,7 @@ export function LoginForm({
   className,
   ...props
 }: LoginFormProps) {
+  const { login } = useAuth()
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -40,6 +43,7 @@ export function LoginForm({
         "/api/users/login",
         { username, password },
         { validateStatus: () => true }
+
       )
 
       if (result.data?.statusCode !== 200) {
@@ -47,11 +51,25 @@ export function LoginForm({
         return
       }
       const { user, token } = result?.data?.data
-      // IMPORTANT: Swapped localStorage usage to follow best practices for token/user data in this environment.
-      sessionStorage.setItem("user", JSON.stringify(user))
-      sessionStorage.setItem("token", token)
+
+      // Use context login
+      localStorage.setItem("user", JSON.stringify(user))
+      localStorage.setItem("token", JSON.stringify(token))
+      login(user, token)
       toast.success(result.data?.message || "Login successful")
-      router.push("/admin/dashboard")
+      if (result.data.data?.user?.role_id == 1) {
+        router.push("/admin/dashboard")
+        return
+      }
+      else if (result.data.data?.user?.role_id == 2) {
+        router.push("/shared-ui/political-position")
+        return
+      }
+      else {
+        router.push("/login")
+      }
+
+      // router.push("/otp")
     } catch {
       toast.error("An unexpected error occurred")
     } finally {
@@ -76,11 +94,11 @@ export function LoginForm({
                 className="h-24 mx-auto w-24 object-contain align-center"
               />
               <h1 className="text-2xl font-bold tracking-tight">
-                Welcome to SFU Party
+                Welcome to SFUP
               </h1>
 
               <p className="text-sm text-muted-foreground">
-                Enter your username and password to continue
+                Enter your email/phone number and password to continue
               </p>
             </div>
 
@@ -93,7 +111,7 @@ export function LoginForm({
                 name="username"
                 required
                 className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="john.doe"
+                placeholder="email/phone number(07..)"
               />
             </div>
 

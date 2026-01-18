@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import api from "@/lib/axios"
-import { Briefcase, ArrowRight } from "lucide-react"
+import { Briefcase, ArrowRight, FolderOpen } from "lucide-react"
+import { JobListingSkeleton } from "./skeleton-loaders"
+import { ProfessionalEmptyState } from "./empty-state"
 
 //Backend job response type
 interface BackendJob {
@@ -31,7 +33,7 @@ export function JobListings() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await api.get("/jobs/all")
+        const res = await api.get("/api/jobs/all")
         const backendJobs: BackendJob[] = res.data.data
 
         const formattedJobs: Job[] = backendJobs.map((job: BackendJob) => ({
@@ -71,47 +73,78 @@ export function JobListings() {
           </p>
         </div>
 
-        {loading && <p className="text-center">Loading jobs...</p>}
-        {error && <p className="text-center text-red-500">{error}</p>}
+        {/* Loading State */}
+        {loading && (
+          <div className="space-y-4">
+            {[...Array(1)].map((_, i) => (
+              <JobListingSkeleton key={i} />
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <ProfessionalEmptyState
+            icon={FolderOpen}
+            title="Service Unavailable"
+            description={error}
+            action={
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-primary text-white px-4 py-2 rounded-lg font-bold"
+              >
+                Refresh Page
+              </button>
+            }
+          />
+        )}
 
         {!loading && !error && (
           <div className="space-y-4">
-            {jobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-card border border-border rounded-lg p-6 hover:border-secondary transition-colors hover:shadow-md"
-              >
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-2">{job.title}</h3>
+            {jobs.length === 0 ? (
+              <ProfessionalEmptyState
+                icon={Briefcase}
+                title="No Open Positions"
+                description="We don't have any job openings right now. However, we're always looking for talent. Check back soon or follow us for updates!"
+              />
+            ) : (
+              jobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="bg-card border border-border rounded-lg p-6 hover:border-secondary transition-colors hover:shadow-md"
+                >
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-2">{job.title}</h3>
 
-                    <div className="flex flex-wrap gap-4 text-sm text-foreground/70 mb-4">
-                      <div className="flex items-center gap-2">
-                        <Briefcase size={16} className="text-secondary" />
-                        <span>{job.type}</span>
+                      <div className="flex flex-wrap gap-4 text-sm text-foreground/70 mb-4">
+                        <div className="flex items-center gap-2">
+                          <Briefcase size={16} className="text-secondary" />
+                          <span>{job.type}</span>
+                        </div>
                       </div>
+
+                      <p className="text-foreground/80 leading-relaxed">
+                        {job.description}
+                      </p>
                     </div>
 
-                    <p className="text-foreground/80 leading-relaxed">
-                      {job.description}
-                    </p>
-                  </div>
+                    <div className="flex flex-col gap-2 items-start md:items-end">
+                      <span className="text-xs text-foreground/60">
+                        Posted {job.postedDate}
+                      </span>
 
-                  <div className="flex flex-col gap-2 items-start md:items-end">
-                    <span className="text-xs text-foreground/60">
-                      Posted {job.postedDate}
-                    </span>
-
-                    <Link
-                      href={`/shared-ui/job-application/${job.id}`}
-                      className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
-                    >
-                      Apply <ArrowRight size={16} />
-                    </Link>
+                      <Link
+                        href={`/shared-ui/job-application/${job.id}`}
+                        className="inline-flex items-center gap-2 text-secondary font-bold hover:gap-3 transition-all"
+                      >
+                        Apply <ArrowRight size={16} />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>

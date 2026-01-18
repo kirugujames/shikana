@@ -28,15 +28,19 @@ export function EditAdminUserDialog({
 }: Props) {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
-    username: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    role: "",
   })
 
   useEffect(() => {
     if (user) {
       setForm({
-        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        role: user.role
       })
     }
   }, [user])
@@ -66,14 +70,24 @@ export function EditAdminUserDialog({
 
         <div className="space-y-4">
           <Input
-            placeholder="Username"
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            placeholder="First Name"
+            value={form.firstName}
+            onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+          />
+          <Input
+            placeholder="Last Name"
+            value={form.lastName}
+            onChange={(e) => setForm({ ...form, lastName: e.target.value })}
           />
           <Input
             placeholder="Email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <Input
+            placeholder="Role"
+            value={form.role}
+            onChange={(e) => setForm({ ...form, role: e.target.value })}
           />
         </div>
 

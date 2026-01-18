@@ -20,7 +20,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ id: string 
   useEffect(() => {
     async function fetchArticle() {
       try {
-        const res = await api.get(`/blog/get-by-id/${id}`)
+        const res = await api.get(`/api/blog/get-by-id/${id}`)
 
         if (res.data.statusCode === 200) {
           setArticle(res.data.data)
