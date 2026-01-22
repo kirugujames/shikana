@@ -59,21 +59,28 @@ export default function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-foreground mb-4">3. Data Protection</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">3. Data Retention</h2>
+                        <p>
+                            We retain your personal data for as long as you are actively involved with the party. To ensure data accuracy and protect your privacy, we implement a data deletion policy where user data is permanently deleted after 1 year if the user is no longer involved in the party or has been inactive for that period.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">4. Data Protection</h2>
                         <p>
                             We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, loss, or alteration. Access to personal data is restricted to authorized party officials who need the information to perform their duties.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-foreground mb-4">4. Data Sharing</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">5. Data Sharing</h2>
                         <p>
                             SFUP does not sell or rent your personal information to third parties. We may share your information with service providers who assist us in our operations, or when required by law to comply with legal processes or government requests.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-foreground mb-4">5. Your Rights</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">6. Your Rights</h2>
                         <p>
                             You have the right to:
                         </p>
@@ -86,7 +93,7 @@ export default function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-foreground mb-4">6. Cookies</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-4">7. Cookies</h2>
                         <p>
                             Our website uses cookies to enhance your browsing experience. You can choose to disable cookies through your browser settings, although this may affect some website functionalities.
                         </p>
@@ -94,7 +101,7 @@ export default function PrivacyPage() {
 
                     <section className="pt-8 border-t border-border">
                         <p className="text-sm">
-                            Last Updated: January 13, 2026
+                            Last Updated: January 19, 2026
                         </p>
                         <p className="text-sm mt-2">
                             If you have any questions about this Privacy Policy, please reach out to our Data Protection Officer at <a href="mailto:info@shikana.co.ke" className="text-secondary font-semibold">privacy@shikana.co.ke</a>.

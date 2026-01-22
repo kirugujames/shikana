@@ -25,21 +25,28 @@ import { exportToCSV } from "@/lib/export-utils"
 
 type Donation = {
   id: number
-  firstname: string
-  lastname: string
-  email: string
-  phone: string
+  firstname?: string
+  lastname?: string
+  donor_name?: string
+  email?: string
+  donor_email?: string
+  phone?: string
   amount: number
-  created_at: string
-  type: "individual" | "organization"
-  is_anonymous: boolean
+  date: string
+  type: string
+  is_anonymous?: boolean
   company_name?: string
+  organization_name?: string
 }
 
 type SortField = keyof Donation | null
 type SortDirection = "asc" | "desc"
 
-export function DonationsTable() {
+interface DonationsTableProps {
+  type: "individual" | "organization"
+}
+
+export function DonationsTable({ type }: DonationsTableProps) {
   const [data, setData] = useState<Donation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -53,13 +60,24 @@ export function DonationsTable() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const res = await api.get("/api/donations/all")
-      const donationsArray = Array.isArray(res.data)
+      const endpoint = "/api/donations/all"
+      const res = await api.get(endpoint)
+      const rawData = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.data)
           ? res.data.data
           : []
-      setData(donationsArray)
+
+      // Map backend fields to frontend expectations
+      const mappedData: Donation[] = rawData.map((item: any) => ({
+        ...item,
+        amount: typeof item.amount === 'string' ? parseFloat(item.amount) : item.amount,
+        email: item.email || item.donor_email || "",
+        phone: item.phone || "",
+        date: item.date || item.createdAt || new Date().toISOString(),
+      }))
+
+      setData(mappedData)
     } catch (err) {
       console.error(err)
       setError("Failed to load donations")
@@ -89,8 +107,11 @@ export function DonationsTable() {
       const searchFields = [
         donation.firstname,
         donation.lastname,
+        donation.donor_name,
         donation.email,
+        donation.donor_email,
         donation.company_name,
+        donation.organization_name,
         donation.phone
       ]
 
@@ -126,13 +147,21 @@ export function DonationsTable() {
   )
 
   const handleExport = () => {
-    const csvData = filteredAndSortedData.map(item => ({
-      Name: item.is_anonymous ? "Anonymous" : item.type === 'organization' ? item.company_name : `${item.firstname} ${item.lastname}`,
-      Email: item.email,
-      Phone: item.phone,
-      Amount: item.amount,
-      Date: new Date(item.created_at).toLocaleDateString()
-    }))
+    const csvData = filteredAndSortedData.map(item => {
+      const name = item.is_anonymous
+        ? "Anonymous"
+        : item.type === 'organization'
+          ? (item.company_name || item.organization_name || "N/A")
+          : (item.donor_name || `${item.firstname || ''} ${item.lastname || ''}`.trim() || item.email || "N/A");
+
+      return {
+        Name: name,
+        Email: item.email || item.donor_email || "N/A",
+        Phone: item.phone || "N/A",
+        Amount: item.amount,
+        Date: new Date(item.date).toLocaleDateString()
+      }
+    })
     exportToCSV(csvData, "donations_export")
   }
 
@@ -190,8 +219,8 @@ export function DonationsTable() {
           <TableHeader>
             <TableRow>
               <TableHead>
-                <Button variant="ghost" size="sm" onClick={() => handleSort("firstname")}>
-                  Name <ArrowUpDown className="ml-2 h-4 w-4" />
+                <Button variant="ghost" size="sm" onClick={() => handleSort(type === 'individual' ? "firstname" : "company_name" as any)}>
+                  {type === 'individual' ? "Name" : "Organization Name"} <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
               <TableHead>Email</TableHead>
@@ -202,7 +231,7 @@ export function DonationsTable() {
                 </Button>
               </TableHead>
               <TableHead>
-                <Button variant="ghost" size="sm" onClick={() => handleSort("created_at")}>
+                <Button variant="ghost" size="sm" onClick={() => handleSort("date")}>
                   Date <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -224,17 +253,19 @@ export function DonationsTable() {
                       <span className="italic text-muted-foreground">Anonymous</span>
                     ) : (
                       <span className="font-medium">
-                        {donation.type === 'organization' ? donation.company_name : `${donation.firstname} ${donation.lastname}`}
+                        {type === 'organization'
+                          ? (donation.company_name || donation.organization_name || "N/A")
+                          : (donation.donor_name || `${donation.firstname || ''} ${donation.lastname || ''}`.trim() || donation.email || "N/A")}
                       </span>
                     )}
                   </TableCell>
-                  <TableCell>{donation.email || "-"}</TableCell>
+                  <TableCell>{donation.email || donation.donor_email || "-"}</TableCell>
                   <TableCell>{donation.phone || "-"}</TableCell>
                   <TableCell className="font-medium">
                     {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(donation.amount)}
                   </TableCell>
                   <TableCell>
-                    {new Date(donation.created_at).toLocaleDateString()}
+                    {new Date(donation.date).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))

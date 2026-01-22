@@ -12,7 +12,7 @@ interface BackendJob {
   id: number
   job_title: string
   description: string
-  created_at: string
+  createdAt: string
   created_by?: string
 }
 
@@ -22,7 +22,7 @@ interface Job {
   title: string
   description: string
   type: string
-  postedDate: string
+  createdAt: string
 }
 
 export function JobListings() {
@@ -41,7 +41,7 @@ export function JobListings() {
           title: job.job_title,
           description: job.description,
           type: "Full-time",
-          postedDate: new Date(job.created_at).toLocaleDateString("en-US", {
+          createdAt: new Date(job.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -131,7 +131,7 @@ export function JobListings() {
 
                     <div className="flex flex-col gap-2 items-start md:items-end">
                       <span className="text-xs text-foreground/60">
-                        Posted {job.postedDate}
+                        Posted {new Date(job.createdAt).toLocaleDateString()}
                       </span>
 
                       <Link

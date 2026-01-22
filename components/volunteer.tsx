@@ -1,9 +1,30 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
-import { Send, ChevronDown } from 'lucide-react'
+import { useState, useEffect, useMemo } from "react"
+import { Send, ChevronDown, Check, Loader2, Search } from 'lucide-react'
 import Link from 'next/link'
+import api from "@/lib/axios"
+import toast, { Toaster } from 'react-hot-toast'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+
+interface Event {
+  id: number
+  title: string
+}
 
 const AREAS_OF_INTEREST = [
   "Policy & Strategy",
@@ -16,7 +37,8 @@ const AREAS_OF_INTEREST = [
   "Other",
 ]
 
-const EVENTS = [
+// Initial static events as fallback
+const STATIC_EVENTS = [
   { id: 1, name: "Community Cleanup Drive - November 2025" },
   { id: 2, name: "Youth Mentorship Program - Ongoing" },
   { id: 3, name: "Food Bank Distribution - Monthly" },
@@ -26,12 +48,34 @@ const EVENTS = [
 
 export function Volunteer() {
   const [volunteerType, setVolunteerType] = useState<"event" | "general">("general")
-  const [selectedEvent, setSelectedEvent] = useState<string>("")
-  const [fullName, setFullName] = useState("")
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
+  const [selectedEventName, setSelectedEventName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
   const [areasOfInterest, setAreasOfInterest] = useState<string[]>([])
   const [consent, setConsent] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [events, setEvents] = useState<Event[]>([])
+  const [loadingEvents, setLoadingEvents] = useState(false)
+  const [popoverOpen, setPopoverOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoadingEvents(true)
+        const res = await api.get("/api/events/all")
+        const eventData = Array.isArray(res.data) ? res.data : (res.data?.data || [])
+        setEvents(eventData)
+      } catch (err) {
+        console.error("Failed to fetch events", err)
+      } finally {
+        setLoadingEvents(false)
+      }
+    }
+    fetchEvents()
+  }, [])
 
   const handleAreaToggle = (area: string) => {
     setAreasOfInterest((prev) =>
@@ -39,25 +83,49 @@ export function Volunteer() {
     )
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const formData = {
-      fullName,
-      email,
-      areasOfInterest,
-      volunteerType,
-      event: volunteerType === "event" ? selectedEvent : "General Volunteering",
-      consent,
+
+    if (!consent) {
+      toast.error("Please agree to the terms and privacy policy")
+      return
     }
-    console.log("Application submitted:", formData)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 3000)
-    // Reset form
-    setFullName("")
-    setEmail("")
-    setAreasOfInterest([])
-    setSelectedEvent("")
-    setConsent(false)
+
+    if (volunteerType === "event" && !selectedEventId) {
+      toast.error("Please select an event")
+      return
+    }
+
+    try {
+      setSubmitting(true)
+      const payload = {
+        full_name: `${firstName} ${lastName}`.trim(),
+        email,
+        phone,
+        areas_of_interest: areasOfInterest,
+        volunteer_type: volunteerType,
+        event_id: volunteerType === "event" ? selectedEventId : null,
+        event_name: volunteerType === "event" ? selectedEventName : "General Volunteering",
+      }
+
+      await api.post("/api/volunteers/register", payload)
+      toast.success("Application submitted successfully!")
+
+      // Reset form
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      setPhone("")
+      setAreasOfInterest([])
+      setSelectedEventId(null)
+      setSelectedEventName("")
+      setConsent(false)
+    } catch (err) {
+      console.error("Submission failed", err)
+      toast.error("Failed to submit application. Please try again.")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -99,7 +167,8 @@ export function Volunteer() {
                   checked={volunteerType === "general"}
                   onChange={(e) => {
                     setVolunteerType("general")
-                    setSelectedEvent("")
+                    setSelectedEventId(null)
+                    setSelectedEventName("")
                   }}
                   className="w-4 h-4 rounded-full mt-1"
                 />
@@ -134,81 +203,131 @@ export function Volunteer() {
               </label>
             </div>
 
-            {/* Event Dropdown (conditional) */}
+            {/* Event Searchable Dropdown (conditional) */}
             {volunteerType === "event" && (
               <div className="mt-6">
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Select Event *
                 </label>
-                <div className="relative">
-                  <select
-                    value={selectedEvent}
-                    onChange={(e) => setSelectedEvent(e.target.value)}
-                    required={volunteerType === "event"}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary appearance-none bg-background text-foreground"
-                  >
-                    <option value="">-- Choose an event --</option>
-                    {EVENTS.map((event) => (
-                      <option key={event.id} value={event.name}>
-                        {event.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-foreground/60 pointer-events-none" />
-                </div>
+                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={popoverOpen}
+                      className="w-full justify-between px-4 py-3 h-auto border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
+                    >
+                      {selectedEventName
+                        ? selectedEventName
+                        : "Select event..."}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                    <Command className="w-full">
+                      <CommandInput placeholder="Search event..." className="h-9" />
+                      <CommandList className="max-h-[300px]">
+                        <CommandEmpty>No event found.</CommandEmpty>
+                        <CommandGroup>
+                          {events.length > 0 ? (
+                            events.map((event) => (
+                              <CommandItem
+                                key={event.id}
+                                value={event.title}
+                                onSelect={() => {
+                                  setSelectedEventId(event.id)
+                                  setSelectedEventName(event.title)
+                                  setPopoverOpen(false)
+                                }}
+                              >
+                                {event.title}
+                                <Check
+                                  className={cn(
+                                    "ml-auto h-4 w-4",
+                                    selectedEventId === event.id ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            ))
+                          ) : (
+                            <CommandItem disabled>
+                              {loadingEvents ? "Loading events..." : "No events available"}
+                            </CommandItem>
+                          )}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
             )}
 
-            {/* Summary */}
-            <div className="mt-6 p-4 bg-muted rounded-lg border border-border">
-              <p className="text-sm text-foreground">
-                <strong>Type:</strong>{" "}
-                {volunteerType === "general"
-                  ? "General Volunteer"
-                  : selectedEvent
-                    ? selectedEvent
-                    : "Please select an event"}
-              </p>
-            </div>
+
           </div>
 
           {/* Right Column - Volunteer Application Form */}
           <div className="bg-card border border-border rounded-lg p-8">
-            {submitted && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-                ✓ Thank you for your application! We'll review it and be in touch soon.
-              </div>
-            )}
+            <Toaster position="top-right" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Full Name */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                  placeholder="Your full name"
-                />
+              {/* Name Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    placeholder="First Name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    placeholder="Last Name"
+                  />
+                </div>
               </div>
 
               {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                  placeholder="your@email.com"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    placeholder="07..."
+                  />
+                </div>
               </div>
 
               <div>
@@ -248,10 +367,11 @@ export function Volunteer() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-secondary text-white py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+                disabled={submitting}
+                className="w-full bg-secondary text-white py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Send size={20} />
-                Submit Registration
+                {submitting ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+                {submitting ? "Submitting..." : "Submit Registration"}
               </button>
             </form>
           </div>

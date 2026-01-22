@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Heart, Loader2, CheckCircle, XCircle } from "lucide-react"
+import { Heart, Loader2, CheckCircle, XCircle, User, Mail, Phone, DollarSign } from "lucide-react"
+import api from "@/lib/axios"
+import toast from "react-hot-toast"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
@@ -44,28 +46,39 @@ export function DonationOptions() {
     try {
       const payload = {
         amount: selectedAmount,
-        phoneNumber,
-        paymentMethod,
-        donationType,
-        anonymous: isAnonymous,
+        phone_number: phoneNumber,
+        payment_method: paymentMethod,
+        donation_type: donationType,
+        is_anonymous: isAnonymous,
         ...(isAnonymous
           ? {}
           : {
-              firstName,
-              lastName,
-              email,
-            }),
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+          }),
       }
 
-      console.log("Donation payload:", payload)
+      await api.post("/api/donations/electronic", payload)
+      setPaymentStatus("success")
+      toast.success("Thank you for your donation!")
 
-      // 🔜 Replace with backend call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Reset after success
+      setTimeout(() => {
+        setPaymentStatus("idle")
+        setSelectedAmount(null)
+        setPhoneNumber("")
+        setFirstName("")
+        setLastName("")
+        setEmail("")
+        setIsAnonymous(false)
+      }, 3000)
 
-      setPaymentStatus("pending")
     } catch (error) {
+      console.error("Donation failed", error)
       setPaymentStatus("failed")
       setErrorMessage("Failed to initiate payment. Please try again.")
+      toast.error("Payment initiation failed")
     }
   }
 
@@ -114,11 +127,10 @@ export function DonationOptions() {
                   key={amount}
                   type="button"
                   onClick={() => setSelectedAmount(amount)}
-                  className={`py-3 rounded-lg font-bold ${
-                    selectedAmount === amount
+                  className={`py-3 rounded-lg font-bold ${selectedAmount === amount
                       ? "bg-secondary text-white"
                       : "bg-muted hover:bg-secondary/20"
-                  }`}
+                    }`}
                 >
                   {amount.toLocaleString()}
                 </button>
@@ -139,50 +151,69 @@ export function DonationOptions() {
           </div>
 
           {/* Personal Details */}
-          <div className="flex items-center gap-3 p-4 mb-4 bg-muted rounded-lg">
+          <div className="flex items-center gap-3 p-4 mb-8 bg-muted rounded-lg border border-border">
             <input
               type="checkbox"
               id="anonymous"
               checked={isAnonymous}
               onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="w-4 h-4 rounded"
+              className="w-4 h-4 rounded mt-1 accent-secondary"
             />
-            <label htmlFor="anonymous" className="cursor-pointer">
+            <label htmlFor="anonymous" className="text-sm font-medium text-foreground cursor-pointer">
               Make this donation anonymous
             </label>
           </div>
-          <div className="space-y-4 mb-8">
-            <div>
-              <label className="block text-sm font-medium mb-2">First Name</label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Your name"
-              />
+
+          {!isAnonymous && (
+            <div className="space-y-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <h3 className="block text-sm font-medium text-foreground mb-2">First Name</h3>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary bg-transparent"
+                      placeholder="Enter first name"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <h3 className="block text-sm font-medium text-foreground mb-2">Last Name</h3>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary bg-transparent"
+                      placeholder="Enter last name"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4 px-0 md:px-0">
+                <div className="flex-1">
+                  <h3 className="block text-sm font-medium text-foreground mb-2">Email Address</h3>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary bg-transparent"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
             </div>
+          )}
+
+          {/* Amount Label with Icon */}
+          <div className="flex gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Last Name</label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Your name"
-              />
+              <h3 className="font-bold text-foreground mb-1">Donation Amount</h3>
+              <p className="text-sm text-muted-foreground">Select or enter the amount you wish to contribute</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="your@email.com"
-              />
-            </div>
-            
           </div>
 
           {/* Payment Method */}
@@ -199,10 +230,9 @@ export function DonationOptions() {
                   <label
                     key={method}
                     className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition
-                      ${
-                        isSelected
-                          ? "border-secondary bg-secondary/10"
-                          : "border-border hover:bg-muted"
+                      ${isSelected
+                        ? "border-secondary bg-secondary/10"
+                        : "border-border hover:bg-muted"
                       }`}
                   >
                     <input
@@ -231,15 +261,20 @@ export function DonationOptions() {
           </div>
 
           {/* Phone */}
-          <div className="mb-8">
-            <label className="block text-sm font-medium mb-2">Phone Number</label>
-            <input
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="07XXXXXXXX"
-            />
+          <div className="mb-12">
+            <div className="flex gap-4 mb-4">
+              <div className="flex-1">
+                <h3 className="font-bold text-foreground mb-1 text-sm tracking-wider">Phone Number</h3>
+                <p className="text-xs text-muted-foreground mb-3">You will receive a STK push on this number</p>
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary bg-transparent"
+                  placeholder="07XXXXXXXX"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Status UI */}

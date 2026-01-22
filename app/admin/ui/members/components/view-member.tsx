@@ -20,7 +20,7 @@ export type Member = {
   phone: string
   dob: string
   gender: string
-  area_of_interest: string
+  specialInterest: string
 //   joinedAt: string
   status: "ACTIVE" | "INACTIVE"
 
@@ -58,7 +58,7 @@ export function ViewMemberDialog({
           <Detail label="Ward" value={member.ward} />
           <Detail label="Date of Birth" value={member.dob} />
           <Detail label="Gender" value={member.gender} />
-          <Detail label="Area of Interest" value={member.area_of_interest} /> 
+          <Detail label="Special Interest" value={member.specialInterest} /> 
 
           <div className="flex justify-between">
             <span className="text-muted-foreground">Status</span>
