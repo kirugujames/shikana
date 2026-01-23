@@ -55,6 +55,7 @@ export function Volunteer() {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [areasOfInterest, setAreasOfInterest] = useState<string[]>([])
+  const [otherInterest, setOtherInterest] = useState("")
   const [consent, setConsent] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
@@ -78,9 +79,14 @@ export function Volunteer() {
   }, [])
 
   const handleAreaToggle = (area: string) => {
-    setAreasOfInterest((prev) =>
-      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
-    )
+    setAreasOfInterest((prev) => {
+      const isRemoving = prev.includes(area)
+      // If unchecking "Other", clear the custom text
+      if (isRemoving && area === "Other") {
+        setOtherInterest("")
+      }
+      return isRemoving ? prev.filter((a) => a !== area) : [...prev, area]
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,17 +104,23 @@ export function Volunteer() {
 
     try {
       setSubmitting(true)
+      // Build areas of interest, replacing "Other" with custom text if provided
+      const finalAreasOfInterest = areasOfInterest.map(area =>
+        area === "Other" && otherInterest.trim() ? otherInterest.trim() : area
+      )
+
       const payload = {
-        full_name: `${firstName} ${lastName}`.trim(),
+        firstname: firstName,
+        lastname: lastName,
         email,
         phone,
-        areas_of_interest: areasOfInterest,
+        areas_of_interest: finalAreasOfInterest,
         volunteer_type: volunteerType,
         event_id: volunteerType === "event" ? selectedEventId : null,
         event_name: volunteerType === "event" ? selectedEventName : "General Volunteering",
       }
 
-      await api.post("/api/volunteers/register", payload)
+      await api.post("/api/volunteers/signup", payload)
       toast.success("Application submitted successfully!")
 
       // Reset form
@@ -117,6 +129,7 @@ export function Volunteer() {
       setEmail("")
       setPhone("")
       setAreasOfInterest([])
+      setOtherInterest("")
       setSelectedEventId(null)
       setSelectedEventName("")
       setConsent(false)
@@ -131,16 +144,6 @@ export function Volunteer() {
   return (
     <section className="w-full py-16 md:py-24 bg-background">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-            Volunteer Application
-          </h2>
-          <p className="text-lg text-foreground/70">
-            Join our team and make a difference! Tell us about yourself and your interests.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           {/* Left Column - Volunteer Type Selection */}
           <div className="bg-card border border-border rounded-lg p-8">
@@ -261,8 +264,6 @@ export function Volunteer() {
                 </Popover>
               </div>
             )}
-
-
           </div>
 
           {/* Right Column - Volunteer Application Form */}
@@ -347,6 +348,20 @@ export function Volunteer() {
                     </label>
                   ))}
                 </div>
+
+                {/* Custom input for "Other" */}
+                {areasOfInterest.includes("Other") && (
+                  <div className="mt-3">
+                    <input
+                      type="text"
+                      value={otherInterest}
+                      onChange={(e) => setOtherInterest(e.target.value)}
+                      placeholder="Please specify your area of interest"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      required={areasOfInterest.includes("Other")}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Consent */}

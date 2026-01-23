@@ -34,7 +34,7 @@ export function ApproveAspirantDialog({
         try {
             setLoading(true)
             // TODO: Replace with actual API endpoint
-            await api.post(`/api/aspirants/${aspirant.id}/approve`)
+            await api.post(`/api/aspirants/${aspirant.id}/update-status`)
             onSuccess()
             onOpenChange(false)
         } catch (error) {
