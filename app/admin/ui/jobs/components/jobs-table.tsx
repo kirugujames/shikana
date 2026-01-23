@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import {
   Table,
   TableBody,
@@ -327,6 +328,7 @@ export function JobsTable() {
                 </Button>
               </TableHead>
 
+              <TableHead>Applications</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -361,6 +363,14 @@ export function JobsTable() {
                     {new Date(job.postedDate).toLocaleDateString()}
                   </TableCell>
 
+                  <TableCell>
+                    <Button variant="outline" size="sm" asChild className="border-secondary text-secondary hover:bg-secondary hover:text-white">
+                      <Link href={`/admin/ui/jobs/${job.id}/applications`}>
+                        View Applications
+                      </Link>
+                    </Button>
+                  </TableCell>
+
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -377,7 +387,7 @@ export function JobsTable() {
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => handleView(job)}>
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleEdit(job)}>
                           <Pencil className="mr-2 h-4 w-4" />

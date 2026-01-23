@@ -36,7 +36,6 @@ import api from "@/lib/axios"
 
 const donationSchema = z.object({
     type: z.enum(["individual", "organization"]),
-    category: z.string().min(1, "Category is required"),
     amount: z.string().min(1, "Amount is required"),
     isAnonymous: z.boolean().default(false),
     firstname: z.string().optional(),

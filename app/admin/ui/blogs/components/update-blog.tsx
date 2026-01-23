@@ -38,14 +38,8 @@ export default function UpdateBlog({ blogId, onSuccess }: UpdateBlogProps) {
         toast.error("Failed to fetch blog")
       }
     }
-    async function getCategory() {
-      try {
-        const response = await api.get("/api/blog/get/all/blogCategory")
-        setCategoryData(response.data?.data || [])
-      } catch {}
-    }
     fetchBlog()
-    getCategory()
+    // getCategory()
   }, [blogId])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

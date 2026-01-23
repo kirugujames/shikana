@@ -37,7 +37,7 @@ type Blog = {
   title: string
   category: string
   posted_by: string
-  posted_date: string
+  createdAt: string
 }
 
 type SortField = keyof Blog | null
@@ -300,7 +300,7 @@ export function BlogsTable() {
                   </TableCell>
                   <TableCell className="text-muted-foreground">{blog.posted_by}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {new Date(blog.posted_date).toLocaleDateString()}
+                    {new Date(blog.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>

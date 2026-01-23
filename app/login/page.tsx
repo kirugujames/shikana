@@ -18,8 +18,6 @@ export default function LoginPage() {
           SFUP is a political movement built on unity, driven by the belief that together we can create meaningful change for Kenya as a whole.
         </p>
       </div>
-
-
       <div className="flex w-full max-w-sm flex-col gap-6 lg:mr-28">
         <LoginForm />
       </div>

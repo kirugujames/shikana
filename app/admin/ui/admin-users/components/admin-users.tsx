@@ -31,6 +31,7 @@ export type AdminUser = {
   lastName: string
   email: string
   role: string
+  role_id: number
 }
 
 type SortField = keyof AdminUser | null
@@ -57,7 +58,18 @@ export function AdminUsersTable() {
     try {
       setLoading(true)
       const res = await api.get("/api/users/get-all-users")
-      setData(Array.isArray(res.data?.data) ? res.data.data : [])
+      const rawData = Array.isArray(res.data?.data) ? res.data.data : []
+
+      // Map backend fields to frontend expected ones
+      const mappedData = rawData.map((u: any) => ({
+        ...u,
+        firstName: u.firstName || u.first_name || "",
+        lastName: u.lastName || u.last_name || "",
+        role: u.role || (u.role_id === 1 ? "Admin" : u.role_id === 2 ? "Political Aspirant" : u.role_id === 3 ? "User" : "Unknown"),
+        role_id: u.role_id
+      }))
+
+      setData(mappedData)
     } catch (err) {
       console.error(err)
       setError("Unable to load admin users")
@@ -83,10 +95,10 @@ export function AdminUsersTable() {
     let filtered = data.filter((u) => {
       const q = searchTerm.toLowerCase()
       return (
-        u.firstName.toLowerCase().includes(q) ||
-        u.lastName.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q) ||
-        u.role.toLowerCase().includes(q)
+        (u.firstName?.toLowerCase() || "").includes(q) ||
+        (u.lastName?.toLowerCase() || "").includes(q) ||
+        (u.email?.toLowerCase() || "").includes(q) ||
+        (u.role?.toLowerCase() || "").includes(q)
       )
     })
 

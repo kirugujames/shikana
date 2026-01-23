@@ -11,34 +11,36 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import api from "@/lib/axios"
-import { Aspirant } from "./aspirants-table"
+import { VolunteerData } from "./volunteer-table"
+import toast from "react-hot-toast"
 
-interface ApproveAspirantDialogProps {
+interface ApproveVolunteerDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    aspirant: Aspirant | null
+    volunteer: VolunteerData | null
     onSuccess: () => void
 }
 
-export function ApproveAspirantDialog({
+export function ApproveVolunteerDialog({
     open,
     onOpenChange,
-    aspirant,
+    volunteer,
     onSuccess,
-}: ApproveAspirantDialogProps) {
+}: ApproveVolunteerDialogProps) {
     const [loading, setLoading] = useState(false)
 
     const handleApprove = async () => {
-        if (!aspirant) return
+        if (!volunteer) return
 
         try {
             setLoading(true)
-            // TODO: Replace with actual API endpoint
-            await api.post(`/api/aspirants/${aspirant.id}/update-status`)
+            await api.post(`/api/volunteers/${volunteer.id}/approve`)
+            toast.success("Volunteer application approved")
             onSuccess()
             onOpenChange(false)
         } catch (error) {
-            console.error("Failed to approve aspirant", error)
+            console.error("Failed to approve volunteer", error)
+            toast.error("Failed to approve volunteer")
         } finally {
             setLoading(false)
         }
@@ -48,15 +50,16 @@ export function ApproveAspirantDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Approve Application</DialogTitle>
+                    <DialogTitle>Approve Volunteer Application</DialogTitle>
                     <DialogDescription>
                         Are you sure you want to approve the application for{" "}
                         <span className="font-semibold">
-                            {aspirant?.first_name} {aspirant?.last_name}
+                            {volunteer?.full_name}
                         </span>
                         ?
                     </DialogDescription>
                 </DialogHeader>
+
                 <DialogFooter>
                     <Button
                         variant="outline"

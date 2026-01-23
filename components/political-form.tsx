@@ -14,7 +14,7 @@ export default function PoliticalRegistrationForm() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    // phone: "",
     membershipNumber: "",
     position: ""
   })
@@ -28,7 +28,7 @@ export default function PoliticalRegistrationForm() {
         firstName: user.first_name || "",
         lastName: user.last_name || "",
         email: user.email || "",
-        phone: user.phone || prev.phone,
+        // phone: user.phone || prev.phone,
       }))
     }
   }, [user])
@@ -68,7 +68,7 @@ export default function PoliticalRegistrationForm() {
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        phone: formData.phone,
+        // phone: formData.phone,
         membership_number: formData.membershipNumber, // Ensure this matches API expectation
         position: formData.position,
       })
@@ -96,13 +96,6 @@ export default function PoliticalRegistrationForm() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       toast.error("Please enter a valid email address")
-      return false
-    }
-
-    // Phone validation (Kenyan format)
-    const phoneRegex = /^(\+254|0)[17]\d{8}$/
-    if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
-      toast.error("Please enter a valid Kenyan phone number")
       return false
     }
 
