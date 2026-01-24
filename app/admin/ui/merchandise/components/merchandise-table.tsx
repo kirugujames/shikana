@@ -16,16 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Search, MoreHorizontal, Eye, Pencil, Trash2, Plus } from "lucide-react"
 import api from "@/lib/axios"
-import { AddNewMerchandise } from "./add-merchandise"
+import { AddNewMerchandise, MerchandiseData } from "./add-merchandise"
+import toast from "react-hot-toast"
 
-type Merchandise = {
-  id: number
-  name: string
-  category: string
-  price: number
-  stock: number
-  status: "ACTIVE" | "INACTIVE"
-  image: string
+type Merchandise = MerchandiseData & {
   createdDate: string
 }
 
@@ -35,13 +29,23 @@ export function MerchandiseTable() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dialogMode, setDialogMode] = useState<"create" | "edit" | "view">("create")
+  const [selectedItem, setSelectedItem] = useState<Merchandise | undefined>(undefined)
 
   const fetchMerchandise = async () => {
     try {
       setLoading(true)
       const res = await api.get("/api/merchandise/all")
       const items = Array.isArray(res.data) ? res.data : (res.data?.data ?? [])
-      setData(items)
+
+      // Transform API data to match frontend model
+      const mappedItems = items.map((item: any) => ({
+        ...item,
+        stock: item.stock_quantity ?? item.stock,
+        size: typeof item.size === 'string' ? JSON.parse(item.size) : item.size,
+      }))
+
+      setData(mappedItems)
     } catch (err) {
       console.error(err)
       setError("Failed to load merchandise")
@@ -68,6 +72,37 @@ export function MerchandiseTable() {
     fetchMerchandise()
   }
 
+  const handleCreate = () => {
+    setDialogMode("create")
+    setSelectedItem(undefined)
+    setIsDialogOpen(true)
+  }
+
+  const handleEdit = (item: Merchandise) => {
+    setDialogMode("edit")
+    setSelectedItem(item)
+    setIsDialogOpen(true)
+  }
+
+  const handleView = (item: Merchandise) => {
+    setDialogMode("view")
+    setSelectedItem(item)
+    setIsDialogOpen(true)
+  }
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this item?")) return
+
+    try {
+      await api.delete(`/api/merchandise/delete/${id}`)
+      toast.success("Merchandise deleted successfully")
+      fetchMerchandise()
+    } catch (error) {
+      console.error("Error deleting merchandise:", error)
+      toast.error("Failed to delete merchandise")
+    }
+  }
+
   if (loading) {
     return <div className="p-4 text-sm text-muted-foreground">Loading merchandise…</div>
   }
@@ -90,7 +125,7 @@ export function MerchandiseTable() {
           />
         </div>
 
-        <Button onClick={() => setIsDialogOpen(true)}>
+        <Button onClick={handleCreate}>
           <Plus className="mr-2 h-4 w-4" />
           New Merchandise
         </Button>
@@ -163,16 +198,19 @@ export function MerchandiseTable() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleView(item)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEdit(item)}>
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => item.id && handleDelete(item.id)}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete
                         </DropdownMenuItem>
@@ -191,7 +229,12 @@ export function MerchandiseTable() {
           <DialogHeader>
             <DialogTitle className="sr-only">Add New Merchandise</DialogTitle>
           </DialogHeader>
-          <AddNewMerchandise onSuccess={handleMerchandiseAdded} onCancel={() => setIsDialogOpen(false)} />
+          <AddNewMerchandise
+            mode={dialogMode}
+            initialData={selectedItem}
+            onSuccess={handleMerchandiseAdded}
+            onCancel={() => setIsDialogOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>
