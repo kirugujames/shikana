@@ -56,7 +56,7 @@ export function RejectApplicationDialog({
 
         try {
             setLoading(true)
-            await api.post(`/api/jobs/applications/${application.id}/reject`, values)
+            await api.patch(`/api/jobs/application-status`, { id: application.id, status: "Rejected",reason: values.reason })
             toast.success("Application rejected")
             onSuccess()
             onOpenChange(false)
