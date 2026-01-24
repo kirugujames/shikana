@@ -27,7 +27,7 @@ type AuditLog = {
   action: string
   entity: string
   description: string
-  ipAddress: string
+  ip_address: string
   createdAt: string
 }
 
@@ -85,7 +85,7 @@ export function AuditLogsTable() {
         log.action.toLowerCase().includes(term) ||
         log.entity.toLowerCase().includes(term) ||
         log.description.toLowerCase().includes(term) ||
-        log.ipAddress.includes(term)
+        log.ip_address.includes(term)
       )
     })
 
@@ -236,7 +236,7 @@ export function AuditLogsTable() {
                     {log.description}
                   </TableCell>
 
-                  <TableCell>{log.ipAddress}</TableCell>
+                  <TableCell>{log.ip_address}</TableCell>
 
                   <TableCell>
                     {new Date(log.createdAt).toLocaleString()}
