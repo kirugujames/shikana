@@ -104,7 +104,7 @@ export function AppSidebar({
     }
 
     // Check for CONTENT_ADMIN
-    if (r === Roles.CONTENT_ADMIN.toLowerCase() || r.includes("content_admin")) {
+    if (r === Roles.CONTENT_ADMIN.toLowerCase() || r === "Content Admin" || r.includes("content_admin")) {
       const allowed = ["Events", "Blogs"] // Only Events and Blogs
       return navItems.filter(item => allowed.includes(item.title))
     }

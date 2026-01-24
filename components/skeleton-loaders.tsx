@@ -178,3 +178,27 @@ export function EventDetailSkeleton() {
         </div>
     )
 }
+
+export function MerchandiseCardSkeleton() {
+    return (
+        <div className="bg-card border border-border rounded-lg overflow-hidden flex flex-col h-full">
+            <Skeleton className="w-full h-48" />
+            <div className="p-6 flex flex-col flex-1 space-y-4">
+                <div className="flex items-center justify-between mb-3">
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                    <Skeleton className="h-6 w-24" />
+                </div>
+                <Skeleton className="h-7 w-3/4" />
+                <div className="space-y-2 py-4">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                </div>
+                <div className="mb-6 flex items-center gap-2">
+                    <Skeleton className="h-4 w-4 rounded" />
+                    <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="h-10 w-full mt-auto rounded-md" />
+            </div>
+        </div>
+    )
+}

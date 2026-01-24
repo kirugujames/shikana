@@ -57,11 +57,13 @@ export function LoginForm({
       localStorage.setItem("token", JSON.stringify(token))
       login(user, token)
       toast.success(result.data?.message || "Login successful")
-      if (result.data.data?.user?.role_id == 1) {
+      const userRole = result.data.data?.user?.role_id;
+      if (userRole == 1 || userRole == 3 || userRole == 4) {
         router.push("/admin/dashboard")
         return
       }
-      else if (result.data.data?.user?.role_id == 2) {
+      
+      else if (userRole == 2) {
         router.push("/shared-ui/political-position")
         return
       }

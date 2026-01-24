@@ -32,6 +32,10 @@ export type AdminUser = {
   email: string
   role: string
   role_id: number
+  Role?: {
+    id: number
+    role_name: string
+  }
 }
 
 type SortField = keyof AdminUser | null
@@ -65,7 +69,7 @@ export function AdminUsersTable() {
         ...u,
         firstName: u.firstName || u.first_name || "",
         lastName: u.lastName || u.last_name || "",
-        role: u.role || (u.role_id === 1 ? "Admin" : u.role_id === 2 ? "Political Aspirant" : u.role_id === 3 ? "User" : "Unknown"),
+        role: u.Role?.role_name || u.role || (u.role_id === 1 ? "Admin" : u.role_id === 2 ? "Political Aspirant" : u.role_id === 3 ? "User" : "Unknown"),
         role_id: u.role_id
       }))
 

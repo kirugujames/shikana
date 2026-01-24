@@ -51,37 +51,53 @@ export function ApplicationForm({ id }: propsData) {
 
     try {
       setIsSubmitting(true)
-      const data = new FormData()
-      data.append("firstname", formData.firstName)
-      data.append("lastname", formData.lastName)
-      data.append("email", formData.email)
-      data.append("phonenumber", formData.phone)
-      data.append("cover_letter", formData.coverLetter)
-      data.append("cv", cvFile)
 
-      const response = await api.post(`/api/jobs/apply/${id}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      // Convert CV file to base64
+      const reader = new FileReader()
+      reader.readAsDataURL(cvFile)
 
-      if (response.status === 200 || response.status === 201) {
-        setSubmitted(true)
-        toast.success("Application submitted successfully!")
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          coverLetter: "",
-        })
-        setCvFile(null)
-        setTimeout(() => setSubmitted(false), 5000)
+      reader.onloadend = async () => {
+        try {
+          const payload = {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            cover_letter: formData.coverLetter,
+            job_id: id,
+            document: reader.result as string,
+          }
+
+          const response = await api.post("/api/jobs/apply", payload)
+
+          if (response.status === 200 || response.status === 201) {
+            setSubmitted(true)
+            toast.success("Application submitted successfully!")
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              phone: "",
+              coverLetter: "",
+            })
+            setCvFile(null)
+            setTimeout(() => setSubmitted(false), 5000)
+          }
+        } catch (error: any) {
+          console.error("Submission error:", error)
+          toast.error(error.response?.data?.message || "Failed to submit application. Please try again.")
+        } finally {
+          setIsSubmitting(false)
+        }
+      }
+
+      reader.onerror = () => {
+        toast.error("Failed to read CV file. Please try again.")
+        setIsSubmitting(false)
       }
     } catch (error: any) {
       console.error("Submission error:", error)
       toast.error(error.response?.data?.message || "Failed to submit application. Please try again.")
-    } finally {
       setIsSubmitting(false)
     }
   }
@@ -166,7 +182,7 @@ export function ApplicationForm({ id }: propsData) {
                 />
               </div>
             </div>
-            
+
             {/* CV Upload */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Upload CV/Resume *</label>
