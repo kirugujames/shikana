@@ -110,8 +110,8 @@ export function Volunteer() {
       )
 
       const payload = {
-        firstname: firstName,
-        lastname: lastName,
+        first_name: firstName,
+        last_name: lastName,
         email,
         phone,
         areas_of_interest: finalAreasOfInterest,

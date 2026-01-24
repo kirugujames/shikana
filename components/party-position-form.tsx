@@ -14,7 +14,7 @@ export default function PartyPositionForm() {
         firstName: "",
         lastName: "",
         email: "",
-        // phone: "",
+        phone: "",
         membershipNumber: "",
         position: ""
     })
@@ -28,7 +28,7 @@ export default function PartyPositionForm() {
                 firstName: user.first_name || "",
                 lastName: user.last_name || "",
                 email: user.email || "",
-                // phone: user.phone || prev.phone,
+                phone: user.phone || prev.phone,
             }))
         }
     }, [user])
@@ -67,7 +67,7 @@ export default function PartyPositionForm() {
                 first_name: formData.firstName,
                 last_name: formData.lastName,
                 email: formData.email,
-                // phone: formData.phone,
+                phone: formData.phone,
                 membership_number: formData.membershipNumber,
                 position: formData.position,
             })
@@ -75,6 +75,16 @@ export default function PartyPositionForm() {
             if (response.status === 200 || response.status === 201) {
                 toast.success("Application submitted successfully!")
                 setStatus("success")
+
+                // Clear form data
+                setFormData({
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                    membershipNumber: "",
+                    position: ""
+                })
             } else {
                 throw new Error(response.data?.message || "Submission failed")
             }
@@ -95,11 +105,11 @@ export default function PartyPositionForm() {
             return false
         }
 
-        // const phoneRegex = /^(\+254|0)[17]\d{8}$/
-        // if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
-        //     toast.error("Please enter a valid Kenyan phone number")
-        //     return false
-        // }
+        const phoneRegex = /^(\+254|0)[17]\d{8}$/
+        if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
+            toast.error("Please enter a valid Kenyan phone number")
+            return false
+        }
 
         if (!formData.firstName || !formData.lastName || !formData.membershipNumber || !formData.position) {
             toast.error("Please fill in all required fields")
@@ -198,6 +208,20 @@ export default function PartyPositionForm() {
                                             disabled={status === "loading" || status === "success"}
                                             className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                                             placeholder="your@email.com"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={status === "loading" || status === "success"}
+                                            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                            placeholder="+254712345678 or 0712345678"
                                         />
                                     </div>
 

@@ -56,8 +56,16 @@ export function RejectAspirantDialog({
 
         try {
             setLoading(true)
-            // TODO: Replace with actual API endpoint
-            await api.post(`/api/aspirants/${aspirant.id}/reject`, values)
+            // Use different endpoints based on type
+            const endpoint = aspirant.type === "party"
+                ? "/api/party-positions/update-status"
+                : "/api/aspirants/update-status"
+
+            await api.patch(endpoint, {
+                id: aspirant.id,
+                status: "Rejected",
+                reason: values.reason
+            })
             onSuccess()
             onOpenChange(false)
             form.reset()

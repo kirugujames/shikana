@@ -68,8 +68,15 @@ export function UpdateAspirantStatusDialog({
 
         try {
             setLoading(true)
-            // TODO: Replace with actual API endpoint
-            await api.post(`/api/aspirants/${aspirant.id}/update-status`, values)
+            // Use different endpoints based on type
+            const endpoint = aspirant.type === "party"
+                ? "/api/party-positions/update-status"
+                : "/api/aspirants/update-status"
+
+            await api.patch(endpoint, {
+                id: aspirant.id,
+                status: values.status
+            })
             onSuccess()
             onOpenChange(false)
         } catch (error) {
