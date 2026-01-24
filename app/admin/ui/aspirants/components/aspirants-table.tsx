@@ -76,25 +76,26 @@ export function AspirantsTable({ type }: AspirantsTableProps) {
     const fetchAspirants = async () => {
         try {
             setLoading(true)
-            // TODO: Replace with actual API endpoint, filtering by type
-            // const res = await api.get(`/api/aspirants?type=${type}`)
-            // setData(res.data?.data || [])
 
-            // MOCK DATA for demonstration
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            const mockData: Aspirant[] = Array.from({ length: 25 }).map((_, i) => ({
-                id: i + 1,
-                first_name: `Aspirant${i + 1}`,
-                last_name: `User${i + 1}`,
-                email: `aspirant${i + 1}@example.com`,
-                phone: `+2547000000${i}`,
-                membership_number: `MEM${1000 + i}`,
-                position: type === "political" ? "Governor" : "Chairman",
-                status: i % 3 === 0 ? "Approved" : i % 3 === 1 ? "Rejected" : "Pending",
+            // Use different endpoints based on type
+            const endpoint = type === "party" ? "/api/party-positions/all" : "/api/aspirants/all"
+            const res = await api.get(endpoint)
+            const rawData = Array.isArray(res.data?.data) ? res.data.data : []
+
+            // Map the data to match the Aspirant type
+            const mappedData: Aspirant[] = rawData.map((item: any) => ({
+                id: item.id,
+                first_name: item.first_name || "",
+                last_name: item.last_name || "",
+                email: item.email || "",
+                phone: item.phone || "",
+                membership_number: item.membership_number || "",
+                position: item.position || "",
+                status: item.status || "Pending",
                 type: type,
             }))
-            setData(mockData)
 
+            setData(mappedData)
         } catch (err) {
             console.error(err)
             setError("Unable to load aspirants")

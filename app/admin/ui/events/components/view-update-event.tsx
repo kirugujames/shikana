@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,7 @@ import { ArrowUpDown, ChevronLeft, ChevronRight, Search, MoreHorizontal, Eye, Pe
 import api from "@/lib/axios"
 import AddNewEvent from "./add-event"
 import { toast } from "react-hot-toast"
+import { VolunteerTable } from "../../volunteer/components/volunteer-table"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -63,6 +64,7 @@ export function EventsTable() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null)
+  const [openVolunteers, setOpenVolunteers] = useState(false)
 
   const fetchEvents = async () => {
     try {
@@ -160,6 +162,11 @@ export function EventsTable() {
   const handleDelete = (event: Event) => {
     setEventToDelete(event)
     setIsDeleteDialogOpen(true)
+  }
+
+  const handleViewVolunteers = (event: Event) => {
+    setSelectedEvent(event)
+    setOpenVolunteers(true)
   }
 
   const confirmDelete = async () => {
@@ -323,6 +330,10 @@ export function EventsTable() {
                         <DropdownMenuItem onClick={() => handleMarkMain(event)}>
                           {event.is_main ? "Unmark as Main" : "Mark as Main"}
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleViewVolunteers(event)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Volunteers
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleView(event)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View
@@ -451,6 +462,23 @@ export function EventsTable() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Event Volunteers Dialog */}
+      <Dialog open={openVolunteers} onOpenChange={setOpenVolunteers}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Volunteers for: {selectedEvent?.title}</DialogTitle>
+            <DialogDescription>
+              View and manage volunteers who signed up for this specific event.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedEvent && (
+            <div className="mt-4">
+              <VolunteerTable eventId={selectedEvent.id} />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

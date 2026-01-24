@@ -14,7 +14,7 @@ export default function PoliticalRegistrationForm() {
     firstName: "",
     lastName: "",
     email: "",
-    // phone: "",
+    phone: "",
     membershipNumber: "",
     position: ""
   })
@@ -28,7 +28,7 @@ export default function PoliticalRegistrationForm() {
         firstName: user.first_name || "",
         lastName: user.last_name || "",
         email: user.email || "",
-        // phone: user.phone || prev.phone,
+        phone: user.phone || prev.phone,
       }))
     }
   }, [user])
@@ -64,11 +64,11 @@ export default function PoliticalRegistrationForm() {
     }
 
     try {
-      const response = await api.post("/api/political-positions/apply", {
+      const response = await api.post("/api/aspirants/apply", {
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        // phone: formData.phone,
+        phone: formData.phone,
         membership_number: formData.membershipNumber, // Ensure this matches API expectation
         position: formData.position,
       })
@@ -76,7 +76,16 @@ export default function PoliticalRegistrationForm() {
       if (response.status === 200 || response.status === 201) {
         toast.success("Application submitted successfully!")
         setStatus("success")
-        // Reset form logic if needed, but maybe keep status success
+
+        // Clear form data
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          membershipNumber: "",
+          position: ""
+        })
       } else {
         throw new Error(response.data?.message || "Submission failed")
       }
@@ -195,7 +204,7 @@ export default function PoliticalRegistrationForm() {
                   </div>
 
                   {/* Phone Number */}
-                  {/* <div>
+                  <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
                     <input
                       type="tel"
@@ -207,7 +216,7 @@ export default function PoliticalRegistrationForm() {
                       className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="+254712345678 or 0712345678"
                     />
-                  </div> */}
+                  </div>
 
                   {/* Membership Number */}
                   <div>

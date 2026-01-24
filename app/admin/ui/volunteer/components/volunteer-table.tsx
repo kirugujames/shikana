@@ -52,7 +52,11 @@ export type VolunteerData = {
 type SortField = keyof VolunteerData | null
 type SortDirection = "asc" | "desc"
 
-export function VolunteerTable() {
+interface VolunteerTableProps {
+    eventId?: number
+}
+
+export function VolunteerTable({ eventId }: VolunteerTableProps) {
     const [data, setData] = useState<VolunteerData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -71,7 +75,8 @@ export function VolunteerTable() {
     const fetchVolunteers = async () => {
         try {
             setLoading(true)
-            const res = await api.get("/api/volunteers/all")
+            const endpoint = eventId ? `/api/volunteers/event/${eventId}` : "/api/volunteers/all"
+            const res = await api.get(endpoint)
             setData(Array.isArray(res.data?.data) ? res.data.data : [])
         } catch (err) {
             console.error(err)
@@ -83,7 +88,7 @@ export function VolunteerTable() {
 
     useEffect(() => {
         fetchVolunteers()
-    }, [])
+    }, [eventId])
 
     const handleSort = (field: SortField) => {
         if (sortField === field) {
