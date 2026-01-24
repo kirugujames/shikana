@@ -57,7 +57,7 @@ export function RejectVolunteerDialog({
 
         try {
             setLoading(true)
-            await api.post(`/api/volunteers/${volunteer.id}/reject`, values)
+            await api.patch(`api/volunteers/update-status`, { id: volunteer.id, status: "rejected", reason: values.reason })
             toast.success("Volunteer application rejected")
             onSuccess()
             onOpenChange(false)
@@ -78,7 +78,7 @@ export function RejectVolunteerDialog({
                     <DialogDescription>
                         Please provide a reason for rejecting the application for{" "}
                         <span className="font-semibold">
-                            {volunteer?.full_name}
+                            {volunteer?.first_name + " " + volunteer?.last_name}
                         </span>
                         .
                     </DialogDescription>

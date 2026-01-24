@@ -37,15 +37,15 @@ import { RejectVolunteerDialog } from "./reject-volunteer-dialog"
 
 export type VolunteerData = {
     id: number
-    full_name: string
+    first_name: string
+    last_name: string
     email: string
     phone: string
     areas_of_interest: string[]
     volunteer_type: "event" | "general"
     event_id?: number
     event_name?: string
-    status: "PENDING" | "APPROVED" | "REJECTED"
-    rejection_reason?: string
+    status: string,
     created_at: string
 }
 
@@ -98,7 +98,8 @@ export function VolunteerTable() {
         let filtered = data.filter((item) => {
             const q = searchTerm.toLowerCase()
             return (
-                item.full_name?.toLowerCase().includes(q) ||
+                item.first_name?.toLowerCase().includes(q) ||
+                item.last_name?.toLowerCase().includes(q) ||
                 item.email?.toLowerCase().includes(q) ||
                 item.phone?.toLowerCase().includes(q) ||
                 item.event_name?.toLowerCase().includes(q)
@@ -179,7 +180,7 @@ export function VolunteerTable() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        onClick={() => handleSort("full_name")}
+                                        onClick={() => handleSort("first_name")}
                                     >
                                         Full Name
                                         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -225,15 +226,15 @@ export function VolunteerTable() {
                                         <TableCell className="font-medium text-muted-foreground">
                                             {(currentPage - 1) * itemsPerPage + idx + 1}
                                         </TableCell>
-                                        <TableCell className="font-medium">{item.full_name}</TableCell>
+                                        <TableCell className="font-medium">{item.first_name + " " + item.last_name}</TableCell>
                                         <TableCell>{item.email}</TableCell>
                                         <TableCell>{item.phone}</TableCell>
                                         <TableCell className="capitalize">{item.volunteer_type}</TableCell>
                                         <TableCell>{item.event_name || "N/A"}</TableCell>
                                         <TableCell>
                                             <Badge variant={
-                                                item.status === 'APPROVED' ? 'default' :
-                                                    item.status === 'REJECTED' ? 'destructive' : 'secondary'
+                                                item.status === 'approved' ? 'default' :
+                                                    item.status === 'rejected' ? 'destructive' : 'secondary'
                                             }>
                                                 {item.status}
                                             </Badge>
@@ -248,7 +249,7 @@ export function VolunteerTable() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem
-                                                        disabled={item.status === 'APPROVED'}
+                                                        disabled={item.status === 'approved'}
                                                         onClick={() => {
                                                             setSelectedVolunteer(item)
                                                             setApproveOpen(true)
@@ -258,7 +259,7 @@ export function VolunteerTable() {
                                                         Approve
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
-                                                        disabled={item.status === 'REJECTED'}
+                                                        disabled={item.status === 'rejected'}
                                                         onClick={() => {
                                                             setSelectedVolunteer(item)
                                                             setRejectOpen(true)

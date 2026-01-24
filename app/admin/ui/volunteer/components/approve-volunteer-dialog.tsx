@@ -34,7 +34,7 @@ export function ApproveVolunteerDialog({
 
         try {
             setLoading(true)
-            await api.post(`/api/volunteers/${volunteer.id}/approve`)
+            await api.patch(`/api/volunteers/update-status`, { id: volunteer.id, status: "approved" })
             toast.success("Volunteer application approved")
             onSuccess()
             onOpenChange(false)
@@ -54,7 +54,7 @@ export function ApproveVolunteerDialog({
                     <DialogDescription>
                         Are you sure you want to approve the application for{" "}
                         <span className="font-semibold">
-                            {volunteer?.full_name}
+                            {volunteer?.first_name + " " + volunteer?.last_name}
                         </span>
                         ?
                     </DialogDescription>

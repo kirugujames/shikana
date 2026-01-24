@@ -38,13 +38,13 @@ import {
 
 type Application = {
     id: number
-    firstname: string
-    lastname: string
+    first_name: string
+    last_name: string
     phonenumber: string
     email: string
-    cv_url: string
+    document: string
     cover_letter: string
-    status: "pending" | "approved" | "rejected"
+    status: string
     created_at: string
 }
 
@@ -97,8 +97,8 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
         let filtered = data.filter((app) => {
             const term = searchTerm.toLowerCase()
             return (
-                app.firstname?.toLowerCase().includes(term) ||
-                app.lastname?.toLowerCase().includes(term) ||
+                app.first_name?.toLowerCase().includes(term) ||
+                app.last_name?.toLowerCase().includes(term) ||
                 app.email?.toLowerCase().includes(term) ||
                 app.phonenumber?.toLowerCase().includes(term)
             )
@@ -130,7 +130,7 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
 
     const handleApprove = async (id: number) => {
         try {
-            await api.post(`/api/jobs/applications/${id}/approve`)
+            await api.patch(`/api/jobs/application-status`, { id, status: "Accepted" })
             toast.success("Application approved")
             fetchApplications()
         } catch (error) {
@@ -146,6 +146,34 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
     const openCoverLetter = (app: Application) => {
         setSelectedApp(app)
         setIsCoverLetterOpen(true)
+    }
+
+    const handleExport = () => {
+        if (!data.length) return
+
+        const headers = ["ID", "First Name", "Last Name", "Email", "Phone", "Status", "Date"]
+        const csvContent = [
+            headers.join(","),
+            ...data.map(app => [
+                app.id,
+                `"${app.first_name || ''}"`,
+                `"${app.last_name || ''}"`,
+                `"${app.email || ''}"`,
+                `"${app.phonenumber || ''}"`,
+                `"${app.status || ''}"`,
+                `"${app.created_at || ''}"`
+            ].join(","))
+        ].join("\n")
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+        const link = document.createElement("a")
+        const url = URL.createObjectURL(blob)
+        link.setAttribute("href", url)
+        link.setAttribute("download", `applications-${jobId}.csv`)
+        link.style.visibility = "hidden"
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }
 
     if (loading) {
@@ -191,16 +219,22 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                         className="pl-9"
                     />
                 </div>
-                <Badge variant="secondary">
-                    {filteredAndSortedData.length} Applicants
-                </Badge>
+                <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={handleExport}>
+                        <Download className="mr-2 h-4 w-4" />
+                        Export CSV
+                    </Button>
+                    <Badge variant="secondary">
+                        {filteredAndSortedData.length} Applicants
+                    </Badge>
+                </div>
             </div>
 
             <div className="rounded-lg border bg-card overflow-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead onClick={() => handleSort("firstname")} className="cursor-pointer">
+                            <TableHead onClick={() => handleSort("first_name")} className="cursor-pointer">
                                 Name <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                             </TableHead>
                             <TableHead>Email</TableHead>
@@ -221,7 +255,7 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                             paginatedData.map((app) => (
                                 <TableRow key={app.id}>
                                     <TableCell className="font-medium">
-                                        {app.firstname} {app.lastname}
+                                        {app.first_name} {app.last_name}
                                     </TableCell>
                                     <TableCell>
                                         <div className="text-sm">{app.email}</div>
@@ -235,9 +269,9 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                                         )}
                                     </TableCell>
                                     <TableCell className="text-center">
-                                        {app.cv_url && (
+                                        {app.document && (
                                             <Button variant="ghost" size="sm" asChild title="Download CV">
-                                                <a href={app.cv_url} download target="_blank" rel="noopener noreferrer">
+                                                <a href={app.document} download target="_blank" rel="noopener noreferrer">
                                                     <Download className="h-4 w-4 text-primary" />
                                                 </a>
                                             </Button>
@@ -245,8 +279,8 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant={
-                                            app.status === 'approved' ? 'default' :
-                                                app.status === 'rejected' ? 'destructive' : 'secondary'
+                                            app.status === 'Accepted' ? 'default' :
+                                                app.status === 'Rejected' ? 'destructive' : 'secondary'
                                         }>
                                             {app.status}
                                         </Badge>
@@ -258,7 +292,7 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                                                 variant="default"
                                                 className="bg-primary text-white hover:bg-primary/90"
                                                 onClick={() => handleApprove(app.id)}
-                                                disabled={app.status === 'approved'}
+                                                disabled={app.status === 'Accepted' || app.status === 'Rejected'}
                                                 title="Approve"
                                             >
                                                 <CheckCircle className="h-4 w-4" />
@@ -267,7 +301,7 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                                                 size="sm"
                                                 variant="secondary"
                                                 onClick={() => openRejectDialog(app)}
-                                                disabled={app.status === 'rejected'}
+                                                disabled={app.status === 'Rejected' || app.status === 'Accepted'}
                                                 title="Reject"
                                             >
                                                 <XCircle className="h-4 w-4" />
@@ -320,7 +354,7 @@ export function ApplicationsTable({ jobId }: ApplicationsTableProps) {
                     <DialogHeader>
                         <DialogTitle>Cover Letter</DialogTitle>
                         <DialogDescription>
-                            From {selectedApp?.firstname} {selectedApp?.lastname}
+                            From {selectedApp?.first_name} {selectedApp?.last_name}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="whitespace-pre-wrap p-4 bg-muted rounded-lg max-h-[60vh] overflow-y-auto">
