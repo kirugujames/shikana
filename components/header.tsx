@@ -40,22 +40,30 @@ export function Header() {
         { label: "Publications", href: "/shared-ui/publications" },
       ],
     },
+
     {
-      label: "Get Involved",
+      label: "Support Us",
       children: [
-        { label: "Become a Member", href: "/shared-ui/register" },
-        { label: "Become An Aspirant", href: "/shared-ui/political-position" },
-        { label: "Party Positions", href: "/shared-ui/party-position" },
-        { label: "Find a Local Group", href: "/shared-ui" },
-        { label: "Volunteers", href: "/shared-ui/volunteer" },
-        { label: "Careers", href: "/shared-ui/careers" },
         { label: "Donate", href: "/shared-ui/donate" },
         { label: "Shop", href: "/shared-ui/listings" },
       ],
     },
 
     {
-      label: "Support",
+      label: "Get Involved",
+      children: [
+        { label: "Become a Member", href: "/shared-ui/register" },
+        { label: "Become An Aspirant", href: "/shared-ui/political-position" },
+        { label: "Party Positions", href: "/shared-ui/party-position" },
+        { label: "Find a Local Group", href: "/shared-ui/local-group" },
+        { label: "Volunteers", href: "/shared-ui/volunteer" },
+        { label: "Careers", href: "/shared-ui/careers" },
+
+      ],
+    },
+
+    {
+      label: "Help Center",
       children: [
         { label: "Contact Us", href: "/shared-ui/contact" },
         { label: "FAQs", href: "/shared-ui/faq" },

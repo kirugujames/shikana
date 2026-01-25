@@ -1,13 +1,13 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { CareersHero } from "@/components/careers-hero"
+import { AspirantHero } from "@/components/aspirant-hero"
 import PoliticalRegistrationForm from "@/components/political-form"
 
 export default function ContactPage() {
   return (
     <main className="w-full">
       <Header />
-      <CareersHero />
+      <AspirantHero />
       <PoliticalRegistrationForm />
       <Footer />
     </main>

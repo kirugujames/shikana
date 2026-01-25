@@ -7,29 +7,29 @@ export function TestimonialsSection() {
     {
       id: 1,
       quote:
-        "The Shikana Frontliners represent true leadership and a genuine commitment to unity. When we lift each other up and celebrate each other’s successes, we amplify our collective achievements.",
+        "Our party represent true leadership and a genuine commitment to unity. When we lift and celebrate each other, we amplify our collective achievements.",
       author: "Nicholas Mutunga",
       role: "IT Expert",
     },
     {
       id: 2,
       quote:
-        "This is the change we want for our country. The more we are, the greater our impact will be in our world.",
+        "SFUP is the change we want for our country. The more we are, the greater our impact will be in transforming our country for good.",
       author: "Grace Nyambura",
       role: "Local Business Owner",
     },
     {
       id: 3,
       quote:
-        "Finally, at Shikana, we’re proud to be a party that listens to young voices and amplify the voices of everyday Kenyans to fight for and invests in a better future. Shikana is a force to reckon with!",
+        "Shikana is a force to reckon with! We’re proud to be a party that listens to the aspirations of the young people and amplify the voices of everyday Kenyans.",
       author: "Ber’nita Ammi’mor",
       role: "Youth Advocate",
     },
     {
       id: 4,
       quote:
-        "Shikana's focus on economic empowerment is exactly what we need. It's refreshing to see a party that prioritizes practical solutions for our local businesses.",
-      author: "David Ochieng",
+        "Shikana's focus on economic empowerment is what we need. It's refreshing to have a party that prioritizes solutions for our local businesses.",
+      author: "Mohammed Abdallah",
       role: "Entrepreneur",
     },
   ]
@@ -37,7 +37,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-8 md:py-16 bg-primary overflow-hidden">
       <div className="w-full">
-        <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">What Our Community Says</h2>
+        <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">What Our People Say</h2>
         <p className="text-lg text-white/80 text-center mb-16">
           Hear from our members and supporters across the counties and the country
         </p>

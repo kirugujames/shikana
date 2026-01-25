@@ -7,6 +7,10 @@ import api from "@/lib/axios"
 import toast from "react-hot-toast"
 import { Button } from "./ui/button"
 import { Spinner } from "./ui/spinner"
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command"
+import { Check, ChevronDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default function PartyPositionForm() {
     const { user } = useAuth()
@@ -35,16 +39,59 @@ export default function PartyPositionForm() {
 
     // Party leadership positions
     const partyPositions = [
-        { value: "", label: "Select Party Position" },
-        { value: "national_chairperson", label: "National Chairperson" },
-        { value: "secretary_general", label: "Secretary General" },
-        { value: "treasurer", label: "Treasurer" },
-        { value: "organizing_secretary", label: "Organizing Secretary" },
-        { value: "youth_leader", label: "Youth Leader" },
-        { value: "women_leader", label: "Women Leader" },
-        { value: "regional_coordinator", label: "Regional Coordinator" },
-        { value: "delegate", label: "Delegate" },
+        { value: "president", label: "01. President" },
+        { value: "deputy_president", label: "02. Deputy President" },
+        { value: "party_leader", label: "03. Party Leader" },
+        { value: "deputy_party_leader", label: "04. Deputy Party leader" },
+        { value: "national_chairperson", label: "05. National Chairperson" },
+        { value: "deputy_national_chairperson", label: "06. Deputy National Chairperson" },
+        { value: "secretary_general", label: "07. Secretary General" },
+        { value: "deputy_secretary_general", label: "08. Deputy Secretary General" },
+        { value: "national_treasurer", label: "09. National Treasurer" },
+        { value: "deputy_national_treasurer", label: "10. Deputy National Treasurer" },
+        { value: "secretary_national_oversight_and_audit", label: "11. Secretary, National Oversight and Audit" },
+        { value: "deputy_secretary_national_oversight_and_audit", label: "12. Deputy Secretary, National Oversight and Audit" },
+        { value: "adviser_national_justice_legal_and_constitutional_affairs", label: "13. Adviser, National Justice, Legal and Constitutional Affairs" },
+        { value: "deputy_adviser_national_justice_legal_and_constitutional_affairs", label: "14. Deputy Adviser, National Justice, Legal and Constitutional Affairs" },
+        { value: "secretary_national_organizing_and_membership_affairs", label: "15. Secretary, National Organizing and Membership Affairs" },
+        { value: "deputy_secretary_national_organizing_and_membership_affairs", label: "16. Deputy Secretary, National Organizing and Membership Affairs" },
+        { value: "secretary_national_publicity_and_media_relations", label: "17. Secretary, National Publicity and Media Relations" },
+        { value: "deputy_secretary_national_publicity_and_media_relations", label: "18. Deputy Secretary, National Publicity and Media Relations" },
+        { value: "secretary_party_elected_leaders_group", label: "19. Secretary, Party Elected Leaders Group (County, National Assembly and Senate)" },
+        { value: "leader_national_youth_chapter_affairs", label: "20. Leader, National Youth Chapter Affairs" },
+        { value: "deputy_leader_national_youth_chapter_affairs", label: "21. Deputy Leader, National Youth Chapter Affairs" },
+        { value: "leader_national_women_chapter_affairs", label: "22. Leader, National Women Chapter Affairs" },
+        { value: "leader_deputy_national_women_chapter_affairs", label: "23. Leader Deputy, National Women Chapter Affairs" },
+        { value: "leader_national_chapter_for_special_interests_affairs", label: "24. Leader, National Chapter for Special Interests Affairs" },
+        { value: "leader_deputy_national_chapter_for_special_interests_affairs", label: "25. Leader Deputy, National Chapter for Special Interests Affairs" },
+        { value: "director_campaigns_and_mobilization_strategy", label: "26. Director, Campaigns and Mobilization Strategy" },
+        { value: "deputy_director_of_campaigns_and_mobilization_strategy", label: "27. Deputy Director of Campaigns and Mobilization Strategy" },
+        { value: "director_nominations_and_candidate_elections", label: "28. Director, Nominations and Candidate Elections" },
+        { value: "deputy_director_of_nominations_and_candidate_elections", label: "29. Deputy Director of Nominations and Candidate Elections" },
+        { value: "national_chairperson_house_of_elders", label: "30. National Chairperson, House of Elders" },
+        { value: "deputy_national_chairperson_house_of_elders", label: "31. Deputy National Chairperson, House of Elders" },
+        { value: "national_executive_director", label: "32. National Executive Director (Ex-Officio)" },
+        { value: "secretary_tourism_and_wildlife_services", label: "33. Secretary, Tourism and Wildlife Services" },
+        { value: "secretary_defense_and_homeland_security", label: "34. Secretary, Defense and Homeland Security" },
+        { value: "secretary_sports_arts_and_cultural_heritage", label: "35. Secretary, Sports, Arts and Cultural Heritage" },
+        { value: "secretary_agriculture_livestock_and_fisheries", label: "36. Secretary, Agriculture, Livestock and Fisheries" },
+        { value: "secretary_education_science_and_technology", label: "37. Secretary, Education, Science and Technology" },
+        { value: "secretary_public_policy_and_economic_planning", label: "38. Secretary, Public Policy and Economic Planning" },
+        { value: "secretary_corporate_strategy_political_affairs", label: "39. Secretary, Corporate Strategy & Political Affairs" },
+        { value: "secretary_professional_regulatory_bodies_affairs", label: "40. Secretary, Professional Regulatory Bodies Affairs" },
+        { value: "secretary_international_relations_and_eac_affairs", label: "41. Secretary, International Relations and EAC Affairs" },
+        { value: "secretary_energy_minerals_and_natural_resources", label: "42. Secretary, Energy, Minerals and Natural Resources" },
+        { value: "secretary_investments_trade_and_industrialization", label: "43. Secretary, Investments, Trade and Industrialization" },
+        { value: "secretary_public_finance_and_resource_mobilization", label: "44. Secretary, Public Finance and Resource Mobilization" },
+        { value: "secretary_environment_forestry_and_water_resources", label: "45. Secretary, Environment, Forestry and Water Resources" },
+        { value: "secretary_social_welfare_and_deferentially_able_affairs", label: "46. Secretary, Social Welfare and Deferentially Able Affairs" },
+        { value: "secretary_public_service_and_human_resource_development", label: "47. Secretary, Public Service, and Human Resource Development" },
+        { value: "secretary_transport_and_physical_infrastructure_development", label: "48. Secretary, Transport and Physical Infrastructure Development" },
+        { value: "secretary_special_programmes_and_disaster_management_affairs", label: "49. Secretary, Special programmes and Disaster Management Affairs" },
+        { value: "secretary_county_government_coordination_and_internal_cooperation", label: "50. Secretary, County Government Coordination and Internal Cooperation" },
     ]
+
+    const [popoverOpen, setPopoverOpen] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -241,20 +288,50 @@ export default function PartyPositionForm() {
 
                                     <div>
                                         <label className="block text-sm font-medium text-foreground mb-2">Party Position *</label>
-                                        <select
-                                            name="position"
-                                            value={formData.position}
-                                            onChange={handleChange}
-                                            required
-                                            disabled={status === "loading" || status === "success"}
-                                            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                        >
-                                            {partyPositions.map(pos => (
-                                                <option key={pos.value} value={pos.value}>
-                                                    {pos.label}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={popoverOpen}
+                                                    className="w-full justify-between px-4 py-2 h-auto border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
+                                                    disabled={status === "loading" || status === "success"}
+                                                >
+                                                    {formData.position
+                                                        ? partyPositions.find((pos) => pos.value === formData.position)?.label
+                                                        : "Select Party Position..."}
+                                                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                                                <Command className="w-full">
+                                                    <CommandInput placeholder="Search position..." className="h-9" />
+                                                    <CommandList className="max-h-[300px]">
+                                                        <CommandEmpty>No position found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {partyPositions.map((pos) => (
+                                                                <CommandItem
+                                                                    key={pos.value}
+                                                                    value={pos.label}
+                                                                    onSelect={() => {
+                                                                        setFormData(prev => ({ ...prev, position: pos.value }))
+                                                                        setPopoverOpen(false)
+                                                                    }}
+                                                                >
+                                                                    {pos.label}
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "ml-auto h-4 w-4",
+                                                                            formData.position === pos.value ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
 
                                     <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
