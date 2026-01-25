@@ -28,6 +28,8 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="text-white/80 hover:text-white">Home</Link></li>
               <li><Link href="/shared-ui/about" className="text-white/80 hover:text-white">About Us</Link></li>
+              <li><Link href="/shared-ui/donate" className="text-white/80 hover:text-white">Donate</Link></li>
+              <li><Link href="/shared-ui/listings" className="text-white/80 hover:text-white">Shop</Link></li>
               <li><Link href="/shared-ui/publications" className="text-white/80 hover:text-white">Publications</Link></li>
               {/* <li><Link href="/shared-ui/contact" className="text-white/80 hover:text-white">Contact</Link></li> */}
               <li><Link href="/shared-ui/terms" className="text-white/80 hover:text-white">Terms & Conditions</Link></li>
@@ -58,8 +60,7 @@ export function Footer() {
               <li><Link href="/shared-ui/political-position" className="text-white/80 hover:text-white">Find Local Group</Link></li>
               <li><Link href="/shared-ui/volunteer" className="text-white/80 hover:text-white">Volunteer</Link></li>
               <li><Link href="/shared-ui/careers" className="text-white/80 hover:text-white">Careers</Link></li>
-              <li><Link href="/shared-ui/donate" className="text-white/80 hover:text-white">Donate</Link></li>
-              <li><Link href="/shared-ui/listings" className="text-white/80 hover:text-white">Shop</Link></li>
+              
             </ul>
           </div>
 
@@ -97,8 +98,7 @@ export function Footer() {
                 <MapPin size={22} className="mt-1 text-white" />
                 <div className="text-sm leading-relaxed">
                   <p className="font-semibold text-white">Kikinga House, Kiambu Road</p>
-                  <p>Opposite Kiambu Referrals Hospital</p>
-                  <p>Kiambu County</p>
+                  <p>Opposite Kiambu Referrals Hospital, Kiambu County</p>
                 </div>
               </li>
               <li className="flex items-start gap-2">

@@ -19,8 +19,7 @@ export function DonateHero() {
         </div>
         <Herotext title="Support Our Movement" />
         <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
-          Your contribution helps us build a united, prosperous nation. Every donation makes a difference.
-        </p>
+          Every donation makes a difference. Your contribution counts in shaping the future we fight and hope for.        </p>
         {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="#donation-options"

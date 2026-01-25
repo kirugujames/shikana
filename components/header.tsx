@@ -40,6 +40,15 @@ export function Header() {
         { label: "Publications", href: "/shared-ui/publications" },
       ],
     },
+
+    {
+      label: "Support Us",
+      children: [
+        { label: "Donate", href: "/shared-ui/donate" },
+        { label: "Shop", href: "/shared-ui/listings" },
+      ],
+    },
+    
     {
       label: "Get Involved",
       children: [
@@ -49,13 +58,12 @@ export function Header() {
         { label: "Find a Local Group", href: "/shared-ui" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
         { label: "Careers", href: "/shared-ui/careers" },
-        { label: "Donate", href: "/shared-ui/donate" },
-        { label: "Shop", href: "/shared-ui/listings" },
+        
       ],
     },
 
     {
-      label: "Support",
+      label: "Help Center",
       children: [
         { label: "Contact Us", href: "/shared-ui/contact" },
         { label: "FAQs", href: "/shared-ui/faq" },

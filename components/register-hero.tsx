@@ -15,7 +15,7 @@ export function RegisterHero() {
         <Herotext title="Join the Movement" />
         <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
           {/* Become a member of the Shikana Frontliners for Unity Party and be part of building a stronger nation. */}
-          The Harvest is ready and plentiful ... Become a member of the Shikana Frontliners for Unity Party and be part of the labourers in the fields that build a stronger nation.
+          The Harvest is ready and plentiful ... Become a member of the Shikana Frontliners for Unity Party and be part of the labourers in the fields.
         </p>
       </div>
     </section>
