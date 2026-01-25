@@ -122,8 +122,28 @@ export default function PoliticalRegistrationForm() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-          {/* Empty space on the left */}
-          <div className="hidden lg:block"></div>
+          {/* Descriptive Text Section */}
+          <div className="hidden lg:block text-foreground/70 leading-relaxed">
+            <h2 className="text-3xl font-bold text-foreground mb-6">Our call for leadership</h2>
+            <p className="mb-4">
+              A nation’s progress is built on leaders who speak truth, act with honesty, and stand firm in accountability.
+              Integrity in public service is not a slogan—it is a commitment to serve without fear, favor, or corruption.
+            </p>
+            <p className="mb-4">
+              When leadership embraces transparency, citizens gain confidence in the institutions that shape their lives.
+              When leaders openly account for their actions and decisions, democracy grows stronger.
+            </p>
+            <p className="mb-4">
+              And when truth guides policy and governance, the nation moves forward with unity and purpose.
+              Our call is for leadership that earns trust not through promises, but through conduct; not through rhetoric, but through results; and not for personal gain, but for the common good.
+            </p>
+            <ul className="space-y-3 list-disc pl-5 mt-6">
+              <li>Lead with integrity</li>
+              <li>Promote transparency</li>
+              <li>Foster accountability</li>
+              <li>Serve the common good</li>
+            </ul>
+          </div>
 
           {/* Registration Form */}
           <div className="lg:col-span-2 bg-card border border-border rounded-lg p-8">

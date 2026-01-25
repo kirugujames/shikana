@@ -57,10 +57,10 @@ export function Footer() {
               <li><Link href="/shared-ui/register" className="text-white/80 hover:text-white">Become a Member</Link></li>
               <li><Link href="/shared-ui/political-position" className="text-white/80 hover:text-white">Become An Aspirant</Link></li>
               <li><Link href="/shared-ui/party-position" className="text-white/80 hover:text-white">Party Positions</Link></li>
-              <li><Link href="/shared-ui/political-position" className="text-white/80 hover:text-white">Find Local Group</Link></li>
+              <li><Link href="/shared-ui/local-group" className="text-white/80 hover:text-white">Find Local Group</Link></li>
               <li><Link href="/shared-ui/volunteer" className="text-white/80 hover:text-white">Volunteer</Link></li>
               <li><Link href="/shared-ui/careers" className="text-white/80 hover:text-white">Careers</Link></li>
-              
+
             </ul>
           </div>
 

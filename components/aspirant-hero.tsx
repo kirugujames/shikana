@@ -1,0 +1,22 @@
+"use client"
+
+import { Herotext } from "./hero-text"
+
+export function AspirantHero() {
+    return (
+        <section className="relative w-full min-h-96 bg-primary overflow-hidden flex items-center justify-center py-20">
+            {/* Background Image */}
+            <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: 'url(/teamwork.jpg.jpeg)' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
+            <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+                <Herotext title="Servant Leaders of Integrity" />
+                <p className="text-xl md:text-2xl md:mt-2 text-white/90 mb-8 max-w-2xl mx-auto text-balance">
+                    When truth becomes the currency of public life, a new era is born — one where leadership serves the people.
+                </p>
+            </div>
+        </section>
+    )
+}
