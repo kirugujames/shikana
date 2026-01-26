@@ -75,16 +75,13 @@ export function LocalGroupForm() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
                     {/* Descriptive Text Section */}
-                    <div className="hidden lg:block text-foreground/70 leading-relaxed">
+                    <div className="text-foreground/70 leading-relaxed mb-12 lg:mb-0 lg:pr-8">
                         <h2 className="text-3xl font-bold text-foreground mb-6">Connecting Communities</h2>
                         <p className="mb-4">
                             Local groups are the heartbeat of our movement. By organizing at the grassroots level, we ensure that every voice is heard and every community is represented.
                         </p>
                         <p className="mb-4">
-                            Joining a local group means participating in local decision-making, coordinating events in your area, and working directly with your neighbors to bring about the change we want for our nation.
-                        </p>
-                        <p className="mb-4">
-                            It's about collective action, local leadership, and fostering unity within our constituencies. Together, we can build a stronger foundation for our country, one village and one town at a time.
+                            Join a local group to participate in decision-making, coordinate initiatives, and work with neighbors to build a stronger foundation for our nation, one village at a time.
                         </p>
                         <ul className="space-y-3 list-disc pl-5 mt-6">
                             <li>Grassroots engagement</li>
