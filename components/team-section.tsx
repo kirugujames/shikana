@@ -9,37 +9,37 @@ export function TeamSection() {
       name: "Stephen Ogallo",
       title: "Chair / Party Leader",
       description: "Leading the party with vision and integrity towards a united Kenya, championing our core values and strategic direction.",
-      image: "",
+      image: "/steve.jpeg",
     },
     {
       name: "Nancy Mutava",
       title: "Secretary General / Legal",
       description: "Overseeing party operations and ensuring compliance with legal frameworks while maintaining organizational excellence.",
-      image: "",
+      image: "/nancy.jpeg",
     },
     {
       name: "Laura Ombok",
       title: "Corporate Strategy / Treasurer",
       description: "Managing party resources with transparency and accountability while driving strategic initiatives for sustainable growth.",
-      image: "",
+      image: "/laura.jpeg",
     },
     {
       name: "Emanuel Yeswa",
       title: "Organising Secretary / Nominations",
       description: "Coordinating party activities and managing the nomination process to ensure fair representation across all levels.",
-      image: "",
+      image: "/emmanuel.jpeg",
     },
     {
       name: "Philip Mwembi",
       title: "Publicity and Media Relations",
       description: "Communicating our vision and values to citizens across the nation through strategic media engagement and public outreach.",
-      image: "",
+      image: "/phillip.jpeg",
     },
     {
       name: "Merceline Aol",
       title: "Women & Special Interest Leader",
       description: "Championing the rights and representation of women and special interest groups, ensuring inclusive participation in party affairs.",
-      image: "",
+      image: "/mercy.jpeg",
     },
   ]
 
