@@ -62,11 +62,11 @@ const policyDocuments = [
 
 const parliamentBills = [
     {
-        title: "The Finance Bill, 2025",
+        title: "Trade Development Bill 2025",
         description: "Proposed legislative changes related to taxation, government spending, and economic policy for the upcoming fiscal year.",
         icon: <Scale className="w-6 h-6 text-secondary" />,
         status: "First Reading",
-        url: "#",
+        url: "/documents/Trade Development Bill 2025.pdf",
     },
     {
         title: "Equal Opportunities Bill",
@@ -190,7 +190,7 @@ export function PublicationsSection() {
                                     <p className="text-muted-foreground text-sm mb-6 flex-grow">
                                         {bill.description}
                                     </p>
-                                    <a href={bill.url}>
+                                    <a href={bill.url} target="_blank" rel="noopener noreferrer">
                                         <Button variant="outline" className="w-full gap-2 border-secondary text-secondary hover:bg-secondary hover:text-white">
                                             <FileText size={16} />
                                             Read Full Bill
