@@ -25,7 +25,8 @@ export function EventsHero() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
         <Herotext title="Events & Gatherings" />
         <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-2xl mx-auto text-balance">
-          Connect with our community, learn about our vision, and be part of the movement for unity and progress.
+          <span className="block italic font-medium">Kama Ayala Ayatamanivyo Maji...</span>
+          Come connect with us, embrace our vision, and help power a movement built on peace, love, and unity.
         </p>
       </div>
     </section>

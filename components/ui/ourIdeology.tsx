@@ -2,7 +2,6 @@
 
 import { Shield, Users, Landmark, Zap, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import router from "next/router"
 
 export function OurIdeology() {
   const principles = [
@@ -93,8 +92,8 @@ export function OurIdeology() {
           Our Party is founded on the idea of nationalism which encompasses social and fiscal conservatism.
           On the one hand we have a fundamental duty of preserving our national and traditional beliefs of a morally stable,
           cohesive and just society. On the other hand, we have an obligation as a country
-          to ensure that we have a socially and an economically empowered people. This can be achieved through focusing on 
-         prudently managing our national and natural resources, for the collective benefit and protection of the interest of our Cultures, Communities, Constituencies, Counties and the Country (5Cs).
+          to ensure that we have a socially and an economically empowered people. This can be achieved through focusing on
+          prudently managing our national and natural resources, for the collective benefit and protection of the interest of our Cultures, Communities, Constituencies, Counties and the Country (5Cs).
         </p>
       </div>
 
