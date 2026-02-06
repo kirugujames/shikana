@@ -10,21 +10,21 @@ const SLIDE_DURATION = 6000 // 6 seconds
 const slides = [
   {
     gif: "/Sfu-login-bg.avif",
-    title: "Together We Rise for a United Tomorrow",
+    title: "Choose the Party that Chooses You",
     description:
-      "Join the Shikana Frontliners for Unity Party in building a Kenya that our people are proud to live in.",
+      "Join a movement driven by the people, for the people - united in purpose, rising for progress, and building the future we all deserve.",
   },
   {
     gif: "/sfu-image.jfif",
-    title: "Unity, Progress, Prosperity",
+    title: "No One should be Left Behind",
     description:
-      "A movement driven by the people, for the people.",
+      "Every Voice Counts, Every Choice Matters, Every Kenyan Must Move Forward and win Kenya’s future!",
   },
   {
     gif: "/unity-img.jpg",
-    title: "The Future Is Ours",
+    title: "We rise. we decide. We vote",
     description:
-      "A bold vision for tomorrow, driven by unity, courage, and collective action.",
+      "One Kenya. One Squad. A bold vision for tomorrow, powered by unity, driven by purpose, and built through progressive actions.",
   },
 ]
 
@@ -115,9 +115,10 @@ export function HeroSection() {
 
           <Link
             href="/shared-ui/donate"
-            className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-lg font-bold transition-colors"
+            className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-primary hover:border-primary px-8 py-4 rounded-lg font-bold transition-colors"
           >
             Support Us Today
+            <ArrowRight size={20} />
           </Link>
         </div>
       </div>

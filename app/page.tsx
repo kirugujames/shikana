@@ -16,8 +16,8 @@ export default function Home() {
       <OurIdeology />
       {/* <WhyChooseUs /> */}
       {/* <MissionVision /> */}
-      <EventsPreview />
       <BlogPreview />
+      <EventsPreview />
       <TestimonialsSection />
       <NewsletterSection />
       <Footer />

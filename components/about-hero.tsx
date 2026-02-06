@@ -22,9 +22,9 @@ export function AboutHero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-        <Herotext title="About Shikana Frontliners for Unity Party" />
+        <Herotext title="About Us" />
         <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-2xl mx-auto text-balance">
-          Dedicated to building a stronger, more united nation through transparent leadership and inclusive governance.
+          Rooted in the vision of our founding members and guided by the unwavering commitment of the party leadership, we are committed to building a stronger, united nation through leadership defined by integrity, transparency, and accountability
         </p>
       </div>
     </section>
