@@ -7,6 +7,7 @@ import { TestimonialsSection } from "@/components/testimonials-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { Footer } from "@/components/footer"
 import { OurIdeology } from "@/components/ui/ourIdeology"
+import { ImpactStoryHome } from "@/components/impact-story-home"
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       {/* <MissionVision /> */}
       <BlogPreview />
       <EventsPreview />
+      <ImpactStoryHome />
       <TestimonialsSection />
       <NewsletterSection />
       <Footer />

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Heart, Loader2, CheckCircle, XCircle, User, Mail, Phone, DollarSign } from "lucide-react"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
+import Link from "next/link" // Ensure Link is imported
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
@@ -21,6 +22,9 @@ export function DonationOptions() {
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [isAnonymous, setIsAnonymous] = useState(false)
+  
+  // 🔹 Terms Consent State
+  const [termsConsent, setTermsConsent] = useState(false)
 
   const presetAmounts = [500, 5000, 10000, 50000, 300000]
 
@@ -30,11 +34,13 @@ export function DonationOptions() {
       lastName.trim() !== "" &&
       email.trim() !== "")
 
+  // Updated logic to include termsConsent
   const canSubmit =
     selectedAmount &&
     paymentMethod &&
     phoneNumber.trim().length >= 9 &&
     personalDetailsValid &&
+    termsConsent && // <--- Added this
     paymentStatus === "idle"
 
   async function handlePayment() {
@@ -72,6 +78,7 @@ export function DonationOptions() {
         setLastName("")
         setEmail("")
         setIsAnonymous(false)
+        setTermsConsent(false) // Reset checkbox
       }, 3000)
 
     } catch (error) {
@@ -88,34 +95,13 @@ export function DonationOptions() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Support SFUP Today</h2>
+          <h2 className="text-4xl font-bold mb-4">Invest in the Vision</h2>
           <p className="text-lg text-foreground/70">
             You will receive a payment prompt on your phone
           </p>
         </div>
 
         <div className="bg-card border rounded-lg p-8">
-
-          {/* Donation Type */}
-          {/* <div className="mb-8">
-            <label className="block text-sm font-medium mb-4">Donation Type</label>
-            <div className="flex gap-4">
-              {(["one-time", "monthly"] as const).map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setDonationType(type)}
-                  className={`flex-1 py-3 rounded-lg ${
-                    donationType === type
-                      ? "bg-secondary text-white"
-                      : "bg-muted hover:bg-secondary/20"
-                  }`}
-                >
-                  {type === "one-time" ? "One-Time Donation" : "Monthly Support"}
-                </button>
-              ))}
-            </div>
-          </div> */}
 
           {/* Amount */}
           <div className="mb-8">
@@ -150,7 +136,7 @@ export function DonationOptions() {
             />
           </div>
 
-          {/* Personal Details */}
+          {/* Personal Details Checkbox */}
           <div className="flex items-center gap-3 p-4 mb-8 bg-muted rounded-lg border border-border">
             <input
               type="checkbox"
@@ -249,6 +235,7 @@ export function DonationOptions() {
                           : "/airtel_logo.svg"
                       }
                       className="h-7 w-auto"
+                      alt={method}
                     />
 
                     <span className="font-medium">
@@ -261,7 +248,7 @@ export function DonationOptions() {
           </div>
 
           {/* Phone */}
-          <div className="mb-12">
+          <div className="mb-8">
             <div className="flex gap-4 mb-4">
               <div className="flex-1">
                 <h3 className="font-bold text-foreground mb-1 text-sm tracking-wider">Phone Number</h3>
@@ -298,6 +285,22 @@ export function DonationOptions() {
               <span>{errorMessage}</span>
             </div>
           )}
+
+          {/* Terms and Conditions Checkbox */}
+          <div className="mt-6 mb-6 space-y-4">
+            <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
+              <input
+                type="checkbox"
+                checked={termsConsent}
+                onChange={(e) => setTermsConsent(e.target.checked)}
+                required
+                className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
+              />
+              <span className="text-sm text-foreground cursor-pointer">
+                I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
+              </span>
+            </label>
+          </div>
 
           {/* Submit */}
           <button

@@ -131,7 +131,7 @@ export function PublicationsSection() {
                             Bills in Parliament
                         </h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Stay informed about active legislative proposals and contribute to the national democratic process.
+                            New bills just dropped. Are they a Win or Loss? Stay informed and get involved to vibe-check every active policy and proposals before it's too late and they become law. Contribute to the process and help us build a nation that isn't mediocre. Your voice is the main character
                         </p>
                     </div>
 

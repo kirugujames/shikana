@@ -19,16 +19,8 @@ export function DonateHero() {
         </div>
         <Herotext title="Support Our Movement" />
         <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto text-balance">
-          Every donation makes a difference. Your contribution counts in shaping the future we fight and hope for.        </p>
-        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="#donation-options"
-            className="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-8 py-4 rounded-lg font-bold transition-colors"
-          >
-            Make a Donation
-            <TrendingUp size={20} />
-          </Link>
-        </div> */}
+          We’re keeping it 100: we can't do this without you. Every dollar is a high-key investment in the future we’re building. Don’t just watch from the sidelines - fuel the movement and help us secure the Win. Your support literally makes the vision possible.
+        </p>
       </div>
     </section>
   )

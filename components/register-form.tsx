@@ -16,12 +16,15 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Check, ChevronsUpDown } from "lucide-react"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
 
 const MEMBERSHIP_TYPES = [
-  { value: "Free", label: "Free Membership" },
+  { value: "Free", label: " Membership Fee (Waived)" },
   { value: "Ordinary", label: "Ordinary Membership", fee: 100 },
   { value: "Life", label: "Life Membership", fee: 5000 },
 ]
@@ -60,7 +63,7 @@ const KENYAN_TRIBES = [
   "Makonde",
   "Mbeere",
   "Meru",
-  "Mijikenda (umbrella for several coastal groups)",
+  "Mijikenda",
   "Njemps",
   "Nubi",
   "Orma",
@@ -80,6 +83,89 @@ const KENYAN_TRIBES = [
   "Turkana",
   "Walwana (Malakote / Somali-related group)",
   "Wayyu",
+]
+
+const RELIGIONS = [
+  "Christianity",
+  "Islam",
+  "Hinduism",
+  "Buddhism",
+  "Judaism",
+]
+
+const POSTAL_OFFICES = [
+  "Ahero – 40101",
+  "Agenga – 40406",
+  "Ainabkoi – 30101",
+  "Akala – 40139",
+  "Aluor – 40140",
+  "Amagoro – 50244",
+  "Amukura – 50403",
+  "Anyiko – 40616",
+  "Archer’s Post – 60302",
+  "Arror – 30708",
+  "Asembo Bay – 40619",
+  "Asumbi – 40309",
+  "Athi River – 00204",
+  "Awach Tende – 40328",
+  "Bahati – 20113",
+  "Bamburi – 80101",
+  "Banja – 50316",
+  "Baraton – 30306",
+  "Bartolimo – 30408",
+  "Bokoli – 50206",
+  "Bondo – 40601",
+  "Bumala – 50404",
+  "Butula – 50405",
+  "Chamakhanga – 50302",
+  "Chogoria – 60401",
+  "Chuka – 60400",
+  "Dadaab – 70103",
+  "Diani Beach – 80401",
+  "Doldol – 10401",
+  "Egerton – 20115",
+  "Eldoret – 30100",
+  "Embu – 60100",
+  "Garissa – 70100",
+  "Gede – 80208",
+  "Githurai – 00626",
+  "Homa Bay – 40300",
+  "Isiolo – 60300",
+  "Ishiara – 60102",
+  "Kabarak – 20157",
+  "Kabarnet – 30400",
+  "Kakamega – 50100",
+  "Kakuma – 30501",
+  "Kaloleni – 80105",
+  "Kamakwa Road – 10141",
+  "Karen – 00502",
+  "Kisumu – 40100",
+  "Lamu – 80500",
+  "Limuru – 00217",
+  "Lodwar – 30500",
+  "Luanda – 50307",
+  "Machakos – 90100",
+  "Makindu – 90138",
+  "Makueni – 90300",
+  "Malakisi – 50209",
+  "Mombasa GPO – 80100",
+  "Nakuru – 20100",
+  "Nanyuki – 10400",
+  "Narok – 20500",
+  "Nyeri – 10100",
+  "Ongata Rongai – 00511",
+  "Oyugis – 40222",
+  "Ruiru – 00232",
+  "Rumuruti – 20321",
+  "Sagalla – 80308",
+  "Sirisia – 50208",
+  "Ukunda – 80400",
+  "Usenge – 40609",
+  "Voi – 80300",
+  "Wajir – 70200",
+  "Watamu – 80202",
+  "Witu – 80504",
+  "Zombe – 90213",
 ]
 
 export function RegisterForm() {
@@ -112,7 +198,7 @@ export function RegisterForm() {
   const [pollingStation, setPollingStation] = useState("")
   const [streetVillage, setStreetVillage] = useState("")
   const [membershipStatus, setMembershipStatus] = useState("")
-  const [specialInterest, setSpecialInterest] = useState("")
+  const [specialInterest, setSpecialInterest] = useState<string[]>([])
   const [localLeader, setLocalLeader] = useState("")
   const [verificationCode, setVerificationCode] = useState("")
   const [politicalDeclaration, setPoliticalDeclaration] = useState(false)
@@ -124,6 +210,8 @@ export function RegisterForm() {
   const [membershipNumber, setMembershipNumber] = useState("")
   const [isPaidMembership, setIsPaidMembership] = useState(false)
   const [paymentProcessed, setPaymentProcessed] = useState(false)
+  const [openPostalCode, setOpenPostalCode] = useState(false)
+  const [openEthnicity, setOpenEthnicity] = useState(false)
 
   const registrationFee = MEMBERSHIP_TYPES.find((type) => type.value === membershipType)?.fee || 0
 
@@ -208,7 +296,8 @@ export function RegisterForm() {
     areaOfInterest &&
     membershipType &&
     politicalDeclaration &&
-    termsConsent
+    termsConsent &&
+    specialInterest.length > 0
 
   const isPaymentRequired = membershipType === "Ordinary" || membershipType === "Life"
   const isPaymentComplete = !isPaymentRequired || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
@@ -254,7 +343,6 @@ export function RegisterForm() {
         pollingStation,
         streetVillage,
         membershipStatus,
-        specialInterest,
         membershipNumber,
         localLeader,
         verificationCode,
@@ -262,6 +350,7 @@ export function RegisterForm() {
         termsConsent,
         verificationMethod,
         membershipType,
+        specialInterest: specialInterest.join(", "),
         paymentMethod: isPaymentRequired ? paymentMethod : null,
         paymentPhoneNumber: isPaymentRequired ? paymentPhoneNumber : null,
         amount: registrationFee,
@@ -319,7 +408,7 @@ export function RegisterForm() {
     setPollingStation("")
     setStreetVillage("")
     setMembershipStatus("")
-    setSpecialInterest("")
+    setSpecialInterest([])
     setLocalLeader("")
     setVerificationCode("")
     setPoliticalDeclaration(false)
@@ -480,47 +569,104 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Religion *</label>
-                    <Select value={religion} onValueChange={setReligion} required>
+                    <Select
+                      value={RELIGIONS.includes(religion) ? religion : religion ? "Other" : ""}
+                      onValueChange={(val) => {
+                        if (val === "Other") setReligion("Other")
+                        else setReligion(val)
+                      }}
+                      required
+                    >
                       <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
                         <SelectValue placeholder="Select Religion" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Christianity">Christianity</SelectItem>
-                        <SelectItem value="Islam">Islam</SelectItem>
-                        <SelectItem value="Hinduism">Hinduism</SelectItem>
-                        <SelectItem value="Buddhism">Buddhism</SelectItem>
-                        <SelectItem value="Judaism">Judaism</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        {RELIGIONS.map((r) => (
+                          <SelectItem key={r} value={r}>
+                            {r}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="Other">Other (Specify)</SelectItem>
                       </SelectContent>
                     </Select>
+                    {(religion === "Other" || (!RELIGIONS.includes(religion) && religion !== "")) && (
+                      <Input
+                        type="text"
+                        value={religion === "Other" ? "" : religion}
+                        onChange={(e) => setReligion(e.target.value)}
+                        placeholder="Please specify your religion"
+                        required
+                        className="mt-3 h-10 border-border rounded-lg focus:border-secondary bg-background px-4 animate-in fade-in slide-in-from-top-1 transition-colors"
+                      />
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Ethnicity / Tribe *</label>
                     <div className="space-y-3">
-                      <Select
-                        value={KENYAN_TRIBES.includes(ethnicity) ? ethnicity : ethnicity === "" ? undefined : "Other"}
-                        onValueChange={(val) => {
-                          if (val === "Other") {
-                            setEthnicity("")
-                          } else {
-                            setEthnicity(val)
-                          }
-                        }}
-                        required
-                      >
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select Tribe" />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-80">
-                          {KENYAN_TRIBES.map((tribe) => (
-                            <SelectItem key={tribe} value={tribe}>
-                              {tribe}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value="Other">Other (Specify)</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Popover open={openEthnicity} onOpenChange={setOpenEthnicity}>
+                        <PopoverTrigger asChild>
+                          <button
+                            role="combobox"
+                            aria-expanded={openEthnicity}
+                            className={cn(
+                              "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
+                              !ethnicity && "text-muted-foreground"
+                            )}
+                          >
+                            {KENYAN_TRIBES.includes(ethnicity)
+                              ? ethnicity
+                              : ethnicity
+                                ? "Other"
+                                : "Select Tribe"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search tribe..." />
+                            <CommandList>
+                              <CommandEmpty>No tribe found.</CommandEmpty>
+                              <CommandGroup>
+                                {KENYAN_TRIBES.map((tribe) => (
+                                  <CommandItem
+                                    key={tribe}
+                                    value={tribe}
+                                    onSelect={(currentValue) => {
+                                      // Use 'tribe' to get the original casing
+                                      setEthnicity(tribe)
+                                      setOpenEthnicity(false)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        ethnicity === tribe ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    {tribe}
+                                  </CommandItem>
+                                ))}
+                                <CommandItem
+                                  value="Other"
+                                  onSelect={() => {
+                                    setEthnicity("Other")
+                                    setOpenEthnicity(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "") ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  Other (Specify)
+                                </CommandItem>
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
 
                       {(ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "")) && (
                         <Input
@@ -548,8 +694,8 @@ export function RegisterForm() {
                         const val = e.target.value
                         setDob(val)
                         const age = calculateAge(val)
-                        if (age > 35 && specialInterest === "Youths") {
-                          setSpecialInterest("")
+                        if (age > 35) {
+                          setSpecialInterest(prev => prev.filter(item => item !== "Youths"))
                         }
                       }}
                       className={`h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary ${dob && userAge < 18 ? "border-red-500 focus:border-red-500" : ""}`}
@@ -646,25 +792,67 @@ export function RegisterForm() {
                 {/* Postal Address and Postal Code */}
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Postal Address *</label>
+                    <label className="block text-sm font-medium text-foreground mb-2">Postal Address</label>
                     <Input
                       value={postalAddress}
                       onChange={(e) => setPostalAddress(e.target.value)}
-                      required
                       className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="P.O. Box xx"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Postal Code *</label>
-                    <Input
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ""))}
-                      required
-                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                      placeholder="00100"
-                    />
+                    <label className="block text-sm font-medium text-foreground mb-2">Postal Code</label>
+                    <Popover open={openPostalCode} onOpenChange={setOpenPostalCode}>
+                      <PopoverTrigger asChild>
+                        <button
+                          role="combobox"
+                          aria-expanded={openPostalCode}
+                          className={cn(
+                            "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
+                            !postalCode && "text-muted-foreground"
+                          )}
+                        >
+                          {postalCode
+                            ? postalCode
+                            : "Select Postal Code"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search postal code..." />
+                          <CommandList>
+                            <CommandEmpty>No code found.</CommandEmpty>
+                            <CommandGroup>
+                              {POSTAL_OFFICES.map((address) => (
+                                <CommandItem
+                                  key={address}
+                                  value={address}
+                                  onSelect={(currentValue) => {
+                                    const parts = address.split(" – ")
+                                    if (parts.length >= 2) {
+                                      setPostalCode(parts[1])
+                                    } else {
+                                      setPostalCode(address)
+                                    }
+                                    setOpenPostalCode(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      postalCode === address.split(" – ")[1] ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  {address}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
               </div>
@@ -709,16 +897,57 @@ export function RegisterForm() {
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
-                    <Select value={specialInterest} onValueChange={setSpecialInterest} required>
-                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                        <SelectValue placeholder="Select Interest Group" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {userAge <= 35 && <SelectItem value="Youths">Youths</SelectItem>}
-                        <SelectItem value="Women">Women</SelectItem>
-                        <SelectItem value="Marginalized">Marginalized Communities</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className={cn(
+                            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                            !specialInterest.length && "text-muted-foreground"
+                          )}
+                        >
+                          {specialInterest.length > 0
+                            ? specialInterest.map(i => i === "Marginalized" ? "Marginalized Communities" : i).join(", ")
+                            : "Select Interest Group"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandGroup>
+                              {["Youths", "Women", "Minority Group", "Marginalized"].map((group) => {
+                                if (group === "Youths" && userAge > 35) return null
+                                return (
+                                  <CommandItem
+                                    key={group}
+                                    onSelect={() => {
+                                      setSpecialInterest((prev) =>
+                                        prev.includes(group)
+                                          ? prev.filter((item) => item !== group)
+                                          : [...prev, group]
+                                      )
+                                    }}
+                                  >
+                                    <div
+                                      className={cn(
+                                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                        specialInterest.includes(group)
+                                          ? "bg-primary text-primary-foreground"
+                                          : "opacity-50 [&_svg]:invisible"
+                                      )}
+                                    >
+                                      <Check className={cn("h-4 w-4")} />
+                                    </div>
+                                    {group === "Marginalized" ? "Marginalized Communities" : group}
+                                  </CommandItem>
+                                )
+                              })}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
 
@@ -1027,20 +1256,6 @@ export function RegisterForm() {
 
                 {/* Verification Code and declaration checkboxes */}
                 <div className="mt-6 space-y-4">
-                  {/* <div className="hidden">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Verification Code (Sent via SMS) *
-                    </label>
-                    <input
-                      type="text"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value)}
-                      required
-                      className="w-full px-4 h-11 border border-border rounded-lg shadow-none focus:outline-none focus:border-secondary bg-background"
-                      placeholder="e.g., Kikuyu, Maasai, Luo"
-                    />
-                  </div> */}
-
                   <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                     <input
                       type="checkbox"

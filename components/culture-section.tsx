@@ -42,8 +42,7 @@ export function CultureSection() {
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">Why Work With Us?</h2>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-            SFUP offers a dynamic, purposeful work environment where you can make a real difference.
-          </p>
+SFUP is a dynamic space for Kenyans ready to see their work change the nation in real- time. If you're looking for a mission that hits different, you just found it.           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

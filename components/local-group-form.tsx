@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { Search, MapPin, Send, CheckCircle, ChevronDown, Check } from "lucide-react"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
+import Link from "next/link" // Added Link import
 import { Button } from "./ui/button"
 import { Spinner } from "./ui/spinner"
 import { Input } from "./ui/input"
@@ -21,6 +22,9 @@ export function LocalGroupForm() {
     const [loadingGroups, setLoadingGroups] = useState(false)
     const [popoverOpen, setPopoverOpen] = useState(false)
     const [status, setStatus] = useState<"idle" | "success" | "loading">("idle")
+    
+    // 🔹 Terms Consent State
+    const [termsConsent, setTermsConsent] = useState(false)
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -29,8 +33,7 @@ export function LocalGroupForm() {
                 const res = await api.get("/api/local-groups/all")
                 setGroups(Array.isArray(res.data?.data) ? res.data.data : [])
             } catch (err) {
-                console.error("Failed to fetch local groups", err)
-                // Fallback mock data if API fails or doesn't exist yet
+                console.error("Failed to fetch local branches", err)
                 setGroups([
                     { id: 1, name: "Nairobi Central Group", county: "Nairobi", constituency: "Starehe" },
                     { id: 2, name: "Kiambu Unity Group", county: "Kiambu", constituency: "Kiambu Town" },
@@ -45,8 +48,15 @@ export function LocalGroupForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        
+        // Validation check for fields and terms
         if (!formData.membershipNumber || !formData.groupId) {
             toast.error("Please fill in all fields")
+            return
+        }
+
+        if (!termsConsent) {
+            toast.error("You must agree to the Terms & Conditions")
             return
         }
 
@@ -59,6 +69,7 @@ export function LocalGroupForm() {
             toast.success("Application to join group submitted!")
             setStatus("success")
             setFormData({ membershipNumber: "", groupId: "" })
+            setTermsConsent(false) // Reset terms on success
         } catch (error: any) {
             console.error("Join group error:", error)
             toast.error(error.response?.data?.message || "Failed to submit application")
@@ -68,7 +79,7 @@ export function LocalGroupForm() {
 
     const selectedGroupLabel = groups.find(g => g.id.toString() === formData.groupId)
         ? `${groups.find(g => g.id.toString() === formData.groupId).county} - ${groups.find(g => g.id.toString() === formData.groupId).constituency}`
-        : "Select local group..."
+        : "Select local branch..."
 
     return (
         <section className="w-full py-16 md:py-24 bg-background">
@@ -79,10 +90,10 @@ export function LocalGroupForm() {
                     <div className="text-foreground/70 leading-relaxed mb-12 lg:mb-0 lg:pr-8">
                         <h2 className="text-3xl font-bold text-foreground mb-6">Connecting Communities</h2>
                         <p className="mb-4">
-                            Local groups are the heartbeat of our movement. By organizing at the grassroots level, we ensure that every voice is heard and every community is represented.
+                            Local branches are the heartbeat of our movement. By organizing at the grassroots level, we ensure that every voice is heard and every community is represented.
                         </p>
                         <p className="mb-4">
-                            Join a local group to participate in decision-making, coordinate initiatives, and work with neighbors to build a stronger foundation for our nation, one village at a time.
+                            Join a local branch to participate in decision-making, coordinate initiatives, and work with neighbors to build a stronger foundation for our nation, one village at a time.
                         </p>
                         <ul className="space-y-3 list-disc pl-5 mt-6">
                             <li>Grassroots engagement</li>
@@ -98,7 +109,7 @@ export function LocalGroupForm() {
                                 <MapPin className="text-secondary w-6 h-6" />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold">Join a Local Group</h2>
+                                <h2 className="text-2xl font-bold">Join a Local Branch</h2>
                                 <p className="text-muted-foreground text-sm">Find and connect with your local community</p>
                             </div>
                         </div>
@@ -127,7 +138,7 @@ export function LocalGroupForm() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-foreground mb-2">Select Your Group *</label>
+                                <label className="block text-sm font-medium text-foreground mb-2">Select Your Branch *</label>
                                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
@@ -174,10 +185,26 @@ export function LocalGroupForm() {
                                 </Popover>
                             </div>
 
+                            {/* Terms and Conditions Checkbox */}
+                            <div className="mt-6 space-y-4">
+                                <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
+                                    <input
+                                        type="checkbox"
+                                        checked={termsConsent}
+                                        onChange={(e) => setTermsConsent(e.target.checked)}
+                                        required
+                                        className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
+                                    />
+                                    <span className="text-sm text-foreground cursor-pointer">
+                                        I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
+                                    </span>
+                                </label>
+                            </div>
+
                             <div className="pt-4">
                                 <Button
                                     type="submit"
-                                    disabled={status === "loading"}
+                                    disabled={status === "loading" || !termsConsent}
                                     className="w-full bg-secondary hover:bg-secondary/90 text-white h-10 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
                                 >
                                     {status === "loading" ? (
