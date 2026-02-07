@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react"
 import Link from "next/link"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
+import { cn } from "@/lib/utils"
 
 type Member = {
     id: number
@@ -36,6 +37,7 @@ export default function VerifyMembershipPage() {
     const [searchResult, setSearchResult] = useState<Member | null>(null)
     const [loading, setLoading] = useState(false)
     const [hasSearched, setHasSearched] = useState(false)
+    const [hasConsent, setHasConsent] = useState(false)
 
     const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -67,11 +69,12 @@ export default function VerifyMembershipPage() {
         setIsOpen(false)
         setHasSearched(false)
         setNationalId("")
+        setHasConsent(false)
     }
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
-            <Card className="w-full max-w-md shadow-lg">
+            <Card className="w-full max-w-md shadow-none border">
                 <CardHeader className="text-center space-y-2">
                     <div className="mx-auto flex items-center justify-center mb-2">
                         <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-24 h-auto" />
@@ -91,21 +94,34 @@ export default function VerifyMembershipPage() {
                                 National ID / Passport No. *
                             </label>
 
-                            <input
+                            <Input
                                 id="nationalId"
-                                type="text"
                                 required
                                 placeholder="e.g. 12345678"
                                 value={nationalId}
-                                onChange={(e) => setNationalId(e.target.value)}
-                                className="w-full px-4 py-3 border border-border rounded-lg text-lg
-                                focus:outline-none focus:border-secondary"
+                                onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+                                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                             />
                         </div>
+
+                        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
+                            <input
+                                id="hasConsent"
+                                type="checkbox"
+                                checked={hasConsent}
+                                onChange={(e) => setHasConsent(e.target.checked)}
+                                required
+                                className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
+                            />
+                            <span className="text-sm text-foreground cursor-pointer">
+                                I consent to verify my membership status using my National ID / Passport number. *
+                            </span>
+                        </label>
+
                         <button
                             type="submit"
-                            disabled={!nationalId.trim() || loading}
-                            className="w-full bg-secondary text-white py-3 rounded-lg font-bold
+                            disabled={!nationalId.trim() || loading || !hasConsent}
+                            className="w-full bg-secondary text-white h-10 rounded-lg font-bold
              hover:bg-secondary/90 transition-colors
              flex items-center justify-center gap-2
              disabled:opacity-50 disabled:cursor-not-allowed"
@@ -121,8 +137,8 @@ export default function VerifyMembershipPage() {
                         </button>
 
                         <div className="text-center mt-4">
-                            <Button variant="link" asChild className="text-muted-foreground">
-                                <Link href="/">Back to Home</Link>
+                            <Button variant="link" asChild className="text-primary hover:text-primary/80">
+                                <Link href="/shared-ui/register">Back to Registration</Link>
                             </Button>
                         </div>
                     </form>
@@ -188,7 +204,7 @@ export default function VerifyMembershipPage() {
                             <DialogDescription className="text-center text-base">
                                 We couldn't find a member with ID <strong>{nationalId}</strong>.
                             </DialogDescription>
-                            <div className="bg-muted/50 p-4 rounded-lg text-sm text-muted-foreground">
+                            <div className="border border-border p-4 rounded-lg text-sm text-muted-foreground hover:bg-muted/10 transition-colors">
                                 <p>Not yet a member? Join us today to be part of the movement.</p>
                             </div>
                             <div className="flex flex-col gap-2 pt-2">

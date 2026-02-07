@@ -86,52 +86,13 @@ const parliamentBills = [
 
 export function PublicationsSection() {
     return (
-        <section className="w-full py-8 md:py-12 bg-background">
-            <div className="max-w-6xl mx-auto px-4">
-
-                {/* Party Documents */}
-                {/* <div className="mb-20">
-                    <div className="flex flex-col mb-10">
-                        <h2 className="text-3xl font-bold text-foreground mb-4">Party Documents</h2>
-                        <div className="h-1.5 w-20 bg-secondary rounded-full"></div>
-                        <p className="text-muted-foreground mt-4 max-w-2xl">
-                            Official governance documents that define our structure, values, and vision for the nation.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {partyDocuments.map((doc, index) => (
-                            <div key={index} className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-shadow">
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-secondary/10 p-3 rounded-lg flex-shrink-0">
-                                        {doc.icon}
-                                    </div>
-                                    <div className="flex-grow">
-                                        <h3 className="text-xl font-bold text-foreground mb-2">{doc.title}</h3>
-                                        <p className="text-muted-foreground text-sm mb-6 line-clamp-2">
-                                            {doc.description}
-                                        </p>
-                                        <a
-                                            href={doc.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-secondary font-semibold hover:underline"
-                                        >
-                                            <Download size={18} />
-                                            Download {doc.type}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div> */}
-
-                {/* Policy Documents */}
-                <div className="mb-20">
-                    <div className="text-center mb-6">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                            Policy & Legal Documents
+        <>
+            {/* Policy Documents */}
+            <section className="w-full py-12 md:py-16 bg-gray-50 border-y border-border">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                            Policy Documents
                         </h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
                             Understand our legal framework, privacy commitments, and find answers to common questions.
@@ -140,17 +101,17 @@ export function PublicationsSection() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {policyDocuments.map((doc, index) => (
-                            <div key={index} className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-shadow">
+                            <div key={index} className="bg-white border border-border rounded-xl p-8 shadow-sm hover:shadow-lg transition-all duration-300">
                                 <div className="flex flex-col h-full">
-                                    <div className="bg-primary/10 w-fit p-3 rounded-lg mb-4">
+                                    <div className="bg-primary/10 w-fit p-3 rounded-lg mb-6">
                                         {doc.icon}
                                     </div>
-                                    <h3 className="text-xl font-bold text-foreground mb-2">{doc.title}</h3>
-                                    <p className="text-muted-foreground text-sm mb-6 flex-grow">
+                                    <h3 className="text-2xl font-bold text-primary mb-3">{doc.title}</h3>
+                                    <p className="text-muted-foreground text-sm mb-8 flex-grow leading-relaxed">
                                         {doc.description}
                                     </p>
                                     <Link href={doc.url}>
-                                        <Button variant="outline" className="w-full gap-2 border-primary text-primary hover:bg-primary hover:text-white">
+                                        <Button variant="outline" className="w-full gap-2 border-primary text-primary hover:bg-primary hover:text-white py-6 font-bold">
                                             <ExternalLink size={16} />
                                             View {doc.type}
                                         </Button>
@@ -160,11 +121,13 @@ export function PublicationsSection() {
                         ))}
                     </div>
                 </div>
+            </section>
 
-                {/* Bills in Parliament */}
-                <div>
-                    <div className="text-center mb-6">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            {/* Bills in Parliament */}
+            <section className="w-full py-12 md:py-16 bg-white">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                             Bills in Parliament
                         </h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -174,24 +137,24 @@ export function PublicationsSection() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {parliamentBills.map((bill, index) => (
-                            <div key={index} className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-shadow">
+                            <div key={index} className="bg-card border border-border rounded-xl p-8 hover:shadow-lg transition-shadow">
                                 <div className="flex flex-col h-full">
-                                    <div className="bg-secondary/10 w-fit p-3 rounded-lg mb-4">
+                                    <div className="bg-secondary/10 w-fit p-3 rounded-lg mb-6">
                                         {bill.icon}
                                     </div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-xl font-bold text-foreground">{bill.title}</h3>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h3 className="text-2xl font-bold text-primary">{bill.title}</h3>
                                     </div>
                                     <div className="mb-4">
-                                        <span className="text-xs font-semibold px-2 py-1 bg-secondary/20 text-secondary rounded-full">
+                                        <span className="text-xs font-bold px-3 py-1 bg-secondary/10 text-secondary rounded-full uppercase tracking-wider">
                                             {bill.status}
                                         </span>
                                     </div>
-                                    <p className="text-muted-foreground text-sm mb-6 flex-grow">
+                                    <p className="text-muted-foreground text-sm mb-8 flex-grow leading-relaxed">
                                         {bill.description}
                                     </p>
                                     <a href={bill.url} target="_blank" rel="noopener noreferrer">
-                                        <Button variant="outline" className="w-full gap-2 border-secondary text-secondary hover:bg-secondary hover:text-white">
+                                        <Button variant="outline" className="w-full gap-2 border-secondary text-secondary hover:bg-secondary hover:text-white py-6 font-bold">
                                             <FileText size={16} />
                                             Read Full Bill
                                         </Button>
@@ -201,8 +164,7 @@ export function PublicationsSection() {
                         ))}
                     </div>
                 </div>
-
-            </div>
-        </section>
+            </section>
+        </>
     )
 }

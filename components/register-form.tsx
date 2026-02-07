@@ -7,6 +7,15 @@ import api from "@/lib/axios"
 import toast, { Toaster } from "react-hot-toast"
 import Link from "next/link"
 import { CancelMembership } from "./cancel-membership"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
@@ -15,6 +24,62 @@ const MEMBERSHIP_TYPES = [
   { value: "Free", label: "Free Membership" },
   { value: "Ordinary", label: "Ordinary Membership", fee: 100 },
   { value: "Life", label: "Life Membership", fee: 5000 },
+]
+
+const KENYAN_TRIBES = [
+  "Arabs (Kenyan)",
+  "Asians (Kenyan)",
+  "Aweer (Boni)",
+  "Bajuni",
+  "Borana",
+  "Burji",
+  "Chonyi",
+  "Dasenach",
+  "Digo",
+  "Dorobo",
+  "Duruma",
+  "El Molo",
+  "Embu",
+  "Gabra",
+  "Giriama",
+  "Gosha",
+  "Ilchamus",
+  "Il-Njemps",
+  "Jibana",
+  "Kalenjin",
+  "Kamba",
+  "Kambe",
+  "Kauma",
+  "Kikuyu",
+  "Kisii",
+  "Konso",
+  "Kuria",
+  "Luhya",
+  "Luo",
+  "Maasai",
+  "Makonde",
+  "Mbeere",
+  "Meru",
+  "Mijikenda (umbrella for several coastal groups)",
+  "Njemps",
+  "Nubi",
+  "Orma",
+  "Pokomo",
+  "Rabai",
+  "Rendille",
+  "Ribe",
+  "Sakuye",
+  "Samburu",
+  "Somali (Kenyan)",
+  "Suba",
+  "Swahili",
+  "Taita",
+  "Taveta",
+  "Teso",
+  "Tharaka",
+  "Turkana",
+  "Walwana (Malakote / Somali-related group)",
+  "Wayyu",
 ]
 
 export function RegisterForm() {
@@ -31,7 +96,7 @@ export function RegisterForm() {
   const [email, setEmail] = useState("")
   const [dob, setDob] = useState("")
   const [gender, setGender] = useState("")
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("254")
   const [idNo, setIdNo] = useState("")
   const [docType, setDocType] = useState("")
   const [county, setCounty] = useState("")
@@ -113,6 +178,20 @@ export function RegisterForm() {
     }
   }
 
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return 0
+    const today = new Date()
+    const birth = new Date(birthDate)
+    let age = today.getFullYear() - birth.getFullYear()
+    const m = today.getMonth() - birth.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--
+    }
+    return age
+  }
+
+  const userAge = dob ? calculateAge(dob) : 0
+
   // Check if all mandatory fields are filled
   const isMandatoryFieldsFilled =
     firstName &&
@@ -133,7 +212,7 @@ export function RegisterForm() {
 
   const isPaymentRequired = membershipType === "Ordinary" || membershipType === "Life"
   const isPaymentComplete = !isPaymentRequired || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
-  const isFormValid = isMandatoryFieldsFilled && isPaymentComplete
+  const isFormValid = isMandatoryFieldsFilled && isPaymentComplete && userAge >= 18
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -224,7 +303,7 @@ export function RegisterForm() {
     setEmail("")
     setDob("")
     setGender("")
-    setPhone("")
+    setPhone("254")
     setIdNo("")
     setDocType("")
     setCounty("")
@@ -320,8 +399,8 @@ export function RegisterForm() {
           </div>
 
           {/* RIGHT — FORM */}
-          <div className="bg-card border border-border rounded-lg p-8 md:w-2/3 shadow-sm">
-            <div className="mb-8 p-6 bg-secondary/5 border border-secondary/20 rounded-xl space-y-4">
+          <div className="bg-card border border-border rounded-lg p-8 md:w-2/3 shadow-none">
+            <div className="mb-8 p-6 border border-secondary/20 rounded-xl space-y-4">
               <div className="flex items-start gap-3">
                 <div className="mt-1 bg-secondary/10 p-1.5 rounded-full">
                   <CheckCircle className="text-secondary w-4 h-4" />
@@ -376,24 +455,22 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
-                    <input
-                      type="text"
+                    <Input
                       required
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="John"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
-                    <input
-                      type="text"
+                    <Input
                       required
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Doe"
                     />
                   </div>
@@ -403,32 +480,59 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Religion *</label>
-                    <select
-                      value={religion}
-                      onChange={(e) => setReligion(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Religion</option>
-                      <option value="Christianity">Christianity</option>
-                      <option value="Islam">Islam</option>
-                      <option value="Hinduism">Hinduism</option>
-                      <option value="Buddhism">Buddhism</option>
-                      <option value="Judaism">Judaism</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    <Select value={religion} onValueChange={setReligion} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Religion" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Christianity">Christianity</SelectItem>
+                        <SelectItem value="Islam">Islam</SelectItem>
+                        <SelectItem value="Hinduism">Hinduism</SelectItem>
+                        <SelectItem value="Buddhism">Buddhism</SelectItem>
+                        <SelectItem value="Judaism">Judaism</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Ethnicity / Tribe *</label>
-                    <input
-                      type="text"
-                      value={ethnicity}
-                      onChange={(e) => setEthnicity(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="e.g., Kikuyu, Maasai, Luo"
-                    />
+                    <div className="space-y-3">
+                      <Select
+                        value={KENYAN_TRIBES.includes(ethnicity) ? ethnicity : ethnicity === "" ? undefined : "Other"}
+                        onValueChange={(val) => {
+                          if (val === "Other") {
+                            setEthnicity("")
+                          } else {
+                            setEthnicity(val)
+                          }
+                        }}
+                        required
+                      >
+                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                          <SelectValue placeholder="Select Tribe" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-80">
+                          {KENYAN_TRIBES.map((tribe) => (
+                            <SelectItem key={tribe} value={tribe}>
+                              {tribe}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="Other">Other (Specify)</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {(ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "")) && (
+                        <Input
+                          type="text"
+                          value={ethnicity === "Other" ? "" : ethnicity}
+                          onChange={(e) => setEthnicity(e.target.value)}
+                          placeholder="Please specify your tribe"
+                          required
+                          className="h-10 border-border rounded-lg focus:border-secondary bg-background px-4 animate-in fade-in slide-in-from-top-1 transition-colors"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -436,27 +540,38 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Date of Birth *</label>
-                    <input
+                    <Input
                       type="date"
                       required
                       value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setDob(val)
+                        const age = calculateAge(val)
+                        if (age > 35 && specialInterest === "Youths") {
+                          setSpecialInterest("")
+                        }
+                      }}
+                      className={`h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary ${dob && userAge < 18 ? "border-red-500 focus:border-red-500" : ""}`}
                     />
+                    {dob && userAge < 18 && (
+                      <p className="text-xs text-red-500 mt-1">
+                        You should be 18 and above to join a political party.
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Sex *</label>
-                    <select
-                      required
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
+                    <Select value={gender} onValueChange={setGender} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -464,26 +579,24 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Document Type *</label>
-                    <select
-                      required
-                      value={docType}
-                      onChange={(e) => setDocType(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Document Type</option>
-                      <option value="Passport">Passport</option>
-                      <option value="National ID">National ID</option>
-                    </select>
+                    <Select value={docType} onValueChange={setDocType} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Document Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Passport">Passport</SelectItem>
+                        <SelectItem value="National ID">National ID</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Document Number *</label>
-                    <input
-                      type="text" // Changed to text to avoid issues with leading zeros
+                    <Input
                       required
                       value={idNo}
-                      onChange={(e) => setIdNo(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      onChange={(e) => setIdNo(e.target.value.replace(/\D/g, ""))}
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="01234567"
                     />
                   </div>
@@ -500,25 +613,32 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                    <input
+                    <Input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="john@example.com"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-                    <input
+                    <Input
                       type="tel"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="+254 712 345 678"
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "")
+                        if (val.startsWith("0")) {
+                          setPhone("254" + val.substring(1))
+                        } else {
+                          setPhone(val)
+                        }
+                      }}
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                      placeholder="2547XXXXXXXX"
                     />
                   </div>
                 </div>
@@ -527,24 +647,22 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Postal Address *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={postalAddress}
                       onChange={(e) => setPostalAddress(e.target.value)}
                       required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="123 Main Street"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                      placeholder="P.O. Box xx"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Postal Code *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
+                      onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ""))}
                       required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="00100"
                     />
                   </div>
@@ -591,31 +709,27 @@ export function RegisterForm() {
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
-                    <select
-                      value={specialInterest}
-                      onChange={(e) => setSpecialInterest(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Interest Group</option>
-                      <option value="Elders">Elders</option>
-                      <option value="Youths">Youths</option>
-                      <option value="Women League">Women League</option>
-                      <option value="Diaspora">Diaspora</option>
-                      <option value="Marginalized">Marginalized Communities</option>
-                    </select>
+                    <Select value={specialInterest} onValueChange={setSpecialInterest} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Interest Group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {userAge <= 35 && <SelectItem value="Youths">Youths</SelectItem>}
+                        <SelectItem value="Women">Women</SelectItem>
+                        <SelectItem value="Marginalized">Marginalized Communities</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
                 {isPWD === "yes" && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-foreground mb-2">NCPWD Number *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={ncpwdNumber}
                       onChange={(e) => setNCPWDNumber(e.target.value)}
                       required={isPWD === "yes"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Enter your NCPWD registration number"
                     />
                   </div>
@@ -632,39 +746,36 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">County *</label>
-                    <select
-                      required
-                      value={county}
-                      onChange={(e) => handleCountyChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select County</option>
-                      {Array.isArray(counties) &&
-                        counties.map((c: any) => (
-                          <option key={c.id} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={county} onValueChange={handleCountyChange} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select County" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(counties) &&
+                          counties.map((c: any) => (
+                            <SelectItem key={c.id} value={c.name}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Constituency *</label>
-                    <select
-                      required
-                      value={constituency}
-                      onChange={(e) => handleSubcountyChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      disabled={!county}
-                    >
-                      <option value="">Select Constituency</option>
-                      {Array.isArray(subCountys) &&
-                        subCountys.map((sc: any) => (
-                          <option key={sc.id} value={sc.name}>
-                            {sc.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={constituency} onValueChange={handleSubcountyChange} required disabled={!county}>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Constituency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(subCountys) &&
+                          subCountys.map((sc: any) => (
+                            <SelectItem key={sc.id} value={sc.name}>
+                              {sc.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -672,31 +783,27 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Ward *</label>
-                    <select
-                      required
-                      value={ward}
-                      onChange={(e) => setWard(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      disabled={!constituency}
-                    >
-                      <option value="">Select Ward</option>
-                      {Array.isArray(wards) &&
-                        wards.map((w: any) => (
-                          <option key={w.id} value={w.name}>
-                            {w.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={ward} onValueChange={setWard} required disabled={!constituency}>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Ward" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(wards) &&
+                          wards.map((w: any) => (
+                            <SelectItem key={w.id} value={w.name}>
+                              {w.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Polling Station *</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium text-foreground mb-2">Polling Station (Optional)</label>
+                    <Input
                       value={pollingStation}
                       onChange={(e) => setPollingStation(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="e.g., Nairobi Primary School"
                     />
                   </div>
@@ -705,21 +812,19 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Street / Village (Optional)</label>
-                    <input
-                      type="text"
+                    <Input
                       value={streetVillage}
                       onChange={(e) => setStreetVillage(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="e.g., Westlands, Lavington"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Local Leader (Optional)</label>
-                    <input
-                      type="text"
+                    <Input
                       value={localLeader}
                       onChange={(e) => setLocalLeader(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Referred by (Name of Local Leader)"
                     />
                   </div>
@@ -764,12 +869,11 @@ export function RegisterForm() {
                 {membershipStatus === "returning" && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-foreground mb-2">Membership Number *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={membershipNumber}
                       onChange={(e) => setMembershipNumber(e.target.value)}
                       required={membershipStatus === "returning"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Enter your membership number"
                     />
                   </div>
@@ -778,11 +882,10 @@ export function RegisterForm() {
                 {/* Membership Type Selection */}
                 <div className="mb-6 mt-6">
                   <label className="block text-sm font-medium text-foreground mb-2">Membership Type *</label>
-                  <select
+                  <Select
                     required
                     value={membershipType}
-                    onChange={(e) => {
-                      const val = e.target.value
+                    onValueChange={(val) => {
                       setMembershipType(val)
                       const isPaid = val === "Ordinary" || val === "Life"
                       setIsPaidMembership(isPaid)
@@ -792,20 +895,23 @@ export function RegisterForm() {
                         setPaymentPhoneNumber("")
                       }
                     }}
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                    <option value="">Select Membership Type</option>
-                    {MEMBERSHIP_TYPES.map((type) => (
-                      <option key={type.value} value={type.value}>
-                        {type.label} {type.fee !== undefined ? `- KES ${type.fee.toLocaleString()}` : ""}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                      <SelectValue placeholder="Select Membership Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MEMBERSHIP_TYPES.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label} {type.fee !== undefined ? `- KES ${type.fee.toLocaleString()}` : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Registration Fee Display */}
                 {isPaidMembership && membershipType && (
-                  <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
+                  <div className="border border-border rounded-lg p-4 mb-6">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-xs text-muted-foreground">Registration Fee</p>
@@ -864,12 +970,19 @@ export function RegisterForm() {
                     {/* Payment Phone Number */}
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Payment Phone Number *</label>
-                      <input
+                      <Input
                         type="tel"
                         value={paymentPhoneNumber}
-                        onChange={(e) => setPaymentPhoneNumber(e.target.value)}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                        placeholder="07XXXXXXXX"
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "")
+                          if (val.startsWith("0")) {
+                            setPaymentPhoneNumber("254" + val.substring(1))
+                          } else {
+                            setPaymentPhoneNumber(val)
+                          }
+                        }}
+                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                        placeholder="2547XXXXXXXX"
                         required={isPaidMembership}
                       />
                       <p className="text-xs text-muted-foreground mt-1.5">
@@ -883,7 +996,7 @@ export function RegisterForm() {
                         type="button"
                         onClick={handlePayment}
                         disabled={!paymentMethod || paymentPhoneNumber.trim().length < 9 || paymentProcessed}
-                        className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       >
                         {paymentStatus === "initiating" ? (
                           <>Processing...</>
@@ -907,7 +1020,7 @@ export function RegisterForm() {
 
 
               {/* SECTION 6: MEMBER DECLARATION */}
-              <div className="border-t border-border pt-8">
+              <div className="border-t border-border pt-8 mt-8 mb-8">
                 <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
                   Member Declaration
                 </h4>
@@ -923,31 +1036,31 @@ export function RegisterForm() {
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value)}
                       required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="Enter 6-digit code"
+                      className="w-full px-4 h-11 border border-border rounded-lg shadow-none focus:outline-none focus:border-secondary bg-background"
+                      placeholder="e.g., Kikuyu, Maasai, Luo"
                     />
                   </div> */}
 
-                  <label className="flex items-start gap-3 cursor-pointer p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
+                  <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                     <input
                       type="checkbox"
                       checked={politicalDeclaration}
                       onChange={(e) => setPoliticalDeclaration(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
+                      className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
                     <span className="text-sm text-foreground cursor-pointer">
                       I hereby affirm that I am not a member of any other registered political party in Kenya. *
                     </span>
                   </label>
 
-                  <label className="flex items-start gap-3 cursor-pointer p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
+                  <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                     <input
                       type="checkbox"
                       checked={termsConsent}
                       onChange={(e) => setTermsConsent(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
+                      className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
                     <span className="text-sm text-foreground cursor-pointer">
                       I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
@@ -998,9 +1111,9 @@ export function RegisterForm() {
               <button
                 type="submit"
                 disabled={
-                  submitted || !politicalDeclaration || !termsConsent || (isPaidMembership && !paymentProcessed)
+                  submitted || !isFormValid
                 }
-                className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Complete Registration
               </button>

@@ -6,6 +6,7 @@ import api from "@/lib/axios"
 import toast from "react-hot-toast"
 import { Button } from "./ui/button"
 import { Spinner } from "./ui/spinner"
+import { Input } from "./ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command"
 import { cn } from "@/lib/utils"
@@ -103,7 +104,7 @@ export function LocalGroupForm() {
                         </div>
 
                         {status === "success" && (
-                            <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 animate-slide-up">
+                            <div className="mb-8 p-4 border border-green-200 rounded-lg flex items-start gap-3 animate-slide-up hover:bg-green-50/10 transition-colors">
                                 <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
                                 <div className="text-green-800">
                                     <p className="font-semibold">Request Submitted!</p>
@@ -115,13 +116,13 @@ export function LocalGroupForm() {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
                                 <label className="block text-sm font-medium text-foreground mb-2">Membership Number *</label>
-                                <input
+                                <Input
                                     type="text"
                                     value={formData.membershipNumber}
                                     onChange={(e) => setFormData(prev => ({ ...prev, membershipNumber: e.target.value }))}
                                     required
                                     placeholder="SFU-2024-XXXXX"
-                                    className="w-full px-4 py-3 border border-border rounded-lg bg-background focus:outline-none focus:border-secondary transition-colors"
+                                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                                 />
                             </div>
 
@@ -133,7 +134,7 @@ export function LocalGroupForm() {
                                             variant="outline"
                                             role="combobox"
                                             aria-expanded={popoverOpen}
-                                            className="w-full justify-between px-4 py-3 h-auto border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
+                                            className="w-full justify-between px-4 h-10 border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
                                         >
                                             {selectedGroupLabel}
                                             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -177,7 +178,7 @@ export function LocalGroupForm() {
                                 <Button
                                     type="submit"
                                     disabled={status === "loading"}
-                                    className="w-full bg-secondary hover:bg-secondary/90 text-white h-12 rounded-lg font-bold flex items-center justify-center gap-2"
+                                    className="w-full bg-secondary hover:bg-secondary/90 text-white h-10 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
                                 >
                                     {status === "loading" ? (
                                         <>

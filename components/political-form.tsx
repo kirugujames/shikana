@@ -7,6 +7,14 @@ import api from "@/lib/axios"
 import toast from "react-hot-toast"
 import { Button } from "./ui/button"
 import { Spinner } from "./ui/spinner"
+import { Input } from "./ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select"
 
 export default function PoliticalRegistrationForm() {
   const { user } = useAuth()
@@ -14,10 +22,20 @@ export default function PoliticalRegistrationForm() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phone: "254",
     membershipNumber: "",
-    position: ""
+    position: "",
+    consent: false
   })
+
+  const isFormValid =
+    formData.firstName.trim() !== "" &&
+    formData.lastName.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.membershipNumber.trim() !== "" &&
+    formData.position.trim() !== "" &&
+    formData.phone.trim().length >= 9 &&
+    formData.consent
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
 
@@ -28,7 +46,7 @@ export default function PoliticalRegistrationForm() {
         firstName: user.first_name || "",
         lastName: user.last_name || "",
         email: user.email || "",
-        phone: user.phone || prev.phone,
+        phone: user.phone && user.phone.startsWith("0") ? "254" + user.phone.substring(1) : (user.phone || "254"),
       }))
     }
   }, [user])
@@ -82,9 +100,10 @@ export default function PoliticalRegistrationForm() {
           firstName: "",
           lastName: "",
           email: "",
-          phone: "",
+          phone: "254",
           membershipNumber: "",
-          position: ""
+          position: "",
+          consent: false
         })
       } else {
         throw new Error(response.data?.message || "Submission failed")
@@ -169,7 +188,7 @@ export default function PoliticalRegistrationForm() {
               <>
                 {/* Success Message */}
                 {status === "success" && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+                  <div className="mb-6 p-4 border border-green-200 rounded-lg flex items-start gap-3 hover:bg-green-50/10 transition-colors">
                     <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
                     <div className="text-green-800">
                       <p className="font-semibold">Application Successful!</p>
@@ -183,27 +202,27 @@ export default function PoliticalRegistrationForm() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
-                      <input
+                      <Input
                         type="text"
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
                         required
                         disabled={status === "loading" || status === "success"}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="John"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
-                      <input
+                      <Input
                         type="text"
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
                         required
                         disabled={status === "loading" || status === "success"}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="Steve"
                       />
                     </div>
@@ -212,14 +231,14 @@ export default function PoliticalRegistrationForm() {
                   {/* Email Address */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                    <input
+                    <Input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
                       disabled={status === "loading" || status === "success"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -227,29 +246,35 @@ export default function PoliticalRegistrationForm() {
                   {/* Phone Number */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-                    <input
+                    <Input
                       type="tel"
                       name="phone"
                       value={formData.phone}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "")
+                        setFormData(prev => ({
+                          ...prev,
+                          phone: val.startsWith("0") ? "254" + val.substring(1) : val
+                        }))
+                      }}
                       required
                       disabled={status === "loading" || status === "success"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      placeholder="+254712345678 or 0712345678"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="2547XXXXXXXX"
                     />
                   </div>
 
                   {/* Membership Number */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Membership Number *</label>
-                    <input
+                    <Input
                       type="text"
                       name="membershipNumber"
                       value={formData.membershipNumber}
                       onChange={handleChange}
                       required
                       disabled={status === "loading" || status === "success"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="SFU-2024-12345"
                     />
                   </div>
@@ -257,25 +282,34 @@ export default function PoliticalRegistrationForm() {
                   {/* Position Dropdown */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Elective Position *</label>
-                    <select
-                      name="position"
+                    <Select
                       value={formData.position}
-                      onChange={handleChange}
-                      required
+                      onValueChange={(val) => setFormData(prev => ({ ...prev, position: val }))}
                       disabled={status === "loading" || status === "success"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary disabled:bg-gray-100 disabled:cursor-not-allowed"
                     >
-                      {kenyanPositions.map(pos => (
-                        <option key={pos.value} value={pos.value}>
-                          {pos.label}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Position" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {kenyanPositions.filter(p => p.value).map(pos => (
+                          <SelectItem key={pos.value} value={pos.value}>
+                            {pos.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Consent */}
-                  <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
-                    <input type="checkbox" id="political-consent" required className="w-4 h-4 rounded mt-1 cursor-pointer" />
+                  <div className="flex items-start gap-3 p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
+                    <input
+                      type="checkbox"
+                      id="political-consent"
+                      required
+                      checked={formData.consent}
+                      onChange={(e) => setFormData(prev => ({ ...prev, consent: e.target.checked }))}
+                      className="w-4 h-4 rounded mt-1 cursor-pointer accent-secondary"
+                    />
                     <label htmlFor="political-consent" className="text-sm text-foreground cursor-pointer">
                       I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
                     </label>
@@ -284,8 +318,8 @@ export default function PoliticalRegistrationForm() {
                   {/* Submit Button */}
                   <button
                     onClick={handleSubmit}
-                    disabled={status === "loading" || status === "success"}
-                    className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={status === "loading" || status === "success" || !isFormValid}
+                    className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {status === "loading" ? (
                       <>

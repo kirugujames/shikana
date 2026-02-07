@@ -5,6 +5,7 @@ import { Send, ChevronDown, Check, Loader2, Search } from 'lucide-react'
 import Link from 'next/link'
 import api from "@/lib/axios"
 import toast, { Toaster } from 'react-hot-toast'
+import { Input } from "@/components/ui/input"
 import {
   Command,
   CommandEmpty,
@@ -53,7 +54,7 @@ export function Volunteer() {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("254")
   const [areasOfInterest, setAreasOfInterest] = useState<string[]>([])
   const [otherInterest, setOtherInterest] = useState("")
   const [consent, setConsent] = useState(false)
@@ -61,6 +62,14 @@ export function Volunteer() {
   const [events, setEvents] = useState<Event[]>([])
   const [loadingEvents, setLoadingEvents] = useState(false)
   const [popoverOpen, setPopoverOpen] = useState(false)
+
+  const isFormValid =
+    firstName.trim() !== "" &&
+    lastName.trim() !== "" &&
+    email.trim() !== "" &&
+    phone.trim().length >= 9 &&
+    consent &&
+    (volunteerType === "event" ? selectedEventId !== null : true)
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -127,7 +136,7 @@ export function Volunteer() {
       setFirstName("")
       setLastName("")
       setEmail("")
-      setPhone("")
+      setPhone("254")
       setAreasOfInterest([])
       setOtherInterest("")
       setSelectedEventId(null)
@@ -158,10 +167,9 @@ export function Volunteer() {
 
             <div className="space-y-3">
               {/* General Volunteering Option */}
-              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted transition-colors"
+              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted/10 transition-colors"
                 style={{
                   borderColor: volunteerType === "general" ? "hsl(var(--secondary))" : undefined,
-                  backgroundColor: volunteerType === "general" ? "hsl(var(--secondary)/.1)" : undefined
                 }}>
                 <input
                   type="radio"
@@ -184,10 +192,9 @@ export function Volunteer() {
               </label>
 
               {/* Event-Specific Option */}
-              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted transition-colors"
+              <label className="flex items-start gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-muted/10 transition-colors"
                 style={{
                   borderColor: volunteerType === "event" ? "hsl(var(--secondary))" : undefined,
-                  backgroundColor: volunteerType === "event" ? "hsl(var(--secondary)/.1)" : undefined
                 }}>
                 <input
                   type="radio"
@@ -218,7 +225,7 @@ export function Volunteer() {
                       variant="outline"
                       role="combobox"
                       aria-expanded={popoverOpen}
-                      className="w-full justify-between px-4 py-3 h-auto border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
+                      className="w-full justify-between px-4 h-10 border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
                     >
                       {selectedEventName
                         ? selectedEventName
@@ -277,12 +284,12 @@ export function Volunteer() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     First Name *
                   </label>
-                  <input
+                  <Input
                     type="text"
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="First Name"
                   />
                 </div>
@@ -290,12 +297,12 @@ export function Volunteer() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Last Name *
                   </label>
-                  <input
+                  <Input
                     type="text"
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="Last Name"
                   />
                 </div>
@@ -307,12 +314,12 @@ export function Volunteer() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Email Address *
                   </label>
-                  <input
+                  <Input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -320,13 +327,20 @@ export function Volunteer() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Phone Number *
                   </label>
-                  <input
+                  <Input
                     type="tel"
                     required
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    placeholder="07..."
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "")
+                      if (val.startsWith("0")) {
+                        setPhone("254" + val.substring(1))
+                      } else {
+                        setPhone(val)
+                      }
+                    }}
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                    placeholder="2547XXXXXXXX"
                   />
                 </div>
               </div>
@@ -352,12 +366,12 @@ export function Volunteer() {
                 {/* Custom input for "Other" */}
                 {areasOfInterest.includes("Other") && (
                   <div className="mt-3">
-                    <input
+                    <Input
                       type="text"
                       value={otherInterest}
                       onChange={(e) => setOtherInterest(e.target.value)}
                       placeholder="Please specify your area of interest"
-                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       required={areasOfInterest.includes("Other")}
                     />
                   </div>
@@ -365,7 +379,7 @@ export function Volunteer() {
               </div>
 
               {/* Consent */}
-              <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+              <div className="flex items-start gap-3 p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
                 <input
                   type="checkbox"
                   id="consent"
@@ -382,8 +396,8 @@ export function Volunteer() {
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={submitting}
-                className="w-full bg-secondary text-white py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                disabled={submitting || !isFormValid}
+                className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
                 {submitting ? "Submitting..." : "Submit Registration"}

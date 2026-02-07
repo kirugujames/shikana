@@ -11,9 +11,9 @@ export function ListingHero() {
         style={{ backgroundImage: 'url(/listing-hero.png)' }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         <Herotext title="Branded Party Products" />
-        <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-2xl mx-auto text-balance">
+        <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-4xl mx-auto text-balance">
           Proudly own SFUP branded merchandise to support our movement
         </p>
       </div>

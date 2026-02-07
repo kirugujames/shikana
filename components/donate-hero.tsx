@@ -13,12 +13,12 @@ export function DonateHero() {
         style={{ backgroundImage: 'url(/donate-hero.png)' }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         <div className="flex justify-center mb-6">
           <Heart size={48} className="text-secondary" />
         </div>
         <Herotext title="Support Our Movement" />
-        <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
+        <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto text-balance">
           Every donation makes a difference. Your contribution counts in shaping the future we fight and hope for.        </p>
         {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

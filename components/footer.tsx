@@ -10,6 +10,7 @@ import {
   Phone,
   MapPin,
   Mailbox,
+  ExternalLink,
 } from "lucide-react"
 
 export function Footer() {
@@ -42,8 +43,26 @@ export function Footer() {
           <div className="md:flex-1">
             <h3 className="text-lg font-semibold mb-4">External Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="https://www.iebc.or.ke/" className="text-white/80 hover:text-white">IEBC</Link></li>
-              <li><Link href="https://orpp.or.ke/" className="text-white/80 hover:text-white">ORPP</Link></li>
+              <li>
+                <a
+                  href="https://www.iebc.or.ke/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/80 hover:text-white inline-flex items-center gap-1"
+                >
+                  IEBC <ExternalLink size={12} />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://orpp.or.ke/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/80 hover:text-white inline-flex items-center gap-1"
+                >
+                  ORPP <ExternalLink size={12} />
+                </a>
+              </li>
 
               {/* <li><Link href="/ideology" className="text-white/80 hover:text-white">Party Ideology</Link></li> */}
 
@@ -127,19 +146,19 @@ export function Footer() {
         {/* Social Media Row */}
         <div className="mt-4 pt-8">
           <div className="flex flex-wrap justify-between gap-8 md:gap-12">
-            <a href="https://facebook.com" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Facebook size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Facebook</span>
             </a>
-            <a href="https://twitter.com" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Twitter size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Twitter / X</span>
             </a>
-            <a href="https://instagram.com" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Instagram size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Instagram</span>
             </a>
-            <a href="https://youtube.com" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Youtube size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">YouTube</span>
             </a>

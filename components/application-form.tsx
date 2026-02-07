@@ -8,6 +8,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
+import { Input } from "@/components/ui/input"
 
 interface propsData {
   id: any;
@@ -21,9 +22,18 @@ export function ApplicationForm({ id }: propsData) {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phone: "254",
     coverLetter: "",
+    consent: false,
   })
+
+  const isFormValid =
+    formData.firstName.trim() !== "" &&
+    formData.lastName.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.phone.trim().length >= 9 &&
+    cvFile !== null &&
+    formData.consent
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -77,8 +87,9 @@ export function ApplicationForm({ id }: propsData) {
               firstName: "",
               lastName: "",
               email: "",
-              phone: "",
+              phone: "254",
               coverLetter: "",
+              consent: false,
             })
             setCvFile(null)
             setTimeout(() => setSubmitted(false), 5000)
@@ -119,7 +130,7 @@ export function ApplicationForm({ id }: propsData) {
 
         <div className="bg-card border border-border rounded-lg p-8">
           {submitted && (
-            <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-lg text-primary-800">
+            <div className="mb-6 p-4 border border-green-200 rounded-lg text-green-800 hover:bg-green-50/10 transition-colors">
               ✓ Thank you for your application! We'll review it and be in touch soon.
             </div>
           )}
@@ -129,13 +140,13 @@ export function ApplicationForm({ id }: propsData) {
               {/* First Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
-                <input
+                <Input
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                   placeholder="First name"
                 />
               </div>
@@ -143,13 +154,13 @@ export function ApplicationForm({ id }: propsData) {
               {/* Last Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
-                <input
+                <Input
                   type="text"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                   placeholder="Last name"
                 />
               </div>
@@ -157,13 +168,13 @@ export function ApplicationForm({ id }: propsData) {
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                <input
+                <Input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                   placeholder="your@email.com"
                 />
               </div>
@@ -171,14 +182,20 @@ export function ApplicationForm({ id }: propsData) {
               {/* Phone */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-                <input
+                <Input
                   type="tel"
                   name="phone"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "")
+                    setFormData(prev => ({
+                      ...prev,
+                      phone: val.startsWith("0") ? "254" + val.substring(1) : val
+                    }))
+                  }}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                  placeholder="0712 345 678"
+                  className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                  placeholder="2547XXXXXXXX"
                 />
               </div>
             </div>
@@ -226,9 +243,15 @@ export function ApplicationForm({ id }: propsData) {
               />
             </div>
 
-            {/* Consent */}
-            <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
-              <input type="checkbox" id="consent" required className="w-4 h-4 rounded mt-1 cursor-pointer" />
+            <div className="flex items-start gap-3 p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
+              <input
+                type="checkbox"
+                id="consent"
+                required
+                checked={formData.consent}
+                onChange={(e) => setFormData(prev => ({ ...prev, consent: e.target.checked }))}
+                className="w-4 h-4 rounded mt-1 cursor-pointer accent-secondary"
+              />
               <label htmlFor="consent" className="text-sm text-foreground cursor-pointer">
                 I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
               </label>
@@ -237,8 +260,8 @@ export function ApplicationForm({ id }: propsData) {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-secondary text-white py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isSubmitting || !isFormValid}
+              className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
