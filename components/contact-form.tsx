@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react"
 import api from "@/lib/axios"
 import toast, { Toaster } from "react-hot-toast"
 import { Spinner } from "./ui/spinner"
+import { Input } from "./ui/input"
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false)
@@ -119,37 +120,37 @@ export function ContactForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
-                  <input
+                  <Input
                     type="text"
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="First name"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
-                  <input
+                  <Input
                     type="text"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="Last name"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                  <input
+                  <Input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                    className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -157,13 +158,13 @@ export function ContactForm() {
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Subject *</label>
-                <input
+                <Input
                   type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                   placeholder="How can we help?"
                 />
               </div>
@@ -176,7 +177,7 @@ export function ContactForm() {
                   onChange={handleChange}
                   rows={5}
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary bg-background"
                   placeholder="Your message..."
                 />
               </div>
@@ -184,7 +185,7 @@ export function ContactForm() {
               <button
                 type="submit"
                 disabled={!isValid || loading}
-                className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>

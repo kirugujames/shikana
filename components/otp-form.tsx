@@ -58,7 +58,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
     }
   }
 
-  const resendOtp = async(e: React.FormEvent) => {
+  const resendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -130,7 +130,13 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
               </Field>
 
               <Field>
-                <Button type="submit">{isLoading ? <Spinner /> : "Verify"}</Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading || otp.length !== 6}
+                  className="h-10 w-full bg-secondary hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isLoading ? <Spinner /> : "Verify"}
+                </Button>
                 <FieldDescription className="text-center" onClick={resendOtp}>
                   Didn&apos;t receive the code? <Link href="#">Resend</Link>
                 </FieldDescription>
@@ -149,8 +155,8 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
       </Card>
 
       <FieldDescription className="text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <Link href="/shared-ui/terms" className="text-secondary hover:underline">Terms & Conditions</Link>{" "}
+        and <Link href="/shared-ui/privacy" className="text-secondary hover:underline">Privacy Policy</Link>.
       </FieldDescription>
     </div>
   )

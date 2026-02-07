@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
     Dialog,
     DialogContent,
@@ -12,11 +13,13 @@ import {
 import { Loader2 } from "lucide-react"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
+import { cn } from "@/lib/utils"
 
 export function CancelMembership() {
     const [isOpen, setIsOpen] = useState(false)
     const [memberId, setMemberId] = useState("")
     const [loading, setLoading] = useState(false)
+    const [hasConsent, setHasConsent] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -73,17 +76,28 @@ export function CancelMembership() {
                             >
                                 Member ID *
                             </label>
-                            <input
+                            <Input
                                 id="memberId"
-                                type="text"
                                 required
                                 placeholder="e.g. SFUP-2024-001"
                                 value={memberId}
                                 onChange={(e) => setMemberId(e.target.value)}
-                                className="w-full px-4 py-3 border border-border rounded-lg
-                                focus:outline-none focus:border-secondary"
+                                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                             />
                         </div>
+
+                        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
+                            <input
+                                type="checkbox"
+                                checked={hasConsent}
+                                onChange={(e) => setHasConsent(e.target.checked)}
+                                required
+                                className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
+                            />
+                            <span className="text-sm text-foreground cursor-pointer text-left">
+                                I confirm that I wish to cancel my membership with SFUP and I understand this action is permanent. *
+                            </span>
+                        </label>
 
                         <div className="flex gap-3">
                             {/* <Button
@@ -99,8 +113,8 @@ export function CancelMembership() {
                             </Button> */}
                             <Button
                                 type="submit"
-                                disabled={loading || !memberId.trim()}
-                                className="flex-1 bg-accent hover:bg-accent/90"
+                                disabled={loading || !memberId.trim() || !hasConsent}
+                                className="flex-1 bg-accent hover:bg-accent/90 h-10"
                             >
                                 {loading ? (
                                     <>

@@ -96,11 +96,11 @@ export function HeroSection() {
       {/* CONTENT */}
       <div
         key={current}
-        className="relative z-10 max-w-4xl mx-auto px-4 text-center animate-slide-up"
+        className="relative z-10 max-w-6xl mx-auto px-4 text-center animate-slide-up"
       >
         <Herotext title={slides[current].title} />
 
-        <p className="text-xl md:text-2xl mt-2 text-white/90 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl md:text-2xl mt-2 text-white/90 mb-8 max-w-4xl mx-auto text-balance">
           {slides[current].description}
         </p>
 

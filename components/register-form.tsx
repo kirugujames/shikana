@@ -7,14 +7,165 @@ import api from "@/lib/axios"
 import toast, { Toaster } from "react-hot-toast"
 import Link from "next/link"
 import { CancelMembership } from "./cancel-membership"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Check, ChevronsUpDown } from "lucide-react"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
 
 const MEMBERSHIP_TYPES = [
-  { value: "Free", label: "Free Membership" },
+  { value: "Free", label: " Membership Fee (Waived)" },
   { value: "Ordinary", label: "Ordinary Membership", fee: 100 },
   { value: "Life", label: "Life Membership", fee: 5000 },
+]
+
+const KENYAN_TRIBES = [
+  "Arabs (Kenyan)",
+  "Asians (Kenyan)",
+  "Aweer (Boni)",
+  "Bajuni",
+  "Borana",
+  "Burji",
+  "Chonyi",
+  "Dasenach",
+  "Digo",
+  "Dorobo",
+  "Duruma",
+  "El Molo",
+  "Embu",
+  "Gabra",
+  "Giriama",
+  "Gosha",
+  "Ilchamus",
+  "Il-Njemps",
+  "Jibana",
+  "Kalenjin",
+  "Kamba",
+  "Kambe",
+  "Kauma",
+  "Kikuyu",
+  "Kisii",
+  "Konso",
+  "Kuria",
+  "Luhya",
+  "Luo",
+  "Maasai",
+  "Makonde",
+  "Mbeere",
+  "Meru",
+  "Mijikenda",
+  "Njemps",
+  "Nubi",
+  "Orma",
+  "Pokomo",
+  "Rabai",
+  "Rendille",
+  "Ribe",
+  "Sakuye",
+  "Samburu",
+  "Somali (Kenyan)",
+  "Suba",
+  "Swahili",
+  "Taita",
+  "Taveta",
+  "Teso",
+  "Tharaka",
+  "Turkana",
+  "Walwana (Malakote / Somali-related group)",
+  "Wayyu",
+]
+
+const RELIGIONS = [
+  "Christianity",
+  "Islam",
+  "Hinduism",
+  "Buddhism",
+  "Judaism",
+]
+
+const POSTAL_OFFICES = [
+  "Ahero – 40101",
+  "Agenga – 40406",
+  "Ainabkoi – 30101",
+  "Akala – 40139",
+  "Aluor – 40140",
+  "Amagoro – 50244",
+  "Amukura – 50403",
+  "Anyiko – 40616",
+  "Archer’s Post – 60302",
+  "Arror – 30708",
+  "Asembo Bay – 40619",
+  "Asumbi – 40309",
+  "Athi River – 00204",
+  "Awach Tende – 40328",
+  "Bahati – 20113",
+  "Bamburi – 80101",
+  "Banja – 50316",
+  "Baraton – 30306",
+  "Bartolimo – 30408",
+  "Bokoli – 50206",
+  "Bondo – 40601",
+  "Bumala – 50404",
+  "Butula – 50405",
+  "Chamakhanga – 50302",
+  "Chogoria – 60401",
+  "Chuka – 60400",
+  "Dadaab – 70103",
+  "Diani Beach – 80401",
+  "Doldol – 10401",
+  "Egerton – 20115",
+  "Eldoret – 30100",
+  "Embu – 60100",
+  "Garissa – 70100",
+  "Gede – 80208",
+  "Githurai – 00626",
+  "Homa Bay – 40300",
+  "Isiolo – 60300",
+  "Ishiara – 60102",
+  "Kabarak – 20157",
+  "Kabarnet – 30400",
+  "Kakamega – 50100",
+  "Kakuma – 30501",
+  "Kaloleni – 80105",
+  "Kamakwa Road – 10141",
+  "Karen – 00502",
+  "Kisumu – 40100",
+  "Lamu – 80500",
+  "Limuru – 00217",
+  "Lodwar – 30500",
+  "Luanda – 50307",
+  "Machakos – 90100",
+  "Makindu – 90138",
+  "Makueni – 90300",
+  "Malakisi – 50209",
+  "Mombasa GPO – 80100",
+  "Nakuru – 20100",
+  "Nanyuki – 10400",
+  "Narok – 20500",
+  "Nyeri – 10100",
+  "Ongata Rongai – 00511",
+  "Oyugis – 40222",
+  "Ruiru – 00232",
+  "Rumuruti – 20321",
+  "Sagalla – 80308",
+  "Sirisia – 50208",
+  "Ukunda – 80400",
+  "Usenge – 40609",
+  "Voi – 80300",
+  "Wajir – 70200",
+  "Watamu – 80202",
+  "Witu – 80504",
+  "Zombe – 90213",
 ]
 
 export function RegisterForm() {
@@ -31,7 +182,7 @@ export function RegisterForm() {
   const [email, setEmail] = useState("")
   const [dob, setDob] = useState("")
   const [gender, setGender] = useState("")
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("254")
   const [idNo, setIdNo] = useState("")
   const [docType, setDocType] = useState("")
   const [county, setCounty] = useState("")
@@ -47,7 +198,7 @@ export function RegisterForm() {
   const [pollingStation, setPollingStation] = useState("")
   const [streetVillage, setStreetVillage] = useState("")
   const [membershipStatus, setMembershipStatus] = useState("")
-  const [specialInterest, setSpecialInterest] = useState("")
+  const [specialInterest, setSpecialInterest] = useState<string[]>([])
   const [localLeader, setLocalLeader] = useState("")
   const [verificationCode, setVerificationCode] = useState("")
   const [politicalDeclaration, setPoliticalDeclaration] = useState(false)
@@ -59,6 +210,8 @@ export function RegisterForm() {
   const [membershipNumber, setMembershipNumber] = useState("")
   const [isPaidMembership, setIsPaidMembership] = useState(false)
   const [paymentProcessed, setPaymentProcessed] = useState(false)
+  const [openPostalCode, setOpenPostalCode] = useState(false)
+  const [openEthnicity, setOpenEthnicity] = useState(false)
 
   const registrationFee = MEMBERSHIP_TYPES.find((type) => type.value === membershipType)?.fee || 0
 
@@ -113,6 +266,20 @@ export function RegisterForm() {
     }
   }
 
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return 0
+    const today = new Date()
+    const birth = new Date(birthDate)
+    let age = today.getFullYear() - birth.getFullYear()
+    const m = today.getMonth() - birth.getMonth()
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--
+    }
+    return age
+  }
+
+  const userAge = dob ? calculateAge(dob) : 0
+
   // Check if all mandatory fields are filled
   const isMandatoryFieldsFilled =
     firstName &&
@@ -129,11 +296,12 @@ export function RegisterForm() {
     areaOfInterest &&
     membershipType &&
     politicalDeclaration &&
-    termsConsent
+    termsConsent &&
+    specialInterest.length > 0
 
   const isPaymentRequired = membershipType === "Ordinary" || membershipType === "Life"
   const isPaymentComplete = !isPaymentRequired || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
-  const isFormValid = isMandatoryFieldsFilled && isPaymentComplete
+  const isFormValid = isMandatoryFieldsFilled && isPaymentComplete && userAge >= 18
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -175,7 +343,6 @@ export function RegisterForm() {
         pollingStation,
         streetVillage,
         membershipStatus,
-        specialInterest,
         membershipNumber,
         localLeader,
         verificationCode,
@@ -183,6 +350,7 @@ export function RegisterForm() {
         termsConsent,
         verificationMethod,
         membershipType,
+        specialInterest: specialInterest.join(", "),
         paymentMethod: isPaymentRequired ? paymentMethod : null,
         paymentPhoneNumber: isPaymentRequired ? paymentPhoneNumber : null,
         amount: registrationFee,
@@ -224,7 +392,7 @@ export function RegisterForm() {
     setEmail("")
     setDob("")
     setGender("")
-    setPhone("")
+    setPhone("254")
     setIdNo("")
     setDocType("")
     setCounty("")
@@ -240,7 +408,7 @@ export function RegisterForm() {
     setPollingStation("")
     setStreetVillage("")
     setMembershipStatus("")
-    setSpecialInterest("")
+    setSpecialInterest([])
     setLocalLeader("")
     setVerificationCode("")
     setPoliticalDeclaration(false)
@@ -320,8 +488,8 @@ export function RegisterForm() {
           </div>
 
           {/* RIGHT — FORM */}
-          <div className="bg-card border border-border rounded-lg p-8 md:w-2/3 shadow-sm">
-            <div className="mb-8 p-6 bg-secondary/5 border border-secondary/20 rounded-xl space-y-4">
+          <div className="bg-card border border-border rounded-lg p-8 md:w-2/3 shadow-none">
+            <div className="mb-8 p-6 border border-secondary/20 rounded-xl space-y-4">
               <div className="flex items-start gap-3">
                 <div className="mt-1 bg-secondary/10 p-1.5 rounded-full">
                   <CheckCircle className="text-secondary w-4 h-4" />
@@ -376,24 +544,22 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">First Name *</label>
-                    <input
-                      type="text"
+                    <Input
                       required
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="John"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Last Name *</label>
-                    <input
-                      type="text"
+                    <Input
                       required
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Doe"
                     />
                   </div>
@@ -403,32 +569,116 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Religion *</label>
-                    <select
-                      value={religion}
-                      onChange={(e) => setReligion(e.target.value)}
+                    <Select
+                      value={RELIGIONS.includes(religion) ? religion : religion ? "Other" : ""}
+                      onValueChange={(val) => {
+                        if (val === "Other") setReligion("Other")
+                        else setReligion(val)
+                      }}
                       required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                     >
-                      <option value="">Select Religion</option>
-                      <option value="Christianity">Christianity</option>
-                      <option value="Islam">Islam</option>
-                      <option value="Hinduism">Hinduism</option>
-                      <option value="Buddhism">Buddhism</option>
-                      <option value="Judaism">Judaism</option>
-                      <option value="Other">Other</option>
-                    </select>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Religion" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {RELIGIONS.map((r) => (
+                          <SelectItem key={r} value={r}>
+                            {r}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="Other">Other (Specify)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {(religion === "Other" || (!RELIGIONS.includes(religion) && religion !== "")) && (
+                      <Input
+                        type="text"
+                        value={religion === "Other" ? "" : religion}
+                        onChange={(e) => setReligion(e.target.value)}
+                        placeholder="Please specify your religion"
+                        required
+                        className="mt-3 h-10 border-border rounded-lg focus:border-secondary bg-background px-4 animate-in fade-in slide-in-from-top-1 transition-colors"
+                      />
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Ethnicity / Tribe *</label>
-                    <input
-                      type="text"
-                      value={ethnicity}
-                      onChange={(e) => setEthnicity(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="e.g., Kikuyu, Maasai, Luo"
-                    />
+                    <div className="space-y-3">
+                      <Popover open={openEthnicity} onOpenChange={setOpenEthnicity}>
+                        <PopoverTrigger asChild>
+                          <button
+                            role="combobox"
+                            aria-expanded={openEthnicity}
+                            className={cn(
+                              "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
+                              !ethnicity && "text-muted-foreground"
+                            )}
+                          >
+                            {KENYAN_TRIBES.includes(ethnicity)
+                              ? ethnicity
+                              : ethnicity
+                                ? "Other"
+                                : "Select Tribe"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search tribe..." />
+                            <CommandList>
+                              <CommandEmpty>No tribe found.</CommandEmpty>
+                              <CommandGroup>
+                                {KENYAN_TRIBES.map((tribe) => (
+                                  <CommandItem
+                                    key={tribe}
+                                    value={tribe}
+                                    onSelect={(currentValue) => {
+                                      // Use 'tribe' to get the original casing
+                                      setEthnicity(tribe)
+                                      setOpenEthnicity(false)
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        ethnicity === tribe ? "opacity-100" : "opacity-0"
+                                      )}
+                                    />
+                                    {tribe}
+                                  </CommandItem>
+                                ))}
+                                <CommandItem
+                                  value="Other"
+                                  onSelect={() => {
+                                    setEthnicity("Other")
+                                    setOpenEthnicity(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "") ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  Other (Specify)
+                                </CommandItem>
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+
+                      {(ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "")) && (
+                        <Input
+                          type="text"
+                          value={ethnicity === "Other" ? "" : ethnicity}
+                          onChange={(e) => setEthnicity(e.target.value)}
+                          placeholder="Please specify your tribe"
+                          required
+                          className="h-10 border-border rounded-lg focus:border-secondary bg-background px-4 animate-in fade-in slide-in-from-top-1 transition-colors"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -436,27 +686,38 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Date of Birth *</label>
-                    <input
+                    <Input
                       type="date"
                       required
                       value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setDob(val)
+                        const age = calculateAge(val)
+                        if (age > 35) {
+                          setSpecialInterest(prev => prev.filter(item => item !== "Youths"))
+                        }
+                      }}
+                      className={`h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary ${dob && userAge < 18 ? "border-red-500 focus:border-red-500" : ""}`}
                     />
+                    {dob && userAge < 18 && (
+                      <p className="text-xs text-red-500 mt-1">
+                        You should be 18 and above to join a political party.
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Sex *</label>
-                    <select
-                      required
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
+                    <Select value={gender} onValueChange={setGender} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -464,27 +725,43 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Document Type *</label>
-                    <select
-                      required
-                      value={docType}
-                      onChange={(e) => setDocType(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Document Type</option>
-                      <option value="Passport">Passport</option>
-                      <option value="National ID">National ID</option>
-                    </select>
+                    <Select value={docType} onValueChange={(val) => {
+                      setDocType(val)
+                      setIdNo("")
+                    }} required>
+
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Document Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Passport">Passport</SelectItem>
+                        <SelectItem value="National ID">National ID</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Document Number *</label>
-                    <input
-                      type="text" // Changed to text to avoid issues with leading zeros
+                    <Input
                       required
                       value={idNo}
-                      onChange={(e) => setIdNo(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="01234567"
+                      onChange={(e) => {
+                        const value = e.target.value
+
+                        // ✅ ADDED: National ID rules
+                        if (docType === "National ID") {
+                          const digitsOnly = value.replace(/\D/g, "").slice(0, 9)
+                          setIdNo(digitsOnly)
+                          return
+                        }
+
+                        // ✅ ADDED: Passport rules (allow alphanumeric)
+                        setIdNo(value)
+                      }}
+                      maxLength={docType === "National ID" ? 9 : undefined} // ✅ ADDED
+                      inputMode={docType === "National ID" ? "numeric" : "text"} // ✅ ADDED
+                      placeholder={docType === "National ID" ? "012345678" : "Enter passport number"} // ✅ ADDED
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                     />
                   </div>
                 </div>
@@ -500,25 +777,32 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                    <input
+                    <Input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="john@example.com"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-                    <input
+                    <Input
                       type="tel"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="+254 712 345 678"
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "")
+                        if (val.startsWith("0")) {
+                          setPhone("254" + val.substring(1))
+                        } else {
+                          setPhone(val)
+                        }
+                      }}
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                      placeholder="2547XXXXXXXX"
                     />
                   </div>
                 </div>
@@ -526,27 +810,67 @@ export function RegisterForm() {
                 {/* Postal Address and Postal Code */}
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Postal Address *</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium text-foreground mb-2">Postal Address</label>
+                    <Input
                       value={postalAddress}
                       onChange={(e) => setPostalAddress(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="123 Main Street"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                      placeholder="P.O. Box xx"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Postal Code *</label>
-                    <input
-                      type="text"
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="00100"
-                    />
+                    <label className="block text-sm font-medium text-foreground mb-2">Postal Code</label>
+                    <Popover open={openPostalCode} onOpenChange={setOpenPostalCode}>
+                      <PopoverTrigger asChild>
+                        <button
+                          role="combobox"
+                          aria-expanded={openPostalCode}
+                          className={cn(
+                            "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
+                            !postalCode && "text-muted-foreground"
+                          )}
+                        >
+                          {postalCode
+                            ? postalCode
+                            : "Select Postal Code"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search postal code..." />
+                          <CommandList>
+                            <CommandEmpty>No code found.</CommandEmpty>
+                            <CommandGroup>
+                              {POSTAL_OFFICES.map((address) => (
+                                <CommandItem
+                                  key={address}
+                                  value={address}
+                                  onSelect={(currentValue) => {
+                                    const parts = address.split(" – ")
+                                    if (parts.length >= 2) {
+                                      setPostalCode(parts[1])
+                                    } else {
+                                      setPostalCode(address)
+                                    }
+                                    setOpenPostalCode(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      postalCode === address.split(" – ")[1] ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  {address}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
               </div>
@@ -591,31 +915,68 @@ export function RegisterForm() {
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
-                    <select
-                      value={specialInterest}
-                      onChange={(e) => setSpecialInterest(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select Interest Group</option>
-                      <option value="Elders">Elders</option>
-                      <option value="Youths">Youths</option>
-                      <option value="Women League">Women League</option>
-                      <option value="Diaspora">Diaspora</option>
-                      <option value="Marginalized">Marginalized Communities</option>
-                    </select>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className={cn(
+                            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                            !specialInterest.length && "text-muted-foreground"
+                          )}
+                        >
+                          {specialInterest.length > 0
+                            ? specialInterest.map(i => i === "Marginalized" ? "Marginalized Communities" : i).join(", ")
+                            : "Select Interest Group"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandGroup>
+                              {["Youths", "Women", "Minority Group", "Marginalized"].map((group) => {
+                                if (group === "Youths" && userAge > 35) return null
+                                return (
+                                  <CommandItem
+                                    key={group}
+                                    onSelect={() => {
+                                      setSpecialInterest((prev) =>
+                                        prev.includes(group)
+                                          ? prev.filter((item) => item !== group)
+                                          : [...prev, group]
+                                      )
+                                    }}
+                                  >
+                                    <div
+                                      className={cn(
+                                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                        specialInterest.includes(group)
+                                          ? "bg-primary text-primary-foreground"
+                                          : "opacity-50 [&_svg]:invisible"
+                                      )}
+                                    >
+                                      <Check className={cn("h-4 w-4")} />
+                                    </div>
+                                    {group === "Marginalized" ? "Marginalized Communities" : group}
+                                  </CommandItem>
+                                )
+                              })}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
 
                 {isPWD === "yes" && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-foreground mb-2">NCPWD Number *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={ncpwdNumber}
                       onChange={(e) => setNCPWDNumber(e.target.value)}
                       required={isPWD === "yes"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Enter your NCPWD registration number"
                     />
                   </div>
@@ -632,39 +993,36 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">County *</label>
-                    <select
-                      required
-                      value={county}
-                      onChange={(e) => handleCountyChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                    >
-                      <option value="">Select County</option>
-                      {Array.isArray(counties) &&
-                        counties.map((c: any) => (
-                          <option key={c.id} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={county} onValueChange={handleCountyChange} required>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select County" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(counties) &&
+                          counties.map((c: any) => (
+                            <SelectItem key={c.id} value={c.name}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Constituency *</label>
-                    <select
-                      required
-                      value={constituency}
-                      onChange={(e) => handleSubcountyChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      disabled={!county}
-                    >
-                      <option value="">Select Constituency</option>
-                      {Array.isArray(subCountys) &&
-                        subCountys.map((sc: any) => (
-                          <option key={sc.id} value={sc.name}>
-                            {sc.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={constituency} onValueChange={handleSubcountyChange} required disabled={!county}>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Constituency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(subCountys) &&
+                          subCountys.map((sc: any) => (
+                            <SelectItem key={sc.id} value={sc.name}>
+                              {sc.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -672,31 +1030,27 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Ward *</label>
-                    <select
-                      required
-                      value={ward}
-                      onChange={(e) => setWard(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      disabled={!constituency}
-                    >
-                      <option value="">Select Ward</option>
-                      {Array.isArray(wards) &&
-                        wards.map((w: any) => (
-                          <option key={w.id} value={w.name}>
-                            {w.name}
-                          </option>
-                        ))}
-                    </select>
+                    <Select value={ward} onValueChange={setWard} required disabled={!constituency}>
+                      <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                        <SelectValue placeholder="Select Ward" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.isArray(wards) &&
+                          wards.map((w: any) => (
+                            <SelectItem key={w.id} value={w.name}>
+                              {w.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Polling Station *</label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium text-foreground mb-2">Polling Station (Optional)</label>
+                    <Input
                       value={pollingStation}
                       onChange={(e) => setPollingStation(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="e.g., Nairobi Primary School"
                     />
                   </div>
@@ -705,21 +1059,19 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Street / Village (Optional)</label>
-                    <input
-                      type="text"
+                    <Input
                       value={streetVillage}
                       onChange={(e) => setStreetVillage(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="e.g., Westlands, Lavington"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Local Leader (Optional)</label>
-                    <input
-                      type="text"
+                    <Input
                       value={localLeader}
                       onChange={(e) => setLocalLeader(e.target.value)}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Referred by (Name of Local Leader)"
                     />
                   </div>
@@ -764,12 +1116,11 @@ export function RegisterForm() {
                 {membershipStatus === "returning" && (
                   <div className="mt-6">
                     <label className="block text-sm font-medium text-foreground mb-2">Membership Number *</label>
-                    <input
-                      type="text"
+                    <Input
                       value={membershipNumber}
                       onChange={(e) => setMembershipNumber(e.target.value)}
                       required={membershipStatus === "returning"}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="Enter your membership number"
                     />
                   </div>
@@ -778,11 +1129,10 @@ export function RegisterForm() {
                 {/* Membership Type Selection */}
                 <div className="mb-6 mt-6">
                   <label className="block text-sm font-medium text-foreground mb-2">Membership Type *</label>
-                  <select
+                  <Select
                     required
                     value={membershipType}
-                    onChange={(e) => {
-                      const val = e.target.value
+                    onValueChange={(val) => {
                       setMembershipType(val)
                       const isPaid = val === "Ordinary" || val === "Life"
                       setIsPaidMembership(isPaid)
@@ -792,20 +1142,23 @@ export function RegisterForm() {
                         setPaymentPhoneNumber("")
                       }
                     }}
-                    className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
                   >
-                    <option value="">Select Membership Type</option>
-                    {MEMBERSHIP_TYPES.map((type) => (
-                      <option key={type.value} value={type.value}>
-                        {type.label} {type.fee !== undefined ? `- KES ${type.fee.toLocaleString()}` : ""}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
+                      <SelectValue placeholder="Select Membership Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MEMBERSHIP_TYPES.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label} {type.fee !== undefined ? `- KES ${type.fee.toLocaleString()}` : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Registration Fee Display */}
                 {isPaidMembership && membershipType && (
-                  <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
+                  <div className="border border-border rounded-lg p-4 mb-6">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-xs text-muted-foreground">Registration Fee</p>
@@ -864,12 +1217,19 @@ export function RegisterForm() {
                     {/* Payment Phone Number */}
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Payment Phone Number *</label>
-                      <input
+                      <Input
                         type="tel"
                         value={paymentPhoneNumber}
-                        onChange={(e) => setPaymentPhoneNumber(e.target.value)}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                        placeholder="07XXXXXXXX"
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "")
+                          if (val.startsWith("0")) {
+                            setPaymentPhoneNumber("254" + val.substring(1))
+                          } else {
+                            setPaymentPhoneNumber(val)
+                          }
+                        }}
+                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                        placeholder="2547XXXXXXXX"
                         required={isPaidMembership}
                       />
                       <p className="text-xs text-muted-foreground mt-1.5">
@@ -883,7 +1243,7 @@ export function RegisterForm() {
                         type="button"
                         onClick={handlePayment}
                         disabled={!paymentMethod || paymentPhoneNumber.trim().length < 9 || paymentProcessed}
-                        className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       >
                         {paymentStatus === "initiating" ? (
                           <>Processing...</>
@@ -907,47 +1267,33 @@ export function RegisterForm() {
 
 
               {/* SECTION 6: MEMBER DECLARATION */}
-              <div className="border-t border-border pt-8">
+              <div className="border-t border-border pt-8 mt-8 mb-8">
                 <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
                   Member Declaration
                 </h4>
 
                 {/* Verification Code and declaration checkboxes */}
                 <div className="mt-6 space-y-4">
-                  {/* <div className="hidden">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Verification Code (Sent via SMS) *
-                    </label>
-                    <input
-                      type="text"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value)}
-                      required
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                      placeholder="Enter 6-digit code"
-                    />
-                  </div> */}
-
-                  <label className="flex items-start gap-3 cursor-pointer p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
+                  <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                     <input
                       type="checkbox"
                       checked={politicalDeclaration}
                       onChange={(e) => setPoliticalDeclaration(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
+                      className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
                     <span className="text-sm text-foreground cursor-pointer">
                       I hereby affirm that I am not a member of any other registered political party in Kenya. *
                     </span>
                   </label>
 
-                  <label className="flex items-start gap-3 cursor-pointer p-4 bg-muted/50 rounded-lg border border-border hover:bg-muted transition-colors">
+                  <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                     <input
                       type="checkbox"
                       checked={termsConsent}
                       onChange={(e) => setTermsConsent(e.target.checked)}
                       required
-                      className="w-4 h-4 text-secondary mt-1 flex-shrink-0 cursor-pointer"
+                      className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                     />
                     <span className="text-sm text-foreground cursor-pointer">
                       I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
@@ -998,9 +1344,9 @@ export function RegisterForm() {
               <button
                 type="submit"
                 disabled={
-                  submitted || !politicalDeclaration || !termsConsent || (isPaidMembership && !paymentProcessed)
+                  submitted || !isFormValid
                 }
-                className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-secondary text-white h-10 rounded-lg font-bold hover:bg-secondary/90 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Complete Registration
               </button>

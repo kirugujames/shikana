@@ -13,22 +13,14 @@ export function DonateHero() {
         style={{ backgroundImage: 'url(/donate-hero.png)' }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         <div className="flex justify-center mb-6">
           <Heart size={48} className="text-secondary" />
         </div>
         <Herotext title="Support Our Movement" />
-        <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance">
-          Every donation makes a difference. Your contribution counts in shaping the future we fight and hope for.        </p>
-        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="#donation-options"
-            className="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/90 text-white px-8 py-4 rounded-lg font-bold transition-colors"
-          >
-            Make a Donation
-            <TrendingUp size={20} />
-          </Link>
-        </div> */}
+        <p className="text-xl md:mt-2 md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto text-balance">
+          We’re keeping it 100: we can't do this without you. Every dollar is a high-key investment in the future we’re building. Don’t just watch from the sidelines - fuel the movement and help us secure the Win. Your support literally makes the vision possible.
+        </p>
       </div>
     </section>
   )

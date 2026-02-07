@@ -54,8 +54,8 @@ export function Header() {
       children: [
         { label: "Become a Member", href: "/shared-ui/register" },
         { label: "Become An Aspirant", href: "/shared-ui/political-position" },
-        { label: "Party Positions", href: "/shared-ui/party-position" },
-        { label: "Find a Local Group", href: "/shared-ui/local-group" },
+        { label: "Internal Party Positions", href: "/shared-ui/party-position" },
+        { label: "Find a Local Branch", href: "/shared-ui/local-group" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
         { label: "Careers", href: "/shared-ui/careers" },
 

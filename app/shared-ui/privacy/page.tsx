@@ -29,19 +29,43 @@ export default function PrivacyPage() {
                 <div className="prose prose-slate max-w-none space-y-8 text-foreground/80 leading-relaxed">
                     <section>
                         <h2 className="text-2xl font-bold text-foreground mb-4">1. Data Collection</h2>
-                        <p>
-                            Shikana Frontliners for Unity Party (SFUP) is committed to protecting your privacy. We collect personal information that you voluntarily provide to us when you:
+                        <p className="mb-4">
+                            Shikana Frontliners for Unity Party (SFUP) is committed to protecting your privacy. We collect personal information that you voluntarily provide to us when you register as a member, apply for an aspirant position, or contact us. The types of data we collect include:
                         </p>
-                        <ul className="list-disc pl-6 mt-4 space-y-2">
-                            <li>Register as a party member.</li>
-                            <li>Sign up for our newsletter.</li>
-                            <li>Apply for a job or volunteer position.</li>
-                            <li>Register for an event.</li>
-                            <li>Apply to be a Become An Aspirant.</li>
-                        </ul>
-                        <p className="mt-4">
-                            This information may include your name, email address, phone number, national ID number, and other relevant details.
-                        </p>
+                        <div className="space-y-4 pl-4 border-l-2 border-secondary/20">
+                            <div>
+                                <h3 className="font-semibold text-foreground">Personal Identification</h3>
+                                <p className="text-sm text-foreground/80">First Name, Last Name, Date of Birth, Gender, National ID or Passport Number.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Contact Information</h3>
+                                <p className="text-sm text-foreground/80">Email Address, Phone Number, Postal Address, Postal Code.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Demographic & Social Data</h3>
+                                <p className="text-sm text-foreground/80">Religion, Ethnicity/Tribe.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Location & Voting Details</h3>
+                                <p className="text-sm text-foreground/80">County, Constituency, Ward, Polling Station, Street/Village.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Membership Information</h3>
+                                <p className="text-sm text-foreground/80">Membership Status, Membership Type, Payment Details (Method, Phone Number), Referral/Local Leader.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Special Categories</h3>
+                                <p className="text-sm text-foreground/80">Disability Status (PWD), NCPWD Number, Special Interest Group (Youth, Women, Marginalized).</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Political Aspirant Data</h3>
+                                <p className="text-sm text-foreground/80">Elective Position sought (e.g., President, Governor, MP, MCA).</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-foreground">Communication Data</h3>
+                                <p className="text-sm text-foreground/80">Subject and detailed message content submitted via our contact forms.</p>
+                            </div>
+                        </div>
                     </section>
 
                     <section>

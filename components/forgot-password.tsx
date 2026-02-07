@@ -7,11 +7,14 @@ import { Card, CardContent } from "./ui/card"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "./ui/spinner"
 import api from "@/lib/axios"
+import { Input } from "./ui/input"
 
 export function ForgotPasswordForm() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  const isValid = email.trim() !== "" && email.includes("@")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -60,12 +63,12 @@ export function ForgotPasswordForm() {
               <label className="block text-sm font-medium text-foreground mb-2">
                 Email *
               </label>
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
+                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                 placeholder="you@example.com"
               />
             </div>
@@ -73,8 +76,8 @@ export function ForgotPasswordForm() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors h-10 mt-3"
-              disabled={isLoading}
+              className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors h-10 mt-3 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !isValid}
             >
               {isLoading ? <Spinner /> : "Send Reset Link"}
             </Button>

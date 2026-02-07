@@ -7,6 +7,7 @@ import { BlogCardSkeleton } from "./skeleton-loaders"
 import { ProfessionalEmptyState } from "./empty-state"
 import { BookOpen } from "lucide-react"
 
+
 export function BlogPreview() {
   const [blogs, setBlogs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -30,8 +31,9 @@ export function BlogPreview() {
   }, [])
 
   return (
-    <section className="py-8 md:py-12 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
+    <section className="relative py-8 md:py-12 px-4 bg-white overflow-hidden">
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Latest News & Insights</h2>
         <p className="text-lg text-muted-foreground mb-16">Stay updated with our latest articles and announcements</p>
 

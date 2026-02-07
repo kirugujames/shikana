@@ -34,6 +34,8 @@ export const metadata: Metadata = {
   },
 }
 
+
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -44,7 +46,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <body className={`font-sans antialiased relative`}>
+
         <AuthProvider>
           <CookieProvider initialConsent={initialConsent}>
             {children}

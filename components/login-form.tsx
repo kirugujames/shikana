@@ -29,6 +29,10 @@ export function LoginForm({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  const isValid = username.trim() !== "" && password.trim() !== ""
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -62,7 +66,7 @@ export function LoginForm({
         router.push("/admin/dashboard")
         return
       }
-      
+
       else if (userRole == 2) {
         router.push("/shared-ui/political-position")
         return
@@ -108,12 +112,20 @@ export function LoginForm({
               <label className="block text-sm font-medium text-foreground mb-2">
                 Username *
               </label>
-              <input
+              <Input
                 type="text"
                 name="username"
-                required
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:border-secondary"
-                placeholder="email/phone number(07..)"
+                value={username}
+                onChange={(e) => {
+                  let val = e.target.value
+                  // If it starts with a number and specifically starts with 0, prepend 254
+                  if (/^\d/.test(val) && val.startsWith("0")) {
+                    val = "254" + val.substring(1)
+                  }
+                  setUsername(val)
+                }}
+                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                placeholder="email or phone number (254...)"
               />
             </div>
 
@@ -131,11 +143,13 @@ export function LoginForm({
               </div>
 
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   required
-                  className="w-full px-4 py-2 border border-border rounded-lg pr-10 focus:outline-none focus:border-secondary"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-10 border-border rounded-lg pr-10 bg-background px-4 transition-colors focus:border-secondary"
                   placeholder="••••••••"
                 />
 
@@ -153,8 +167,8 @@ export function LoginForm({
             {/* Submit */}
             <Button
               type="submit"
-              className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors h-10 mt-3"
-              disabled={isLoading}
+              className="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors h-10 mt-3 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !isValid}
             >
               {isLoading ? <Spinner /> : "Login"}
             </Button>
