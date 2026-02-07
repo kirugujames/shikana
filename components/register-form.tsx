@@ -725,7 +725,11 @@ export function RegisterForm() {
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Document Type *</label>
-                    <Select value={docType} onValueChange={setDocType} required>
+                    <Select value={docType} onValueChange={(val) => {
+                      setDocType(val)
+                      setIdNo("")
+                    }} required>
+
                       <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
                         <SelectValue placeholder="Select Document Type" />
                       </SelectTrigger>
@@ -741,9 +745,23 @@ export function RegisterForm() {
                     <Input
                       required
                       value={idNo}
-                      onChange={(e) => setIdNo(e.target.value.replace(/\D/g, ""))}
+                      onChange={(e) => {
+                        const value = e.target.value
+
+                        // ✅ ADDED: National ID rules
+                        if (docType === "National ID") {
+                          const digitsOnly = value.replace(/\D/g, "").slice(0, 9)
+                          setIdNo(digitsOnly)
+                          return
+                        }
+
+                        // ✅ ADDED: Passport rules (allow alphanumeric)
+                        setIdNo(value)
+                      }}
+                      maxLength={docType === "National ID" ? 9 : undefined} // ✅ ADDED
+                      inputMode={docType === "National ID" ? "numeric" : "text"} // ✅ ADDED
+                      placeholder={docType === "National ID" ? "012345678" : "Enter passport number"} // ✅ ADDED
                       className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                      placeholder="01234567"
                     />
                   </div>
                 </div>
