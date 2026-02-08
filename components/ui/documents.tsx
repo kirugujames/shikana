@@ -42,12 +42,12 @@ const documents: DocumentItem[] = [
   //   category: "Legal",
   //   file: "/documents/ELECTION AND NOMINATION RULES.pdf",
   // },
-  // {
-  //   title: "Party Privacy Policy - Detailed",
-  //   description: "Our commitment to protecting your personal data and privacy rights.",
-  //   category: "Policy",
-  //   file: "/documents/SFUP Privacy Policy.pdf",
-  // },
+  {
+    title: "Party Privacy Policy - Detailed",
+    description: "Our commitment to protecting your personal data and privacy rights.",
+    category: "Policy",
+    file: "/documents/SFUP Privacy Policy.pdf",
+  },
 ]
 
 export function PartyDocumentsSection() {
