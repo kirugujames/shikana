@@ -60,7 +60,9 @@ export function DonationsTable({ type }: DonationsTableProps) {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const endpoint = "/api/donations/all"
+      const endpoint = type === "organization"
+        ? "/api/donations/organization/all"
+        : "/api/donations/individual/all"
       const res = await api.get(endpoint)
       const rawData = Array.isArray(res.data)
         ? res.data
