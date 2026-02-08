@@ -48,7 +48,7 @@ export default function VerifyMembershipPage() {
         try {
             const response = await api.get(
                 `/api/members/get/member/idno/${nationalId.trim()}`,
-                { params: { phone: phone.trim() } }
+                { params: { phone: phone.trim(), consent: hasConsent } }
             )
 
             if (response.data?.statusCode === 200 || response.data?.data) {

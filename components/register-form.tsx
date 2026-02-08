@@ -188,7 +188,6 @@ export function RegisterForm() {
   const [county, setCounty] = useState("")
   const [constituency, setConstituency] = useState("")
   const [ward, setWard] = useState("")
-  const [areaOfInterest, setAreaOfInterest] = useState("")
   const [religion, setReligion] = useState("")
   const [ethnicity, setEthnicity] = useState("")
   const [postalAddress, setPostalAddress] = useState("")
@@ -293,14 +292,13 @@ export function RegisterForm() {
     county &&
     constituency &&
     ward &&
-    areaOfInterest &&
     membershipType &&
     politicalDeclaration &&
     termsConsent &&
     specialInterest.length > 0
 
-  const isPaymentRequired = membershipType === "Ordinary" || membershipType === "Life"
-  const isPaymentComplete = !isPaymentRequired || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
+  const isPaymentRequired = isPaidMembership
+  const isPaymentComplete = !isPaidMembership || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
   const isFormValid = isMandatoryFieldsFilled && isPaymentComplete && userAge >= 18
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -333,7 +331,6 @@ export function RegisterForm() {
         Constituency: constituency,
         ward,
         county,
-        area_of_interest: areaOfInterest,
         religion,
         ethnicity,
         postalAddress,
@@ -350,7 +347,7 @@ export function RegisterForm() {
         termsConsent,
         verificationMethod,
         membershipType,
-        specialInterest: specialInterest.join(", "),
+        specialInterest: specialInterest,
         paymentMethod: isPaymentRequired ? paymentMethod : null,
         paymentPhoneNumber: isPaymentRequired ? paymentPhoneNumber : null,
         amount: registrationFee,
@@ -398,7 +395,6 @@ export function RegisterForm() {
     setCounty("")
     setConstituency("")
     setWard("")
-    setAreaOfInterest("")
     setReligion("")
     setEthnicity("")
     setPostalAddress("")
