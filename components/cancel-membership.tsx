@@ -38,13 +38,18 @@ export function CancelMembership() {
         try {
             const response = await api.patch(
                 `/api/members/deactivate/idno/${memberId.trim()}`,
-                { nationalId: nationalId.trim() } // adjust if backend expects differently
+                {
+                    memberId: memberId.trim(),
+                    nationalId: nationalId.trim(),
+                    hasConsent,
+                } // adjust if backend expects differently
             )
 
             if (response.data?.statusCode === 200) {
                 toast.success(response.data?.message || "Membership cancelled successfully")
                 setMemberId("")
                 setNationalId("")
+                setHasConsent(false)
                 setIsOpen(false)
             } else {
                 toast.error(response.data?.message || "Failed to cancel membership")
