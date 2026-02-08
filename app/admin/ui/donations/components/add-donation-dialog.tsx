@@ -102,7 +102,12 @@ export function AddDonationDialog({ onSuccess }: AddDonationDialogProps) {
                 payload.is_anonymous = false
             }
 
-            await api.post("/api/donations/create", payload)
+            const endpoint =
+                values.type === "organization"
+                    ? "/api/donations/organization/create"
+                    : "/api/donations/individual/create"
+
+            await api.post(endpoint, payload)
 
             toast({
                 title: "Success",
