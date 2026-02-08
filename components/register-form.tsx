@@ -788,6 +788,35 @@ export function RegisterForm() {
                   </div>
 
                   <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Phone Number *
+                    </label>
+                    <Input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => {
+                        let val = e.target.value.replace(/\D/g, "")
+
+                        if (val.startsWith("0")) {
+                          val = "254" + val.substring(1)
+                        }
+
+                        // 🔒 limit to 12 digits
+                        if (val.length > 12) {
+                          val = val.slice(0, 12)
+                        }
+
+                        setPhone(val)
+                      }}
+                      maxLength={12}
+                      className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                      placeholder="2547XXXXXXXX"
+                    />
+                  </div>
+
+
+                  {/* <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
                     <Input
                       type="tel"
@@ -804,7 +833,7 @@ export function RegisterForm() {
                       className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       placeholder="2547XXXXXXXX"
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Postal Address and Postal Code */}

@@ -319,7 +319,7 @@ export function DonationOptions() {
             ) : (
               <>
                 <Heart size={20} />
-                Proceed to Payment
+                Pay Now
               </>
             )}
           </button>
