@@ -11,12 +11,9 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
 import api from "@/lib/axios"
-import toast from "react-hot-toast"
-import { cn } from "@/lib/utils"
 
 type Member = {
     id: number
@@ -33,6 +30,7 @@ type Member = {
 
 export default function VerifyMembershipPage() {
     const [nationalId, setNationalId] = useState("")
+    const [phone, setPhone] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [searchResult, setSearchResult] = useState<Member | null>(null)
     const [loading, setLoading] = useState(false)
@@ -41,14 +39,18 @@ export default function VerifyMembershipPage() {
 
     const handleVerify = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!nationalId.trim()) return
+        if (!nationalId.trim() || !phone.trim()) return
 
         setLoading(true)
         setSearchResult(null)
         setHasSearched(false)
 
         try {
-            const response = await api.get(`/api/members/get/member/idno/${nationalId.trim()}`)
+            const response = await api.get(
+                `/api/members/get/member/idno/${nationalId.trim()}`,
+                { params: { phone: phone.trim() } }
+            )
+
             if (response.data?.statusCode === 200 || response.data?.data) {
                 setSearchResult(response.data.data)
             } else {
@@ -57,7 +59,6 @@ export default function VerifyMembershipPage() {
         } catch (error) {
             console.error("Verification error:", error)
             setSearchResult(null)
-            // Optional: toast.error("Could not verify details. Please try again.")
         } finally {
             setLoading(false)
             setHasSearched(true)
@@ -69,6 +70,7 @@ export default function VerifyMembershipPage() {
         setIsOpen(false)
         setHasSearched(false)
         setNationalId("")
+        setPhone("")
         setHasConsent(false)
     }
 
@@ -81,21 +83,18 @@ export default function VerifyMembershipPage() {
                     </div>
                     <CardTitle className="text-2xl font-bold">Verify Membership</CardTitle>
                     <CardDescription>
-                        Enter your National ID or Passport number to check your membership status.
+                        Enter your National ID / Passport number and phone number to check your membership status.
                     </CardDescription>
                 </CardHeader>
+
                 <CardContent>
                     <form onSubmit={handleVerify} className="space-y-4">
+                        {/* National ID */}
                         <div>
-                            <label
-                                htmlFor="nationalId"
-                                className="block text-sm font-medium text-foreground mb-2"
-                            >
+                            <label className="block text-sm font-medium text-foreground mb-2">
                                 National ID / Passport No. *
                             </label>
-
                             <Input
-                                id="nationalId"
                                 required
                                 placeholder="e.g. 12345678"
                                 value={nationalId}
@@ -104,9 +103,59 @@ export default function VerifyMembershipPage() {
                             />
                         </div>
 
-                        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border hover:bg-muted/10 transition-colors">
+                        {/* Phone Number (UPDATED) */}
+                        {/* <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                                Phone Number *
+                            </label>
+                            <Input
+                                type="tel"
+                                required
+                                value={phone}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, "")
+                                    if (val.startsWith("0")) {
+                                        setPhone("254" + val.substring(1))
+                                    } else {
+                                        setPhone(val)
+                                    }
+                                }}
+                                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                                placeholder="2547XXXXXXXX"
+                            />
+                        </div> */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-2">
+                                Phone Number *
+                            </label>
+                            <Input
+                                type="tel"
+                                required
+                                value={phone}
+                                onChange={(e) => {
+                                    let val = e.target.value.replace(/\D/g, "")
+
+                                    if (val.startsWith("0")) {
+                                        val = "254" + val.substring(1)
+                                    }
+
+                                    // 🔒 limit to 12 digits
+                                    if (val.length > 12) {
+                                        val = val.slice(0, 12)
+                                    }
+
+                                    setPhone(val)
+                                }}
+                                maxLength={12}
+                                className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
+                                placeholder="2547XXXXXXXX"
+                            />
+                        </div>
+
+
+                        {/* Consent */}
+                        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/40 transition-colors">
                             <input
-                                id="hasConsent"
                                 type="checkbox"
                                 checked={hasConsent}
                                 onChange={(e) => setHasConsent(e.target.checked)}
@@ -114,17 +163,18 @@ export default function VerifyMembershipPage() {
                                 className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                             />
                             <span className="text-sm text-foreground cursor-pointer">
-                                I consent to verify my membership status using my National ID / Passport number. *
+                                I consent to verify my membership status using my details provided above. *
                             </span>
                         </label>
 
+                        {/* Submit */}
                         <button
                             type="submit"
-                            disabled={!nationalId.trim() || loading || !hasConsent}
+                            disabled={!nationalId.trim() || !phone.trim() || loading || !hasConsent}
                             className="w-full bg-secondary text-white h-10 rounded-lg font-bold
-             hover:bg-secondary/90 transition-colors
-             flex items-center justify-center gap-2
-             disabled:opacity-50 disabled:cursor-not-allowed"
+                                hover:bg-secondary/90 transition-colors
+                                flex items-center justify-center gap-2
+                                disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <>
@@ -142,25 +192,16 @@ export default function VerifyMembershipPage() {
                             </Button>
                         </div>
                     </form>
-
                 </CardContent>
             </Card>
 
+            {/* Result Dialog */}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="text-center text-xl flex flex-col items-center gap-2">
-                            {searchResult ? (
-                                <>
-                                    <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-16 h-auto mb-2" />
-                                    Member Verified
-                                </>
-                            ) : (
-                                <>
-                                    <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-16 h-auto mb-2" />
-                                    Member Not Found
-                                </>
-                            )}
+                            <img src="/SFU-LOGO.png" alt="SFU Party Logo" className="w-16 h-auto mb-2" />
+                            {searchResult ? "Member Verified" : "Member Not Found"}
                         </DialogTitle>
                     </DialogHeader>
 
@@ -169,7 +210,9 @@ export default function VerifyMembershipPage() {
                             <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div className="space-y-1">
                                     <p className="text-muted-foreground">Full Name</p>
-                                    <p className="font-semibold">{searchResult.first_name} {searchResult.last_name}</p>
+                                    <p className="font-semibold">
+                                        {searchResult.first_name} {searchResult.last_name}
+                                    </p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-muted-foreground">Membership Code</p>
@@ -186,27 +229,31 @@ export default function VerifyMembershipPage() {
                                 <div className="space-y-1 col-span-2">
                                     <p className="text-muted-foreground">Status</p>
                                     <span
-                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${searchResult.status === "ACTIVE"
-                                            ? "bg-green-100 text-green-800"
-                                            : "bg-yellow-100 text-yellow-800"
-                                            }`}
+                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                            searchResult.status === "ACTIVE"
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-yellow-100 text-yellow-800"
+                                        }`}
                                     >
                                         {searchResult.status}
                                     </span>
                                 </div>
                             </div>
+
                             <Button className="w-full mt-4" onClick={handleClose}>
                                 Close
                             </Button>
                         </div>
                     ) : (
                         <div className="space-y-4 py-2 text-center">
-                            <DialogDescription className="text-center text-base">
+                            <DialogDescription className="text-base">
                                 We couldn't find a member with ID <strong>{nationalId}</strong>.
                             </DialogDescription>
+
                             <div className="border border-border p-4 rounded-lg text-sm text-muted-foreground hover:bg-muted/10 transition-colors">
                                 <p>Not yet a member? Join us today to be part of the movement.</p>
                             </div>
+
                             <div className="flex flex-col gap-2 pt-2">
                                 <Button asChild className="w-full" size="lg">
                                     <Link href="/shared-ui/register">Proceed to Registration</Link>
@@ -222,4 +269,3 @@ export default function VerifyMembershipPage() {
         </div>
     )
 }
-
