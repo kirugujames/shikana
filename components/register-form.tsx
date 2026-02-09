@@ -961,6 +961,7 @@ export function RegisterForm() {
                             <CommandGroup>
                               {["Youths", "Women", "Minority Group", "Marginalized"].map((group) => {
                                 if (group === "Youths" && userAge > 35) return null
+                                if (group === "Women" && gender === "Male") return null
                                 return (
                                   <CommandItem
                                     key={group}
