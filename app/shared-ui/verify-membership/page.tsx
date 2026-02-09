@@ -14,6 +14,12 @@ import {
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
 import api from "@/lib/axios"
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSeparator,
+    InputOTPSlot,
+} from "@/components/ui/input-otp"
 
 type Member = {
     id: number
@@ -33,36 +39,94 @@ export default function VerifyMembershipPage() {
     const [phone, setPhone] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [searchResult, setSearchResult] = useState<Member | null>(null)
-    const [loading, setLoading] = useState(false)
+    const [requestLoading, setRequestLoading] = useState(false)
+    const [verifyLoading, setVerifyLoading] = useState(false)
     const [hasSearched, setHasSearched] = useState(false)
     const [hasConsent, setHasConsent] = useState(false)
+    const [step, setStep] = useState<"request" | "otp">("request")
+    const [otp, setOtp] = useState("")
+    const [requestMessage, setRequestMessage] = useState<string | null>(null)
+    const [requestError, setRequestError] = useState<string | null>(null)
+    const [verifyError, setVerifyError] = useState<string | null>(null)
 
-    const handleVerify = async (e: React.FormEvent) => {
+    const resetFlow = () => {
+        setStep("request")
+        setOtp("")
+        setRequestMessage(null)
+        setRequestError(null)
+        setVerifyError(null)
+    }
+
+    const handleRequestOtp = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         if (!nationalId.trim() || !phone.trim()) return
 
-        setLoading(true)
+        setRequestLoading(true)
+        setRequestMessage(null)
+        setRequestError(null)
+        setVerifyError(null)
+
+        try {
+            const response = await api.post(
+                "/api/members/verify/request-otp",
+                {
+                    idNo: nationalId.trim(),
+                    phone: phone.trim(),
+                    hasConsent,
+                },
+                { validateStatus: () => true }
+            )
+
+            if (response.data?.statusCode === 200) {
+                setRequestMessage(response.data?.message || "OTP sent successfully.")
+                setStep("otp")
+            } else {
+                setRequestError(response.data?.message || "Failed to send OTP.")
+            }
+        } catch (error) {
+            console.error("Request OTP error:", error)
+            setRequestError("Something went wrong. Please try again.")
+        } finally {
+            setRequestLoading(false)
+        }
+    }
+
+    const handleVerify = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!nationalId.trim() || !phone.trim() || otp.length !== 6) return
+
+        setVerifyLoading(true)
+        setVerifyError(null)
         setSearchResult(null)
         setHasSearched(false)
 
         try {
-            const response = await api.get(
-                `/api/members/get/member/idno/${nationalId.trim()}`,
-                { params: { phone: phone.trim(), consent: hasConsent } }
+            const response = await api.post(
+                "/api/members/verify/existence",
+                {
+                    idNo: nationalId.trim(),
+                    phone: phone.trim(),
+                    otp,
+                    hasConsent,
+                },
+                { validateStatus: () => true }
             )
 
             if (response.data?.statusCode === 200 || response.data?.data) {
                 setSearchResult(response.data.data)
-            } else {
+                setIsOpen(true)
+            } else if (response.data?.statusCode === 404) {
                 setSearchResult(null)
+                setIsOpen(true)
+            } else {
+                setVerifyError(response.data?.message || "Verification failed.")
             }
         } catch (error) {
             console.error("Verification error:", error)
-            setSearchResult(null)
+            setVerifyError("Something went wrong. Please try again.")
         } finally {
-            setLoading(false)
+            setVerifyLoading(false)
             setHasSearched(true)
-            setIsOpen(true)
         }
     }
 
@@ -72,6 +136,7 @@ export default function VerifyMembershipPage() {
         setNationalId("")
         setPhone("")
         setHasConsent(false)
+        resetFlow()
     }
 
     return (
@@ -88,7 +153,7 @@ export default function VerifyMembershipPage() {
                 </CardHeader>
 
                 <CardContent>
-                    <form onSubmit={handleVerify} className="space-y-4">
+                    <form onSubmit={step === "request" ? handleRequestOtp : handleVerify} className="space-y-4">
                         {/* National ID */}
                         <div>
                             <label className="block text-sm font-medium text-foreground mb-2">
@@ -98,7 +163,11 @@ export default function VerifyMembershipPage() {
                                 required
                                 placeholder="e.g. 12345678"
                                 value={nationalId}
-                                onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+                                onChange={(e) => {
+                                    setNationalId(e.target.value.replace(/\D/g, ""))
+                                    resetFlow()
+                                }}
+                                disabled={step === "otp"}
                                 className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                             />
                         </div>
@@ -145,8 +214,10 @@ export default function VerifyMembershipPage() {
                                     }
 
                                     setPhone(val)
+                                    resetFlow()
                                 }}
                                 maxLength={12}
+                                disabled={step === "otp"}
                                 className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                                 placeholder="2547XXXXXXXX"
                             />
@@ -158,7 +229,10 @@ export default function VerifyMembershipPage() {
                             <input
                                 type="checkbox"
                                 checked={hasConsent}
-                                onChange={(e) => setHasConsent(e.target.checked)}
+                                onChange={(e) => {
+                                    setHasConsent(e.target.checked)
+                                    resetFlow()
+                                }}
                                 required
                                 className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
                             />
@@ -167,22 +241,96 @@ export default function VerifyMembershipPage() {
                             </span>
                         </label>
 
+                        {step === "request" && requestError && (
+                            <p className="text-sm text-red-600 text-center">
+                                {requestError}
+                            </p>
+                        )}
+
+                        {step === "otp" && (
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-foreground mb-2">
+                                    Enter OTP *
+                                </label>
+                                <InputOTP
+                                    maxLength={6}
+                                    value={otp}
+                                    onChange={(value) => setOtp(value)}
+                                    required
+                                    containerClassName="justify-center"
+                                >
+                                    <InputOTPGroup>
+                                        <InputOTPSlot index={0} />
+                                        <InputOTPSlot index={1} />
+                                        <InputOTPSlot index={2} />
+                                    </InputOTPGroup>
+                                    <InputOTPSeparator />
+                                    <InputOTPGroup>
+                                        <InputOTPSlot index={3} />
+                                        <InputOTPSlot index={4} />
+                                        <InputOTPSlot index={5} />
+                                    </InputOTPGroup>
+                                </InputOTP>
+
+                                {requestMessage && (
+                                    <p className="text-sm text-muted-foreground text-center">
+                                        {requestMessage}
+                                    </p>
+                                )}
+                                {requestError && (
+                                    <p className="text-sm text-red-600 text-center">
+                                        {requestError}
+                                    </p>
+                                )}
+                                {verifyError && (
+                                    <p className="text-sm text-red-600 text-center">
+                                        {verifyError}
+                                    </p>
+                                )}
+                                <div className="flex items-center justify-between text-sm">
+                                    <button
+                                        type="button"
+                                        className="text-secondary hover:underline"
+                                        onClick={handleRequestOtp}
+                                        disabled={requestLoading}
+                                    >
+                                        Resend OTP
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="text-muted-foreground hover:underline"
+                                        onClick={resetFlow}
+                                        disabled={requestLoading || verifyLoading}
+                                    >
+                                        Edit details
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Submit */}
                         <button
                             type="submit"
-                            disabled={!nationalId.trim() || !phone.trim() || loading || !hasConsent}
+                            disabled={
+                                !nationalId.trim() ||
+                                !phone.trim() ||
+                                !hasConsent ||
+                                requestLoading ||
+                                verifyLoading ||
+                                (step === "otp" && otp.length !== 6)
+                            }
                             className="w-full bg-secondary text-white h-10 rounded-lg font-bold
                                 hover:bg-secondary/90 transition-colors
                                 flex items-center justify-center gap-2
                                 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? (
+                            {requestLoading || verifyLoading ? (
                                 <>
                                     <Loader2 className="animate-spin" size={20} />
-                                    Verifying...
+                                    {step === "request" ? "Sending OTP..." : "Verifying..."}
                                 </>
                             ) : (
-                                "Verify Status"
+                                step === "request" ? "Send OTP" : "Verify Status"
                             )}
                         </button>
 
