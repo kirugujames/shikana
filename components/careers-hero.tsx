@@ -20,3 +20,6 @@ export function CareersHero() {
     </section>
   )
 }
+
+
+// hero section
